@@ -9,10 +9,11 @@ import { Pagination } from "@/components/data/pagination";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
-import { api } from "@/lib/api/client";
+import { api, errorMessage } from "@/lib/api/client";
 import { formatDate, formatInt, formatPen } from "@/lib/format";
 import { useQuery } from "@/lib/use-query";
 import { cn } from "@/lib/utils";
+import { DiscardDialog } from "./discard-dialog";
 
 const PER_PAGE = 10;
 const TYPES = [["", "Todos", "all"], ["company", "Empresas", "company"], ["person", "Personas", "person"]] as const;
@@ -21,12 +22,17 @@ const TYPE_BADGE: Record<string, [string, string]> = {
   company: ["Empresa", "bg-info-bg text-info-fg"], person: ["Persona", "bg-neutral-bg text-neutral-fg"], other: ["Otro", "bg-neutral-bg text-neutral-fg"],
 };
 
-/** Clientes sin pedidos en los últimos 12 meses, incluidos los que nunca pidieron, por venta histórica. */
-export function DormantCustomers() {
+type Done = { ruc: string; name: string; undone?: boolean; error?: string };
+
+/** Clientes sin pedidos en los últimos 12 meses, incluidos los que nunca pidieron, por venta histórica.
+ *  Cada fila se puede descartar (cerró, cambió de datos o ya no es viable); el descarte se deshace o se restaura después. */
+export function DormantCustomers({ onShowDiscarded }: { onShowDiscarded?: () => void }) {
   const [searchText, setSearchText] = useState("");
   const [search, setSearch] = useState("");
   const [type, setType] = useState<TypeFilter>("");
   const [page, setPage] = useState(1);
+  const [discarding, setDiscarding] = useState<{ ruc: string; name: string } | null>(null);
+  const [done, setDone] = useState<Done | null>(null);
 
   useEffect(() => {
     const t = setTimeout(() => { setSearch(searchText.trim()); setPage(1); }, 400);
@@ -38,6 +44,15 @@ export function DormantCustomers() {
     [search, type, page],
     "No se pudo cargar los clientes dormidos.",
   );
+
+  // Si se descartó el último cliente de la página, vuelve a la anterior.
+  useEffect(() => { if (data && data.items.length === 0 && page > 1) setPage(page - 1); }, [data, page]);
+
+  async function undo(target: Done) {
+    const { error: err, response } = await api.DELETE("/api/v1/customers/{ruc}/discard", { params: { path: { ruc: target.ruc } } });
+    if (response.status !== 204) { setDone({ ...target, error: errorMessage(err, "No se pudo deshacer. Restáuralo desde «Clientes descartados».") }); return; }
+    setDone({ ...target, undone: true }); reload();
+  }
 
   return (
     <section aria-label="Clientes dormidos" className="flex flex-col gap-4 rounded-lg border border-line bg-surface p-6">
@@ -51,6 +66,7 @@ export function DormantCustomers() {
             {formatInt(data.dormant_count)} de los {formatInt(data.customer_count)} clientes del maestro no compraron en los últimos 12 meses.{" "}
             {formatInt(data.ordered_before_count)} de ellos sí compraron antes y {formatInt(data.dormant_count - data.ordered_before_count)} no tienen
             pedidos en estos archivos. Ordenados por venta histórica (sin IGV, solo productos veterinarios).
+            {data.discarded_count > 0 && <>{" "}No incluye {formatInt(data.discarded_count)} {data.discarded_count === 1 ? "cliente descartado" : "clientes descartados"}.</>}
           </p>
         )}
       </div>
@@ -71,6 +87,22 @@ export function DormantCustomers() {
           ))}
         </div>
       </div>
+
+      {done && (
+        <div role="status" className={cn("flex flex-wrap items-center justify-between gap-3 rounded border px-4 py-3 text-sm",
+          done.error ? "border-brand-softBorder bg-brand-soft" : "border-ok-fg/20 bg-ok-bg")}>
+          <span>
+            {done.error ?? (done.undone
+              ? <><span className="font-semibold">{done.name}</span> volvió a la lista de dormidos.</>
+              : <><span className="font-semibold">{done.name}</span> se movió a «Clientes descartados».</>)}
+          </span>
+          <span className="flex gap-2">
+            {!done.undone && !done.error && <Button size="sm" variant="outline" onClick={() => undo(done)}>Deshacer</Button>}
+            {!done.undone && onShowDiscarded && <Button size="sm" variant="ghost" onClick={onShowDiscarded}>Ver descartados</Button>}
+            <button type="button" onClick={() => setDone(null)} aria-label="Cerrar aviso" className="px-1 text-ink-muted hover:text-ink">×</button>
+          </span>
+        </div>
+      )}
 
       {error ? (
         <Notice className="flex items-center justify-between gap-4">
@@ -94,6 +126,7 @@ export function DormantCustomers() {
                 <TH numeric>Pedidos</TH>
                 <TH numeric>Venta histórica</TH>
                 <TH numeric>Última compra</TH>
+                <TH><span className="sr-only">Acciones</span></TH>
               </TR>
             </THead>
             <TBody>
@@ -110,6 +143,10 @@ export function DormantCustomers() {
                     <TD numeric>{c.order_count ? formatInt(c.order_count) : "—"}</TD>
                     <TD numeric className="font-semibold">{c.order_count ? formatPen(c.lifetime_amount) : <span className="font-normal text-ink-muted">Sin pedidos</span>}</TD>
                     <TD numeric className="whitespace-nowrap text-ink-2">{formatDate(c.last_order_date)}</TD>
+                    <TD className="text-right">
+                      <Button size="sm" variant="outline" onClick={() => { setDone(null); setDiscarding({ ruc: c.ruc, name: c.name }); }}
+                        aria-label={`Descartar a ${c.name}`}>Descartar</Button>
+                    </TD>
                   </TR>
                 );
               })}
@@ -117,6 +154,11 @@ export function DormantCustomers() {
           </Table>
           <Pagination page={data.page} perPage={data.per_page} total={data.total} onPage={setPage} label="clientes dormidos" />
         </div>
+      )}
+
+      {discarding && (
+        <DiscardDialog customer={discarding} onClose={() => setDiscarding(null)}
+          onDiscarded={() => { setDone({ ...discarding }); setDiscarding(null); reload(); }} />
       )}
     </section>
   );

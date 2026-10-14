@@ -16,12 +16,13 @@ import { formatDate, formatInt, formatMonthYear, formatPen, formatPercent, twelv
 import { CUSTOMER_TYPE } from "@/lib/labels";
 import { useQuery } from "@/lib/use-query";
 import { cn } from "@/lib/utils";
+import { DiscardedCustomers } from "./discarded-customers";
 import { DormantCustomers } from "./dormant-customers";
 
 const PER_PAGE = 20;
 const LEVELS = [["", "Todos"], ["A", "Nivel A"], ["B", "Nivel B"], ["C", "Nivel C"]] as const;
 type LevelFilter = (typeof LEVELS)[number][0];
-type View = "volume" | "dormant";
+type View = "volume" | "dormant" | "discarded";
 
 export function CustomerList() {
   const { user } = useAuth();
@@ -31,7 +32,7 @@ export function CustomerList() {
   const [level, setLevel] = useState<LevelFilter>("");
   const [page, setPage] = useState(1);
   const [view, setView] = useState<View>("volume");
-  const views: [View, string][] = [["volume", "Clientes por volumen"], ["dormant", "Clientes dormidos"]];
+  const views: [View, string][] = [["volume", "Clientes por volumen"], ["dormant", "Clientes dormidos"], ["discarded", "Clientes descartados"]];
 
   // Se busca medio segundo después de dejar de escribir, para no pedir una página por cada letra.
   useEffect(() => {
@@ -62,7 +63,7 @@ export function CustomerList() {
         ))}
       </div>
 
-      {view === "dormant" ? <DormantCustomers /> : <>
+      {view === "dormant" ? <DormantCustomers onShowDiscarded={() => setView("discarded")} /> : view === "discarded" ? <DiscardedCustomers /> : <>
       {data && !data.levels_configured && (
         <Notice tone="warn">
           Los niveles A, B y C aparecerán cuando gerencia defina los umbrales de volumen.{" "}
