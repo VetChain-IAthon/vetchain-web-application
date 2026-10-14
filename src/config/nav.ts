@@ -18,9 +18,9 @@ export const NAV: NavGroup[] = [
     { label: "Planificación de importación", href: "/planificacion", roles: ["manager"], icon: "package" },
     { label: "Reportes", href: "/reportes", roles: ["manager"], icon: "bar-chart-3", children: [
       { label: "Indicadores clave", href: "/reportes/kpis" },
-      { label: "Ventas y rentabilidad", href: "/reportes/ventas" },
+      { label: "Pedidos y productos", href: "/reportes/ventas" },
       { label: "Clientes", href: "/reportes/clientes" },
-      { label: "Stock y vencimientos", href: "/reportes/stock" },
+      { label: "Stock", href: "/reportes/stock" },
       { label: "Cartera y cobranza", href: "/reportes/cobranza" },
       { label: "Vendedores", href: "/reportes/vendedores" },
     ] },

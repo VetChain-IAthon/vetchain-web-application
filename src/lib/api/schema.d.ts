@@ -515,8 +515,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Resumen semanal y cifras principales (pendiente) */
-        get: operations["pending_get_dashboard_summary_api_v1_dashboard_summary_get"];
+        /** Dashboard Summary */
+        get: operations["dashboard_summary_api_v1_dashboard_summary_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -532,8 +532,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Catálogo de reportes con el origen de sus datos (pendiente) */
-        get: operations["pending_get_reports_api_v1_reports_get"];
+        /** List Reports */
+        get: operations["list_reports_api_v1_reports_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -549,8 +549,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Los KPIs con su estado (pendiente) */
-        get: operations["pending_get_reports_kpis_api_v1_reports_kpis_get"];
+        /** Get Kpis */
+        get: operations["get_kpis_api_v1_reports_kpis_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -566,8 +566,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Pedidos por mes, producto y categoría (pendiente) */
-        get: operations["pending_get_reports_sales_api_v1_reports_sales_get"];
+        /** Get Sales Report */
+        get: operations["get_sales_report_api_v1_reports_sales_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -583,8 +583,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Concentración, maestro de clientes, en riesgo y dormidos (pendiente) */
-        get: operations["pending_get_reports_customers_api_v1_reports_customers_get"];
+        /** Get Customers Report */
+        get: operations["get_customers_report_api_v1_reports_customers_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -600,8 +600,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Estado del stock (pendiente) */
-        get: operations["pending_get_reports_stock_api_v1_reports_stock_get"];
+        /** Get Stock Report */
+        get: operations["get_stock_report_api_v1_reports_stock_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -617,8 +617,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Deuda por antigüedad y nivel (estimada) (pendiente) */
-        get: operations["pending_get_reports_receivables_api_v1_reports_receivables_get"];
+        /** Get Receivables Report */
+        get: operations["get_receivables_report_api_v1_reports_receivables_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -634,8 +634,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Pedidos de 12 meses y seguimiento de alertas por vendedor (pendiente) */
-        get: operations["pending_get_reports_salespeople_api_v1_reports_salespeople_get"];
+        /** Get Salespeople Report */
+        get: operations["get_salespeople_report_api_v1_reports_salespeople_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -651,8 +651,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Embudo: alertas, contactos, cotizaciones, convertidas y monto recuperado (pendiente) */
-        get: operations["pending_get_reports_funnel_api_v1_reports_funnel_get"];
+        /** Get Funnel Report */
+        get: operations["get_funnel_report_api_v1_reports_funnel_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -772,6 +772,19 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** CategoryAmountOut */
+        CategoryAmountOut: {
+            /** Code */
+            code: string | null;
+            /** Amount */
+            amount: number;
+            /**
+             * Data Origin
+             * @default real
+             * @constant
+             */
+            data_origin: "real";
+        };
         /** CommercialTermsOut */
         CommercialTermsOut: {
             /** Level */
@@ -826,6 +839,23 @@ export interface components {
             page: number;
             /** Per Page */
             per_page: number;
+        };
+        /** CustomerAmountOut */
+        CustomerAmountOut: {
+            /** Ruc */
+            ruc: string;
+            /** Name */
+            name: string;
+            /** Amount */
+            amount: number;
+            /** Share Pct */
+            share_pct: number | null;
+            /**
+             * Data Origin
+             * @default real
+             * @constant
+             */
+            data_origin: "real";
         };
         /** CustomerDetailOut */
         CustomerDetailOut: {
@@ -981,10 +1011,109 @@ export interface components {
              */
             data_origin: "real";
         };
+        /** CustomersReportOut */
+        CustomersReportOut: {
+            period: components["schemas"]["PeriodOut"];
+            /** Master Count */
+            master_count: number;
+            /** Active Count */
+            active_count: number | null;
+            /** No Orders 12M */
+            no_orders_12m: number | null;
+            /** Amount */
+            amount: number | null;
+            /** Top Ten Share Pct */
+            top_ten_share_pct: number | null;
+            /** Top Customers */
+            top_customers: components["schemas"]["CustomerAmountOut"][];
+            /** At Risk Count */
+            at_risk_count?: number | null;
+            /** Dormant Count */
+            dormant_count?: number | null;
+            /** Warnings */
+            warnings: string[];
+            /**
+             * Data Origin
+             * @default real
+             * @constant
+             */
+            data_origin: "real";
+        };
+        /** DashboardSummaryOut */
+        DashboardSummaryOut: {
+            period: components["schemas"]["PeriodOut"];
+            /** Amount */
+            amount: number | null;
+            /** Order Count */
+            order_count: number | null;
+            /** Average Order */
+            average_order: number | null;
+            /** Active Customers */
+            active_customers: number | null;
+            /** Top Ten Share Pct */
+            top_ten_share_pct: number | null;
+            /** Monthly */
+            monthly: components["schemas"]["MonthlyAmountOut"][];
+            /** Top Customers */
+            top_customers: components["schemas"]["CustomerAmountOut"][];
+            /** Warnings */
+            warnings: string[];
+            /**
+             * Data Origin
+             * @default real
+             * @constant
+             */
+            data_origin: "real";
+        };
+        /** FunnelReportOut */
+        FunnelReportOut: {
+            period: components["schemas"]["PeriodOut"];
+            /** Alerts */
+            alerts?: number | null;
+            /** Contacts */
+            contacts?: number | null;
+            /** Quotations */
+            quotations?: number | null;
+            /** Converted */
+            converted?: number | null;
+            /** Recovered Amount */
+            recovered_amount?: number | null;
+            /**
+             * Warnings
+             * @default [
+             *       "alerts_unavailable",
+             *       "conversion_unavailable"
+             *     ]
+             */
+            warnings: string[];
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** KpiOut */
+        KpiOut: {
+            /** Code */
+            code: string;
+            /** Value */
+            value: number | null;
+            /** Target */
+            target: number | null;
+            /** Status */
+            status: string | null;
+            /** Data Origin */
+            data_origin: string;
+            /** Warning */
+            warning: string | null;
+        };
+        /** KpiReportOut */
+        KpiReportOut: {
+            period: components["schemas"]["PeriodOut"];
+            /** Items */
+            items: components["schemas"]["KpiOut"][];
+            /** Warnings */
+            warnings: string[];
         };
         /** LevelThresholdsIn */
         LevelThresholdsIn: {
@@ -1018,6 +1147,26 @@ export interface components {
             email?: string | null;
             /** Phone */
             phone?: string | null;
+        };
+        /** MonthlyAmountOut */
+        MonthlyAmountOut: {
+            /**
+             * Month
+             * Format: date
+             */
+            month: string;
+            /** Order Count */
+            order_count: number;
+            /** Amount */
+            amount: number;
+            /** Dispatched Amount */
+            dispatched_amount: number;
+            /**
+             * Data Origin
+             * @default real
+             * @constant
+             */
+            data_origin: "real";
         };
         /** OrderOut */
         OrderOut: {
@@ -1060,6 +1209,17 @@ export interface components {
              */
             data_origin: "real";
         };
+        /** PeriodOut */
+        PeriodOut: {
+            /** From Date */
+            from_date: string | null;
+            /** To Date */
+            to_date: string | null;
+            /** Data As Of */
+            data_as_of: string | null;
+            /** Warning */
+            warning: string | null;
+        };
         /** PricingIn */
         PricingIn: {
             /** Igv Rate Pct */
@@ -1087,6 +1247,21 @@ export interface components {
              * @description Cuánto baja el margen mínimo en promociones
              */
             promo_margin_cut_pct: number;
+        };
+        /** ProductAmountOut */
+        ProductAmountOut: {
+            /** Code */
+            code: string;
+            /** Name */
+            name: string;
+            /** Amount */
+            amount: number;
+            /**
+             * Data Origin
+             * @default real
+             * @constant
+             */
+            data_origin: "real";
         };
         /** ProductOut */
         ProductOut: {
@@ -1304,6 +1479,112 @@ export interface components {
              */
             data_origin: "estimated";
         };
+        /** ReceivablesReportOut */
+        ReceivablesReportOut: {
+            period: components["schemas"]["PeriodOut"];
+            /** Outstanding Amount */
+            outstanding_amount?: number | null;
+            /** Overdue Amount */
+            overdue_amount?: number | null;
+            /**
+             * Warnings
+             * @default [
+             *       "receipts_not_linked"
+             *     ]
+             */
+            warnings: string[];
+        };
+        /** ReportCatalogOut */
+        ReportCatalogOut: {
+            /** Items */
+            items: components["schemas"]["ReportEntryOut"][];
+            /** Total */
+            total: number;
+            /**
+             * Page
+             * @default 1
+             */
+            page: number;
+            /**
+             * Per Page
+             * @default 7
+             */
+            per_page: number;
+        };
+        /** ReportEntryOut */
+        ReportEntryOut: {
+            /** Code */
+            code: string;
+            /** Name */
+            name: string;
+            /** Path */
+            path: string;
+            /** Data Origin */
+            data_origin: string | null;
+            /** Warning */
+            warning: string | null;
+        };
+        /** SalesReportOut */
+        SalesReportOut: {
+            period: components["schemas"]["PeriodOut"];
+            /** Monthly */
+            monthly: components["schemas"]["MonthlyAmountOut"][];
+            /** Products */
+            products: components["schemas"]["ProductAmountOut"][];
+            /** Categories */
+            categories: components["schemas"]["CategoryAmountOut"][];
+            /** Amount */
+            amount: number | null;
+            /** Order Count */
+            order_count: number | null;
+            /** Margin Pct */
+            margin_pct?: number | null;
+            /** Warnings */
+            warnings: string[];
+            /**
+             * Data Origin
+             * @default real
+             * @constant
+             */
+            data_origin: "real";
+        };
+        /** SalespeopleReportOut */
+        SalespeopleReportOut: {
+            period: components["schemas"]["PeriodOut"];
+            /** Amount */
+            amount: number | null;
+            /** Items */
+            items: components["schemas"]["SalespersonAmountOut"][];
+            /** Warnings */
+            warnings: string[];
+            /**
+             * Data Origin
+             * @default real
+             * @constant
+             */
+            data_origin: "real";
+        };
+        /** SalespersonAmountOut */
+        SalespersonAmountOut: {
+            /** Code */
+            code: string;
+            /** Name */
+            name: string;
+            /** Amount */
+            amount: number;
+            /** Order Count */
+            order_count: number;
+            /** Customer Count */
+            customer_count: number;
+            /** Share Pct */
+            share_pct: number | null;
+            /**
+             * Data Origin
+             * @default real
+             * @constant
+             */
+            data_origin: "real";
+        };
         /** SessionCreateIn */
         SessionCreateIn: {
             /** Email */
@@ -1321,6 +1602,48 @@ export interface components {
              */
             token_type: string;
             user: components["schemas"]["UserOut"];
+        };
+        /** StockItemOut */
+        StockItemOut: {
+            /** Product Code */
+            product_code: string;
+            /** Product Name */
+            product_name: string | null;
+            /** Balance */
+            balance: number;
+            /**
+             * Last Period End
+             * Format: date
+             */
+            last_period_end: string;
+            /**
+             * Data Origin
+             * @default real
+             * @constant
+             */
+            data_origin: "real";
+            /**
+             * Warning
+             * @default stock_balance_unconfirmed
+             * @constant
+             */
+            warning: "stock_balance_unconfirmed";
+        };
+        /** StockReportOut */
+        StockReportOut: {
+            period: components["schemas"]["PeriodOut"];
+            /** Stock As Of */
+            stock_as_of: string | null;
+            /** Items */
+            items: components["schemas"]["StockItemOut"][];
+            /** Warnings */
+            warnings: string[];
+            /**
+             * Data Origin
+             * @default real
+             * @constant
+             */
+            data_origin: "real";
         };
         /** UserCreateIn */
         UserCreateIn: {
@@ -2364,27 +2687,39 @@ export interface operations {
             };
         };
     };
-    pending_get_dashboard_summary_api_v1_dashboard_summary_get: {
+    dashboard_summary_api_v1_dashboard_summary_get: {
         parameters: {
-            query?: never;
+            query?: {
+                from?: string | null;
+                to?: string | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["DashboardSummaryOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
     };
-    pending_get_reports_api_v1_reports_get: {
+    list_reports_api_v1_reports_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -2393,153 +2728,237 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["ReportCatalogOut"];
                 };
             };
         };
     };
-    pending_get_reports_kpis_api_v1_reports_kpis_get: {
+    get_kpis_api_v1_reports_kpis_get: {
         parameters: {
-            query?: never;
+            query?: {
+                from?: string | null;
+                to?: string | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["KpiReportOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
     };
-    pending_get_reports_sales_api_v1_reports_sales_get: {
+    get_sales_report_api_v1_reports_sales_get: {
         parameters: {
-            query?: never;
+            query?: {
+                from?: string | null;
+                to?: string | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["SalesReportOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
     };
-    pending_get_reports_customers_api_v1_reports_customers_get: {
+    get_customers_report_api_v1_reports_customers_get: {
         parameters: {
-            query?: never;
+            query?: {
+                from?: string | null;
+                to?: string | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["CustomersReportOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
     };
-    pending_get_reports_stock_api_v1_reports_stock_get: {
+    get_stock_report_api_v1_reports_stock_get: {
         parameters: {
-            query?: never;
+            query?: {
+                from?: string | null;
+                to?: string | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["StockReportOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
     };
-    pending_get_reports_receivables_api_v1_reports_receivables_get: {
+    get_receivables_report_api_v1_reports_receivables_get: {
         parameters: {
-            query?: never;
+            query?: {
+                from?: string | null;
+                to?: string | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["ReceivablesReportOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
     };
-    pending_get_reports_salespeople_api_v1_reports_salespeople_get: {
+    get_salespeople_report_api_v1_reports_salespeople_get: {
         parameters: {
-            query?: never;
+            query?: {
+                from?: string | null;
+                to?: string | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["SalespeopleReportOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
     };
-    pending_get_reports_funnel_api_v1_reports_funnel_get: {
+    get_funnel_report_api_v1_reports_funnel_get: {
         parameters: {
-            query?: never;
+            query?: {
+                from?: string | null;
+                to?: string | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["FunnelReportOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
