@@ -732,8 +732,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Pedido sugerido por producto (pendiente) */
-        get: operations["pending_get_import_suggestions_api_v1_import_suggestions_get"];
+        /**
+         * List Import Suggestions
+         * @description Escenario persistido de cuatro laboratorios. Todas las cifras son de ejemplo.
+         */
+        get: operations["list_import_suggestions_api_v1_import_suggestions_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -755,8 +758,11 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        /** Decisión: aprobar, rechazar o volver a pendiente (pendiente) */
-        patch: operations["pending_patch_import_suggestions_suggestion_id_api_v1_import_suggestions__suggestion_id__patch"];
+        /**
+         * Decide Import Suggestion
+         * @description Guarda una revisión de la simulación; no crea ni autoriza compras.
+         */
+        patch: operations["decide_import_suggestion_api_v1_import_suggestions__suggestion_id__patch"];
         trace?: never;
     };
     "/api/v1/data-sources": {
@@ -1638,6 +1644,14 @@ export interface components {
             /** Items */
             items: components["schemas"]["DataSourceOut"][];
         };
+        /** DecisionIn */
+        DecisionIn: {
+            /**
+             * Decision
+             * @enum {string}
+             */
+            decision: "pending" | "approved" | "rejected";
+        };
         /** DormantCustomerOut */
         DormantCustomerOut: {
             /** Ruc */
@@ -1816,6 +1830,22 @@ export interface components {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
+        /** ImportPlanOut */
+        ImportPlanOut: {
+            /**
+             * Data Origin
+             * @default simulated
+             * @constant
+             */
+            data_origin: "simulated";
+            /**
+             * Warning
+             * @default Escenario de ejemplo. Los laboratorios, productos, stock, demanda, precios, costos y fechas son simulados. No genera pedidos reales.
+             */
+            warning: string;
+            /** Laboratories */
+            laboratories: components["schemas"]["LaboratoryOut"][];
+        };
         /** ImportPreviewOut */
         ImportPreviewOut: {
             /**
@@ -1861,6 +1891,34 @@ export interface components {
             items: components["schemas"]["KpiOut"][];
             /** Warnings */
             warnings: string[];
+        };
+        /** LaboratoryOut */
+        LaboratoryOut: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Country */
+            country: string;
+            /** Lead Days */
+            lead_days: number;
+            /** Merchandise Cost Usd */
+            merchandise_cost_usd: string;
+            /** Import Cost Usd */
+            import_cost_usd: number;
+            /**
+             * Estimated Arrival
+             * Format: date
+             */
+            estimated_arrival: string;
+            /**
+             * Data Origin
+             * @default simulated
+             * @constant
+             */
+            data_origin: "simulated";
+            /** Suggestions */
+            suggestions: components["schemas"]["SuggestionOut"][];
         };
         /** LastImportOut */
         LastImportOut: {
@@ -2583,6 +2641,41 @@ export interface components {
              * @constant
              */
             data_origin: "real";
+        };
+        /** SuggestionOut */
+        SuggestionOut: {
+            /** Id */
+            id: number;
+            /** Product Name */
+            product_name: string;
+            /** Stock Units */
+            stock_units: number;
+            /** Coverage Days */
+            coverage_days: number;
+            /** Demand 90 Days */
+            demand_90_days: number;
+            /** Suggested Units */
+            suggested_units: number;
+            /** Shelf Life Months */
+            shelf_life_months: number;
+            /**
+             * Order Before
+             * Format: date
+             */
+            order_before: string;
+            /** Unit Price Usd */
+            unit_price_usd: string;
+            /**
+             * Decision
+             * @enum {string}
+             */
+            decision: "pending" | "approved" | "rejected";
+            /**
+             * Data Origin
+             * @default simulated
+             * @constant
+             */
+            data_origin: "simulated";
         };
         /** UserCreateIn */
         UserCreateIn: {
@@ -4024,7 +4117,7 @@ export interface operations {
             };
         };
     };
-    pending_get_import_suggestions_api_v1_import_suggestions_get: {
+    list_import_suggestions_api_v1_import_suggestions_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -4033,33 +4126,48 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["ImportPlanOut"];
                 };
             };
         };
     };
-    pending_patch_import_suggestions_suggestion_id_api_v1_import_suggestions__suggestion_id__patch: {
+    decide_import_suggestion_api_v1_import_suggestions__suggestion_id__patch: {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                suggestion_id: number;
+            };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DecisionIn"];
+            };
+        };
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["SuggestionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
