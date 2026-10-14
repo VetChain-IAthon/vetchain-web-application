@@ -188,7 +188,8 @@ export function DataImports() {
                 className={cn("rounded-xs px-2 py-0.5 font-mono text-xs", /^c\d+$/.test(h) ? "bg-surface text-ink-muted" : "border border-line bg-surface text-ink-2")}
                 title={/^c\d+$/.test(h) ? "Columna de Defontana que no se usa: puede ir vacía" : undefined}>
                 <span className="mr-1 text-ink-muted">{i + 1}</span>{h}</li>)}</ol>
-              <p className="mt-2 text-xs text-ink-muted">Las columnas en gris (cN) no se usan y pueden ir vacías.</p>
+              <p className="mt-2 text-xs text-ink-muted">Las columnas en gris (cN) no se usan y pueden ir vacías. Si abriste el CSV en Excel y se perdieron
+                los ceros a la izquierda (008 → 8), VetChain los repone en los códigos al revisar.</p>
             </div>}
           </div>
         </Step>
