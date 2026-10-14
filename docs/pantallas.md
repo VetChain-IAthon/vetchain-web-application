@@ -9,7 +9,7 @@ Roles: M = manager (gerencia), S = salesperson (vendedor). P1 = sin esto no arra
 | Panel gerencial | `/panel` | M | Main.dc.html | `GET /dashboard/summary`<br>`GET /reports/salespeople`<br>`GET /reports/funnel` | real | P2 |
 | Hoy | `/hoy` | S | Vendedor.dc.html | `GET /alerts`<br>`GET /alerts/summary` | estimated | P2 |
 | Alertas del día | `/alertas` | M, S | Alertas.dc.html | `GET /alerts`<br>`GET /alerts/summary`<br>`GET /alerts/{alert_id}`<br>`GET /alerts/{alert_id}/explanation`<br>`POST /customers/{ruc}/contacts`<br>`GET /customers/{ruc}/whatsapp-link` | estimated | P2 |
-| Clientes | `/clientes` | M, S | Clientes.dc.html (gerencia) y VendedorClientes.dc.html (vendedor) | `GET /customers`<br>`GET /settings/customer-levels` | real | P2 |
+| Clientes | `/clientes` | M, S | Clientes.dc.html (gerencia) y VendedorClientes.dc.html (vendedor) | `GET /customers`<br>`GET /settings/customer-levels`<br>`GET /customers/dormant`<br>`GET /customers/discarded`<br>`POST /customers/{ruc}/discard`<br>`DELETE /customers/{ruc}/discard` | real | P2 |
 | Ficha de cliente | `/clientes/[ruc]` | M, S | Ficha-icvr.dc.html (versión para reunión) y Clientes.dc.html (detalle) | `GET /customers/{ruc}`<br>`GET /customers/{ruc}/orders`<br>`GET /customers/{ruc}/products`<br>`GET /customers/{ruc}/commercial-terms`<br>`GET /customers/{ruc}/contacts`<br>`POST /customers/{ruc}/contacts`<br>`GET /customers/{ruc}/whatsapp-link` | real | P2 |
 | Cotizaciones | `/cotizaciones` | M, S | Cotizaciones.dc.html (gerencia) y VendedorCotizaciones.dc.html (vendedor) | `GET /products`<br>`GET /products/{code}`<br>`POST /quotation-previews`<br>`GET /quotations`<br>`POST /quotations`<br>`GET /quotations/{quotation_id}` | estimated | P2 |
 | Planificación de importación | `/planificacion` | M | Planificacion.dc.html | `GET /import-suggestions`<br>`PATCH /import-suggestions/{suggestion_id}` | simulated | P3 |
@@ -28,8 +28,9 @@ Roles: M = manager (gerencia), S = salesperson (vendedor). P1 = sin esto no arra
 - **Panel gerencial:** Muestra montos de pedidos veterinarios sin IGV ni líneas bonificadas. No son ventas facturadas. Alertas y embudo permanecen sin cifras.
 - **Hoy:** El backend fuerza el filtro del vendedor.
 - **Alertas del día:** Las alertas calculadas se distinguen de las demostraciones simuladas.
+- **Clientes:** Pestañas: por volumen, dormidos y descartados. Solo se descartan clientes sin pedidos en 12 meses; se restauran desde Descartados.
 - **Cotizaciones:** Solo se emiten; no se editan. Si approval_required, pedir approval_confirmed + approval_note. Sin costos, margen null con aviso no_cost_data. Precio de referencia = último precio pagado (estimated).
-- **Planificación de importación:** Los cuatro laboratorios ficticios y todas las cifras son simulados. Las revisiones se guardan, pero no crean pedidos ni ejecutan importaciones. No se usa IA en esta fase.
+- **Planificación de importación:** Los cuatro laboratorios y todas las cifras son simulados. Revisar una sugerencia no crea pedidos.
 - **Reportes:** Las preguntas en lenguaje natural siguen pendientes.
 - **Ficha de cliente para reunión:** El PDF lo genera la web. Resumen, ofertas y guion esperan Gemini; proyección, el modelo; ganancia, costos; cobranza, cobros enlazados.
 - **Indicadores clave:** Sin metas configuradas, no se muestra estado de cumplimiento.

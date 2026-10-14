@@ -6,7 +6,8 @@ El backend (FastAPI) vive en otro repositorio; su contrato está en `design/endp
 
 ## Stack
 Next.js 15 (App Router) + TypeScript + Tailwind CSS 3 + componentes estilo shadcn/ui + Recharts + lucide-react.
-Datos: `openapi-fetch` con tipos generados (`src/lib/api/schema.d.ts`). Despliegue: Vercel al subir a `main`.
+Datos: `openapi-fetch` con tipos generados (`src/lib/api/schema.d.ts`). Despliegue: Vercel solo compila `main` (Ignored Build Step = «Only build production»): las otras ramas no generan vista previa.
+`NEXT_PUBLIC_API_URL` se lee al compilar; en Vercel apunta a `https://vetchain-api.onrender.com`.
 
 ## Dónde está el diseño (léelo antes de construir una pantalla)
 - `design/prototipo/*.dc.html`: prototipo de Claude Design. **Es la referencia visual.** Ábrelo, copia estructura, textos,
@@ -40,6 +41,10 @@ Datos: `openapi-fetch` con tipos generados (`src/lib/api/schema.d.ts`). Desplieg
 - Los **PDF los genera la web** (no hay endpoints de PDF): ficha para reunión y cotizaciones.
 - El vendedor solo recibe sus datos (el backend lo fuerza); la web solo oculta lo que no le corresponde en el menú.
 - Cierre de sesión = borrar el token. No hay cambio de contraseña en el MVP.
+- Correo: `src/features/reportes/email-composer.tsx` ofrece «Mi Gmail» (OAuth por usuario, conectado también desde Perfil)
+  y «Correo general» (remitente único de Ajustes › Correo; el backend decide Resend o Gmail SMTP). Si
+  `provider_configured` es falso, el envío general queda deshabilitado con aviso. Reglas de remitente en `src/lib/email-sender.ts`,
+  iguales a las del backend.
 - Cotizaciones: solo se emiten, no se editan. Si la vista previa trae `approval_required`, pedir confirmación y nota
   (`approval_confirmed`, `approval_note`). La aprobación ocurre fuera de VetChain.
 
