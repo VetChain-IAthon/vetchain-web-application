@@ -86,6 +86,144 @@ export interface paths {
         patch: operations["update_user_api_v1_users__user_id__patch"];
         trace?: never;
     };
+    "/api/v1/customers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Customers
+         * @description Cartera ordenada por monto de pedidos de 12 meses, con nivel y participación.
+         */
+        get: operations["list_customers_api_v1_customers_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/customers/{ruc}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Customer
+         * @description Ficha del cliente con nivel, resumen de 12 meses e historial completo.
+         */
+        get: operations["get_customer_api_v1_customers__ruc__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/customers/{ruc}/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Customer Orders
+         * @description Historial de pedidos (todos los estados), del más reciente al más antiguo.
+         */
+        get: operations["list_customer_orders_api_v1_customers__ruc__orders_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/customers/{ruc}/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Customer Products
+         * @description Productos veterinarios que compra, de mayor a menor monto.
+         */
+        get: operations["list_customer_products_api_v1_customers__ruc__products_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/customers/{ruc}/commercial-terms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Commercial Terms
+         * @description Nivel del cliente y sus reglas: margen, descuento máximo y días de crédito.
+         */
+        get: operations["get_commercial_terms_api_v1_customers__ruc__commercial_terms_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/customers/{ruc}/contacts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Contacts */
+        get: operations["list_contacts_api_v1_customers__ruc__contacts_get"];
+        put?: never;
+        /**
+         * Register Contact
+         * @description Registra que contactaste hoy al cliente y qué respondió.
+         */
+        post: operations["register_contact_api_v1_customers__ruc__contacts_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/customers/{ruc}/whatsapp-link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Build Whatsapp Link */
+        get: operations["build_whatsapp_link_api_v1_customers__ruc__whatsapp_link_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/alerts": {
         parameters: {
             query?: never;
@@ -146,126 +284,6 @@ export interface paths {
         };
         /** Texto de IA que explica la alerta (solo cifras agregadas) (pendiente) */
         get: operations["pending_get_alerts_alert_id_explanation_api_v1_alerts__alert_id__explanation_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/customers": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Lista de clientes con filtros de nivel, estado, búsqueda y vendedor (pendiente) */
-        get: operations["pending_get_customers_api_v1_customers_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/customers/{ruc}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Ficha del cliente con nivel y resumen de 12 meses (pendiente) */
-        get: operations["pending_get_customers_ruc_api_v1_customers__ruc__get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/customers/{ruc}/orders": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Historial de pedidos (pendiente) */
-        get: operations["pending_get_customers_ruc_orders_api_v1_customers__ruc__orders_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/customers/{ruc}/products": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Qué compra el cliente y con qué frecuencia (pendiente) */
-        get: operations["pending_get_customers_ruc_products_api_v1_customers__ruc__products_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/customers/{ruc}/commercial-terms": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Nivel, margen, descuento máximo y días de crédito (pendiente) */
-        get: operations["pending_get_customers_ruc_commercial_terms_api_v1_customers__ruc__commercial_terms_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/customers/{ruc}/contacts": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Registro de contactos (pendiente) */
-        get: operations["pending_get_customers_ruc_contacts_api_v1_customers__ruc__contacts_get"];
-        put?: never;
-        /** Registrar un contacto y su resultado (pendiente) */
-        post: operations["pending_post_customers_ruc_contacts_api_v1_customers__ruc__contacts_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/customers/{ruc}/whatsapp-link": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Enlace wa.me con el mensaje sugerido (pendiente) */
-        get: operations["pending_get_customers_ruc_whatsapp_link_api_v1_customers__ruc__whatsapp_link_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -754,6 +772,121 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** CommercialTermsOut */
+        CommercialTermsOut: {
+            /** Level */
+            level: string;
+            /** Margin Pct */
+            margin_pct: number;
+            /** Max Discount Pct */
+            max_discount_pct: number;
+            /** Credit Days */
+            credit_days: number;
+            /**
+             * Amount 12M
+             * @description Monto de 12 meses con el que se calculó el nivel
+             */
+            amount_12m: number;
+            /** Data As Of */
+            data_as_of: string | null;
+        };
+        /** ContactIn */
+        ContactIn: {
+            /**
+             * Outcome
+             * @description Qué respondió el cliente (las opciones se definen con Mederi)
+             */
+            outcome: string;
+        };
+        /** ContactOut */
+        ContactOut: {
+            /** Id */
+            id: number;
+            /** Ruc */
+            ruc: string;
+            /** User Id */
+            user_id: number;
+            /** Outcome */
+            outcome: string;
+            /**
+             * Contact Date
+             * Format: date
+             */
+            contact_date: string;
+            /** Alert Id */
+            alert_id: number | null;
+        };
+        /** ContactPageOut */
+        ContactPageOut: {
+            /** Items */
+            items: components["schemas"]["ContactOut"][];
+            /** Total */
+            total: number;
+            /** Page */
+            page: number;
+            /** Per Page */
+            per_page: number;
+        };
+        /** CustomerDetailOut */
+        CustomerDetailOut: {
+            /** Ruc */
+            ruc: string;
+            /** Name */
+            name: string;
+            /**
+             * Customer Type
+             * @description company | person | other
+             */
+            customer_type: string | null;
+            /** Region */
+            region: string | null;
+            /** Salesperson Code */
+            salesperson_code: string | null;
+            /**
+             * Level
+             * @description A, B o C; null mientras gerencia no defina los umbrales
+             */
+            level: string | null;
+            /**
+             * Amount 12M
+             * @description Pedidos de 12 meses, sin IGV, solo veterinarios
+             */
+            amount_12m: number;
+            /** Order Count 12M */
+            order_count_12m: number;
+            /**
+             * Last Order Date
+             * @description Último pedido en todo el historial
+             */
+            last_order_date: string | null;
+            /** Phone */
+            phone: string | null;
+            /** Email */
+            email: string | null;
+            /** Average Order Amount 12M */
+            average_order_amount_12m: number;
+            /**
+             * Purchase Rhythm Days
+             * @description Días promedio entre pedidos; null con menos de dos
+             */
+            purchase_rhythm_days: number | null;
+            /** Lifetime Amount */
+            lifetime_amount: number;
+            /** Lifetime Order Count */
+            lifetime_order_count: number;
+            /** First Order Date */
+            first_order_date: string | null;
+            /** Data As Of */
+            data_as_of: string | null;
+            /** Levels Configured */
+            levels_configured: boolean;
+            /**
+             * Data Origin
+             * @default real
+             * @constant
+             */
+            data_origin: "real";
+        };
         /** CustomerLevelIn */
         CustomerLevelIn: {
             /** Max Discount Pct */
@@ -783,6 +916,70 @@ export interface components {
              * @description Niveles que gerencia aún no configuró
              */
             missing_levels: string[];
+        };
+        /** CustomerListItemOut */
+        CustomerListItemOut: {
+            /** Ruc */
+            ruc: string;
+            /** Name */
+            name: string;
+            /**
+             * Customer Type
+             * @description company | person | other
+             */
+            customer_type: string | null;
+            /** Region */
+            region: string | null;
+            /** Salesperson Code */
+            salesperson_code: string | null;
+            /**
+             * Level
+             * @description A, B o C; null mientras gerencia no defina los umbrales
+             */
+            level: string | null;
+            /**
+             * Amount 12M
+             * @description Pedidos de 12 meses, sin IGV, solo veterinarios
+             */
+            amount_12m: number;
+            /** Order Count 12M */
+            order_count_12m: number;
+            /**
+             * Last Order Date
+             * @description Último pedido en todo el historial
+             */
+            last_order_date: string | null;
+            /**
+             * Share Pct
+             * @description % del monto de 12 meses de la cartera visible
+             */
+            share_pct: number;
+        };
+        /** CustomerPageOut */
+        CustomerPageOut: {
+            /** Items */
+            items: components["schemas"]["CustomerListItemOut"][];
+            /** Total */
+            total: number;
+            /** Page */
+            page: number;
+            /** Per Page */
+            per_page: number;
+            /** Total Amount 12M */
+            total_amount_12m: number;
+            /**
+             * Data As Of
+             * @description Fecha del último pedido cargado: la ventana de 12 meses termina aquí
+             */
+            data_as_of: string | null;
+            /** Levels Configured */
+            levels_configured: boolean;
+            /**
+             * Data Origin
+             * @default real
+             * @constant
+             */
+            data_origin: "real";
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -822,6 +1019,47 @@ export interface components {
             /** Phone */
             phone?: string | null;
         };
+        /** OrderOut */
+        OrderOut: {
+            /** Order No */
+            order_no: string;
+            /**
+             * Order Date
+             * Format: date
+             */
+            order_date: string;
+            /**
+             * Amount
+             * @description Sin IGV (subtotal − descuento). Un pedido no es una venta facturada
+             */
+            amount: number;
+            /** Total With Tax */
+            total_with_tax: number;
+            /**
+             * Status Code
+             * @description T en tránsito, A almacén, C cancelado, D devuelto/entregado (por confirmar)
+             */
+            status_code: string | null;
+            /** Salesperson Code */
+            salesperson_code: string;
+        };
+        /** OrderPageOut */
+        OrderPageOut: {
+            /** Items */
+            items: components["schemas"]["OrderOut"][];
+            /** Total */
+            total: number;
+            /** Page */
+            page: number;
+            /** Per Page */
+            per_page: number;
+            /**
+             * Data Origin
+             * @default real
+             * @constant
+             */
+            data_origin: "real";
+        };
         /** PricingIn */
         PricingIn: {
             /** Igv Rate Pct */
@@ -849,6 +1087,40 @@ export interface components {
              * @description Cuánto baja el margen mínimo en promociones
              */
             promo_margin_cut_pct: number;
+        };
+        /** ProductPurchaseOut */
+        ProductPurchaseOut: {
+            /** Product Code */
+            product_code: string;
+            /** Product Name */
+            product_name: string;
+            /** Category Code */
+            category_code: string | null;
+            /** Times Ordered */
+            times_ordered: number;
+            /** Total Quantity */
+            total_quantity: number;
+            /**
+             * Amount
+             * @description Sin IGV y sin líneas bonificadas
+             */
+            amount: number;
+            /**
+             * Last Order Date
+             * Format: date
+             */
+            last_order_date: string;
+        };
+        /** ProductPurchasesOut */
+        ProductPurchasesOut: {
+            /** Items */
+            items: components["schemas"]["ProductPurchaseOut"][];
+            /**
+             * Data Origin
+             * @default real
+             * @constant
+             */
+            data_origin: "real";
         };
         /** SessionCreateIn */
         SessionCreateIn: {
@@ -941,6 +1213,13 @@ export interface components {
             input?: unknown;
             /** Context */
             ctx?: Record<string, never>;
+        };
+        /** WhatsappLinkOut */
+        WhatsappLinkOut: {
+            /** Url */
+            url: string;
+            /** Message */
+            message: string;
         };
     };
     responses: never;
@@ -1137,6 +1416,273 @@ export interface operations {
             };
         };
     };
+    list_customers_api_v1_customers_get: {
+        parameters: {
+            query?: {
+                /** @description Nombre o inicio del RUC */
+                search?: string | null;
+                level?: ("A" | "B" | "C") | null;
+                /** @description Solo gerencia; al vendedor se le fuerza el suyo */
+                salesperson_code?: string | null;
+                page?: number;
+                per_page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomerPageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_customer_api_v1_customers__ruc__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ruc: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomerDetailOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_customer_orders_api_v1_customers__ruc__orders_get: {
+        parameters: {
+            query?: {
+                page?: number;
+                per_page?: number;
+            };
+            header?: never;
+            path: {
+                ruc: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderPageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_customer_products_api_v1_customers__ruc__products_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ruc: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductPurchasesOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_commercial_terms_api_v1_customers__ruc__commercial_terms_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ruc: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommercialTermsOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_contacts_api_v1_customers__ruc__contacts_get: {
+        parameters: {
+            query?: {
+                page?: number;
+                per_page?: number;
+            };
+            header?: never;
+            path: {
+                ruc: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContactPageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    register_contact_api_v1_customers__ruc__contacts_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ruc: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContactIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContactOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    build_whatsapp_link_api_v1_customers__ruc__whatsapp_link_get: {
+        parameters: {
+            query?: {
+                /** @description Si no llega, se usa el mensaje sugerido */
+                message?: string | null;
+            };
+            header?: never;
+            path: {
+                ruc: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WhatsappLinkOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     pending_get_alerts_api_v1_alerts_get: {
         parameters: {
             query?: never;
@@ -1198,166 +1744,6 @@ export interface operations {
         };
     };
     pending_get_alerts_alert_id_explanation_api_v1_alerts__alert_id__explanation_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    pending_get_customers_api_v1_customers_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    pending_get_customers_ruc_api_v1_customers__ruc__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    pending_get_customers_ruc_orders_api_v1_customers__ruc__orders_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    pending_get_customers_ruc_products_api_v1_customers__ruc__products_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    pending_get_customers_ruc_commercial_terms_api_v1_customers__ruc__commercial_terms_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    pending_get_customers_ruc_contacts_api_v1_customers__ruc__contacts_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    pending_post_customers_ruc_contacts_api_v1_customers__ruc__contacts_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    pending_get_customers_ruc_whatsapp_link_api_v1_customers__ruc__whatsapp_link_get: {
         parameters: {
             query?: never;
             header?: never;
