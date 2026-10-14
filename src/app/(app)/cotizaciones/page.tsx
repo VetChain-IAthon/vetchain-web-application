@@ -1,5 +1,5 @@
-import { ScreenStub } from "@/components/layout/screen-stub";
+import { QuotationsPage } from "@/features/cotizaciones/quotations-page";
 
 export default function Page() {
-  return <ScreenStub screenKey="cotizaciones" />;
+  return <QuotationsPage />;
 }

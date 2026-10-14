@@ -412,8 +412,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Buscar productos para cotizar (pendiente) */
-        get: operations["pending_get_products_api_v1_products_get"];
+        /** Search Products */
+        get: operations["search_products_api_v1_products_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -429,8 +429,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Un producto con su precio de referencia (pendiente) */
-        get: operations["pending_get_products_code_api_v1_products__code__get"];
+        /** Get Product */
+        get: operations["get_product_api_v1_products__code__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -448,8 +448,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Calcular totales, IGV y margen sin guardar (pendiente) */
-        post: operations["pending_post_quotation_previews_api_v1_quotation_previews_post"];
+        /** Preview Quotation */
+        post: operations["preview_quotation_api_v1_quotation_previews_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -463,11 +463,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Lista de cotizaciones con filtros (pendiente) */
-        get: operations["pending_get_quotations_api_v1_quotations_get"];
+        /** List Quotations */
+        get: operations["list_quotations_api_v1_quotations_get"];
         put?: never;
-        /** Emitir una cotización (valida descuento y margen) (pendiente) */
-        post: operations["pending_post_quotations_api_v1_quotations_post"];
+        /** Issue Quotation */
+        post: operations["issue_quotation_api_v1_quotations_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -481,8 +481,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Detalle de una cotización con sus líneas (pendiente) */
-        get: operations["pending_get_quotations_quotation_id_api_v1_quotations__quotation_id__get"];
+        /** Get Quotation */
+        get: operations["get_quotation_api_v1_quotations__quotation_id__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1088,6 +1088,30 @@ export interface components {
              */
             promo_margin_cut_pct: number;
         };
+        /** ProductOut */
+        ProductOut: {
+            /** Code */
+            code: string;
+            /** Name */
+            name: string;
+            /** Family */
+            family: string | null;
+            /** Reference Price */
+            reference_price: number | null;
+            /** Reference Price Origin */
+            reference_price_origin: "estimated" | null;
+        };
+        /** ProductPageOut */
+        ProductPageOut: {
+            /** Items */
+            items: components["schemas"]["ProductOut"][];
+            /** Total */
+            total: number;
+            /** Page */
+            page: number;
+            /** Per Page */
+            per_page: number;
+        };
         /** ProductPurchaseOut */
         ProductPurchaseOut: {
             /** Product Code */
@@ -1121,6 +1145,164 @@ export interface components {
              * @constant
              */
             data_origin: "real";
+        };
+        /** QuotationIssueIn */
+        QuotationIssueIn: {
+            /** Ruc */
+            ruc: string;
+            /** Lines */
+            lines: components["schemas"]["QuotationLineIn"][];
+            /** Discount Pct */
+            discount_pct: number | string;
+            /**
+             * Approval Confirmed
+             * @default false
+             */
+            approval_confirmed: boolean;
+            /** Approval Note */
+            approval_note?: string | null;
+        };
+        /** QuotationLineIn */
+        QuotationLineIn: {
+            /** Product Code */
+            product_code: string;
+            /** Quantity */
+            quantity: number | string;
+        };
+        /** QuotationLineOut */
+        QuotationLineOut: {
+            /** Product Code */
+            product_code: string;
+            /** Quantity */
+            quantity: number;
+            /** Unit Price */
+            unit_price: number;
+            /** Amount */
+            amount: number;
+            /**
+             * Data Origin
+             * @default estimated
+             * @constant
+             */
+            data_origin: "estimated";
+        };
+        /** QuotationOut */
+        QuotationOut: {
+            /** Id */
+            id: number;
+            /** Ruc */
+            ruc: string;
+            /** User Id */
+            user_id: number;
+            /** Status */
+            status: string;
+            /**
+             * Issued On
+             * Format: date
+             */
+            issued_on: string;
+            /**
+             * Valid Until
+             * Format: date
+             */
+            valid_until: string;
+            /** Order No */
+            order_no: string | null;
+            /** Lines */
+            lines: components["schemas"]["QuotationLineOut"][];
+            /** Discount Pct */
+            discount_pct: number;
+            /** Subtotal */
+            subtotal: number;
+            /** Discount Amount */
+            discount_amount: number;
+            /** Net */
+            net: number;
+            /** Igv */
+            igv: number;
+            /** Total With Tax */
+            total_with_tax: number;
+            /** Margin Pct */
+            margin_pct: number | null;
+            /** Warnings */
+            warnings: string[];
+            /** Approval Required */
+            approval_required: boolean;
+            /** Approval Reasons */
+            approval_reasons: string[];
+            /** Approval Confirmed */
+            approval_confirmed: boolean;
+            /** Approval Note */
+            approval_note: string | null;
+            /**
+             * Data Origin
+             * @default estimated
+             * @constant
+             */
+            data_origin: "estimated";
+        };
+        /** QuotationPageOut */
+        QuotationPageOut: {
+            /** Items */
+            items: components["schemas"]["QuotationOut"][];
+            /** Total */
+            total: number;
+            /** Page */
+            page: number;
+            /** Per Page */
+            per_page: number;
+        };
+        /** QuotationPreviewIn */
+        QuotationPreviewIn: {
+            /** Ruc */
+            ruc: string;
+            /** Lines */
+            lines: components["schemas"]["QuotationLineIn"][];
+            /** Discount Pct */
+            discount_pct: number | string;
+        };
+        /** QuotationPreviewOut */
+        QuotationPreviewOut: {
+            /** Ruc */
+            ruc: string;
+            /** Level */
+            level: string;
+            /** Credit Days */
+            credit_days: number;
+            /** Max Discount Pct */
+            max_discount_pct: number;
+            /** Lines */
+            lines: components["schemas"]["QuotationLineOut"][];
+            /** Discount Pct */
+            discount_pct: number;
+            /** Subtotal */
+            subtotal: number;
+            /** Discount Amount */
+            discount_amount: number;
+            /** Net */
+            net: number;
+            /** Igv Rate Pct */
+            igv_rate_pct: number;
+            /** Igv */
+            igv: number;
+            /** Total With Tax */
+            total_with_tax: number;
+            /** Margin Pct */
+            margin_pct: number | null;
+            /** Warnings */
+            warnings: string[];
+            /** Approval Required */
+            approval_required: boolean;
+            /** Approval Reasons */
+            approval_reasons: string[];
+            /** Quotation Validity Days */
+            quotation_validity_days: number;
+            /**
+             * Data Origin
+             * @default estimated
+             * @constant
+             */
+            data_origin: "estimated";
         };
         /** SessionCreateIn */
         SessionCreateIn: {
@@ -1964,122 +2146,200 @@ export interface operations {
             };
         };
     };
-    pending_get_products_api_v1_products_get: {
+    search_products_api_v1_products_get: {
         parameters: {
-            query?: never;
+            query?: {
+                search?: string | null;
+                family?: string | null;
+                page?: number;
+                per_page?: number;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["ProductPageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
     };
-    pending_get_products_code_api_v1_products__code__get: {
+    get_product_api_v1_products__code__get: {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                code: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["ProductOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
     };
-    pending_post_quotation_previews_api_v1_quotation_previews_post: {
+    preview_quotation_api_v1_quotation_previews_post: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["QuotationPreviewIn"];
+            };
+        };
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["QuotationPreviewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
     };
-    pending_get_quotations_api_v1_quotations_get: {
+    list_quotations_api_v1_quotations_get: {
         parameters: {
-            query?: never;
+            query?: {
+                status?: ("issued" | "converted" | "expired") | null;
+                ruc?: string | null;
+                from?: string | null;
+                to?: string | null;
+                page?: number;
+                per_page?: number;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["QuotationPageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
     };
-    pending_post_quotations_api_v1_quotations_post: {
+    issue_quotation_api_v1_quotations_post: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["QuotationIssueIn"];
+            };
+        };
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["QuotationOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
     };
-    pending_get_quotations_quotation_id_api_v1_quotations__quotation_id__get: {
+    get_quotation_api_v1_quotations__quotation_id__get: {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                quotation_id: number;
+            };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["QuotationOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
