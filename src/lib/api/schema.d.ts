@@ -186,6 +186,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/customers/{ruc}/brief": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Customer Brief
+         * @description Ficha para reunión (versión interna): pedidos, precios, ritmo y vendedor del período.
+         *     Proyección, ganancia, ofertas, guion y cobranza llegan como avisos en `warnings` hasta tener modelo, IA y datos.
+         */
+        get: operations["get_customer_brief_api_v1_customers__ruc__brief_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/customers/{ruc}/orders": {
         parameters: {
             query?: never;
@@ -344,23 +365,6 @@ export interface paths {
         };
         /** Texto de IA que explica la alerta (solo cifras agregadas) (pendiente) */
         get: operations["pending_get_alerts_alert_id_explanation_api_v1_alerts__alert_id__explanation_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/customers/{ruc}/brief": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Ficha del cliente para reunión (from, to, projection) (pendiente) */
-        get: operations["pending_get_customers_ruc_brief_api_v1_customers__ruc__brief_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -762,8 +766,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Los 7 archivos: contenido, registros, período y estado (pendiente) */
-        get: operations["pending_get_data_sources_api_v1_data_sources_get"];
+        /**
+         * List Data Sources
+         * @description Los 7 archivos: encabezados esperados, filas en la base, período y última carga confirmada.
+         */
+        get: operations["list_data_sources_api_v1_data_sources_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -779,11 +786,17 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Cargas anteriores (pendiente) */
-        get: operations["pending_get_data_imports_api_v1_data_imports_get"];
+        /**
+         * List Imports
+         * @description Cargas anteriores, de la más reciente a la más antigua.
+         */
+        get: operations["list_imports_api_v1_data_imports_get"];
         put?: never;
-        /** Subir un CSV (multipart, campo source); se valida pero no se aplica (pendiente) */
-        post: operations["pending_post_data_imports_api_v1_data_imports_post"];
+        /**
+         * Stage Import
+         * @description Sube un CSV: se revisan los encabezados y se valida cada fila. Queda en revisión; no se aplica todavía.
+         */
+        post: operations["stage_import_api_v1_data_imports_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -797,15 +810,21 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Revisión: filas leídas y errores por línea (pendiente) */
-        get: operations["pending_get_data_imports_import_id_api_v1_data_imports__import_id__get"];
+        /**
+         * Get Import
+         * @description Revisión de una carga: filas leídas, válidas y errores por línea.
+         */
+        get: operations["get_import_api_v1_data_imports__import_id__get"];
         put?: never;
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
-        /** Confirmar (actualiza e inserta) o cancelar (pendiente) */
-        patch: operations["pending_patch_data_imports_import_id_api_v1_data_imports__import_id__patch"];
+        /**
+         * Decide Import
+         * @description Confirmar escribe las filas válidas (actualiza e inserta, nunca borra). Cancelar las descarta.
+         */
+        patch: operations["decide_import_api_v1_data_imports__import_id__patch"];
         trace?: never;
     };
     "/health": {
@@ -858,6 +877,11 @@ export interface components {
              * @description Pedido promedio de 12 meses, sin IGV
              */
             money_at_stake: number;
+            /**
+             * Amount 12M
+             * @description Pedidos de 12 meses, sin IGV
+             */
+            amount_12m: number;
         };
         /** AtRiskCustomerPageOut */
         AtRiskCustomerPageOut: {
@@ -910,6 +934,78 @@ export interface components {
              * @constant
              */
             data_origin: "estimated";
+        };
+        /** Body_stage_import_api_v1_data_imports_post */
+        Body_stage_import_api_v1_data_imports_post: {
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "customers" | "salespeople" | "products" | "orders" | "order_lines" | "stock_balances" | "receipts";
+            /**
+             * File
+             * @description CSV con encabezados (ver /data-sources)
+             */
+            file: string;
+            /**
+             * Origin
+             * @default real
+             * @enum {string}
+             */
+            origin: "real" | "synthetic" | "simulated";
+        };
+        /** BriefMonthOut */
+        BriefMonthOut: {
+            /**
+             * Month
+             * @description AAAA-MM
+             */
+            month: string;
+            /** Amount */
+            amount: number;
+            /** Order Count */
+            order_count: number;
+        };
+        /** BriefProductOut */
+        BriefProductOut: {
+            /** Product Code */
+            product_code: string;
+            /** Product Name */
+            product_name: string;
+            /**
+             * Category Code
+             * @description Categoría de Defontana (POR CONFIRMAR)
+             */
+            category_code: string | null;
+            /** Order Count */
+            order_count: number;
+            /** Quantity */
+            quantity: number;
+            /**
+             * Amount
+             * @description Sin IGV, sin bonificadas
+             */
+            amount: number;
+            /**
+             * Average Price
+             * @description Precio pagado promedio por unidad, sin IGV
+             */
+            average_price: number | null;
+            /**
+             * Reference Price
+             * @description Último precio pagado por cualquier cliente (estimado)
+             */
+            reference_price: number | null;
+            /**
+             * Below Reference Pct
+             * @description % bajo la referencia; negativo si pagó más
+             */
+            below_reference_pct: number | null;
+            /**
+             * Last Order Date
+             * Format: date
+             */
+            last_order_date: string;
         };
         /** CategoryAmountOut */
         CategoryAmountOut: {
@@ -994,6 +1090,122 @@ export interface components {
              * @description Pedidos del período
              */
             order_count: number;
+            /**
+             * Data Origin
+             * @default real
+             * @constant
+             */
+            data_origin: "real";
+        };
+        /** CustomerBriefOut */
+        CustomerBriefOut: {
+            /** Ruc */
+            ruc: string;
+            /** Name */
+            name: string;
+            /**
+             * Level
+             * @description Por el monto de 12 meses; null mientras gerencia no defina los umbrales
+             */
+            level: string | null;
+            /** Credit Days */
+            credit_days: number | null;
+            /** Salesperson Code */
+            salesperson_code: string | null;
+            /** Salesperson Name */
+            salesperson_name: string | null;
+            /**
+             * Salesperson Share Pct
+             * @description % del monto del período atendido por su vendedor asignado
+             */
+            salesperson_share_pct: number | null;
+            /**
+             * Date From
+             * Format: date
+             */
+            date_from: string;
+            /**
+             * Date To
+             * Format: date
+             */
+            date_to: string;
+            /** Data As Of */
+            data_as_of: string | null;
+            /**
+             * Projection
+             * @enum {string}
+             */
+            projection: "month" | "semester" | "year";
+            /**
+             * Amount
+             * @description Pedidos del período, sin IGV, solo veterinarios
+             */
+            amount: number;
+            /** Order Count */
+            order_count: number;
+            /** Average Order Amount */
+            average_order_amount: number;
+            /**
+             * Share Pct
+             * @description % del monto de todos los clientes en el período
+             */
+            share_pct: number;
+            /** Rank */
+            rank: number | null;
+            /**
+             * Ranked Customers
+             * @description Clientes con pedidos en el período
+             */
+            ranked_customers: number;
+            /** Purchase Rhythm Days */
+            purchase_rhythm_days: number | null;
+            /** Last Order Date */
+            last_order_date: string | null;
+            /** Expected Next Order Date */
+            expected_next_order_date: string | null;
+            /**
+             * Days Since Last Order
+             * @description Hasta date_to
+             */
+            days_since_last_order: number | null;
+            /**
+             * Days Late
+             * @description Días por encima de su ritmo de compra; 0 si va al día
+             */
+            days_late: number | null;
+            /**
+             * Invoice Discount
+             * @description Descuento de línea en los pedidos del período, sin IGV
+             */
+            invoice_discount: number;
+            /**
+             * List Amount
+             * @description Monto antes del descuento de línea
+             */
+            list_amount: number;
+            /** Monthly */
+            monthly: components["schemas"]["BriefMonthOut"][];
+            /** Order Dates */
+            order_dates: string[];
+            /** Products */
+            products: components["schemas"]["BriefProductOut"][];
+            /**
+             * Below Reference Pct
+             * @description Promedio ponderado por monto, solo productos con referencia
+             */
+            below_reference_pct: number | null;
+            /**
+             * Projected Amount
+             * @description Siempre null hasta que exista el modelo de predicción
+             */
+            projected_amount: number | null;
+            /**
+             * Estimated Profit
+             * @description Siempre null hasta que haya costos validados
+             */
+            estimated_profit: number | null;
+            /** Warnings */
+            warnings: string[];
             /**
              * Data Origin
              * @default real
@@ -1209,6 +1421,95 @@ export interface components {
              */
             data_origin: "real";
         };
+        /** DataImportDecisionIn */
+        DataImportDecisionIn: {
+            /**
+             * Action
+             * @enum {string}
+             */
+            action: "confirm" | "cancel";
+        };
+        /** DataImportOut */
+        DataImportOut: {
+            /** Id */
+            id: number;
+            /** Source */
+            source: string;
+            /** File Name */
+            file_name: string;
+            /** Origin */
+            origin: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "staged" | "confirmed" | "cancelled";
+            /** Rows Read */
+            rows_read: number;
+            /** Rows With Error */
+            rows_with_error: number;
+            /** Valid Rows */
+            valid_rows: number;
+            /** Rows Loaded */
+            rows_loaded: number | null;
+            /**
+             * Errors
+             * @description Hasta 200 errores por línea
+             */
+            errors: components["schemas"]["RowErrorOut"][];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Decided At */
+            decided_at: string | null;
+        };
+        /** DataImportPageOut */
+        DataImportPageOut: {
+            /** Items */
+            items: components["schemas"]["DataImportOut"][];
+            /** Total */
+            total: number;
+            /** Page */
+            page: number;
+            /** Per Page */
+            per_page: number;
+        };
+        /** DataSourceOut */
+        DataSourceOut: {
+            /**
+             * Source
+             * @description customers, salespeople, products, orders, order_lines, stock_balances o receipts
+             */
+            source: string;
+            /** Number */
+            number: number;
+            /** Description */
+            description: string;
+            /**
+             * File Name
+             * @description Nombre sugerido del archivo, como los CSV originales
+             */
+            file_name: string;
+            /**
+             * Headers
+             * @description Encabezados que debe traer la primera fila, en este orden
+             */
+            headers: string[];
+            /** Rows In Db */
+            rows_in_db: number;
+            /** First Date */
+            first_date: string | null;
+            /** Last Date */
+            last_date: string | null;
+            last_import: components["schemas"]["LastImportOut"] | null;
+        };
+        /** DataSourcesOut */
+        DataSourcesOut: {
+            /** Items */
+            items: components["schemas"]["DataSourceOut"][];
+        };
         /** DormantCustomerOut */
         DormantCustomerOut: {
             /** Ruc */
@@ -1351,6 +1652,17 @@ export interface components {
             /** Warnings */
             warnings: string[];
         };
+        /** LastImportOut */
+        LastImportOut: {
+            /** Id */
+            id: number;
+            /** Decided At */
+            decided_at: string | null;
+            /** Origin */
+            origin: string;
+            /** Rows Loaded */
+            rows_loaded: number | null;
+        };
         /** LevelThresholdsIn */
         LevelThresholdsIn: {
             /**
@@ -1445,6 +1757,17 @@ export interface components {
              */
             data_origin: "real";
         };
+        /** PayerOut */
+        PayerOut: {
+            /** Ruc */
+            ruc: string;
+            /** Name */
+            name: string;
+            /** Amount */
+            amount: number;
+            /** Count */
+            count: number;
+        };
         /** PeriodOut */
         PeriodOut: {
             /** From Date */
@@ -1455,6 +1778,29 @@ export interface components {
             data_as_of: string | null;
             /** Warning */
             warning: string | null;
+        };
+        /** PricePointOut */
+        PricePointOut: {
+            /** Code */
+            code: string;
+            /** Name */
+            name: string;
+            /** Quantity */
+            quantity: number;
+            /**
+             * Amount
+             * @description Sin IGV, sin bonificadas
+             */
+            amount: number;
+            /** Average Price */
+            average_price: number | null;
+            /**
+             * Reference Price
+             * @description Último precio pagado por cualquier cliente hasta el fin del período (estimado)
+             */
+            reference_price: number | null;
+            /** Below Reference Pct */
+            below_reference_pct: number | null;
         };
         /** PricingIn */
         PricingIn: {
@@ -1715,13 +2061,45 @@ export interface components {
              */
             data_origin: "estimated";
         };
+        /** ReceiptMonthOut */
+        ReceiptMonthOut: {
+            /**
+             * Month
+             * Format: date
+             */
+            month: string;
+            /** Amount */
+            amount: number;
+            /** Count */
+            count: number;
+        };
         /** ReceivablesReportOut */
         ReceivablesReportOut: {
             period: components["schemas"]["PeriodOut"];
-            /** Outstanding Amount */
+            /**
+             * Outstanding Amount
+             * @description Siempre null: los cobros no se enlazan con pedidos
+             */
             outstanding_amount?: number | null;
-            /** Overdue Amount */
+            /**
+             * Overdue Amount
+             * @description Siempre null: falta el vencimiento de cada factura
+             */
             overdue_amount?: number | null;
+            /**
+             * Collected Amount
+             * @description Cobrado en el período, tal como viene en cobros (real)
+             */
+            collected_amount?: number | null;
+            /** Receipt Count */
+            receipt_count?: number | null;
+            /** Monthly Collected */
+            monthly_collected?: components["schemas"]["ReceiptMonthOut"][];
+            /**
+             * Top Payers
+             * @description Los 10 clientes que más pagaron en el período
+             */
+            top_payers?: components["schemas"]["PayerOut"][];
             /**
              * Warnings
              * @default [
@@ -1729,6 +2107,12 @@ export interface components {
              *     ]
              */
             warnings: string[];
+            /**
+             * Data Origin
+             * @default real
+             * @constant
+             */
+            data_origin: "real";
         };
         /** ReportCatalogOut */
         ReportCatalogOut: {
@@ -1760,6 +2144,16 @@ export interface components {
             /** Warning */
             warning: string | null;
         };
+        /** RowErrorOut */
+        RowErrorOut: {
+            /**
+             * Line
+             * @description Línea del archivo (la 2 es la primera fila de datos, después de los encabezados)
+             */
+            line: number;
+            /** Message */
+            message: string;
+        };
         /** SalesReportOut */
         SalesReportOut: {
             period: components["schemas"]["PeriodOut"];
@@ -1775,6 +2169,26 @@ export interface components {
             order_count: number | null;
             /** Margin Pct */
             margin_pct?: number | null;
+            /**
+             * Price Points
+             * @description Los 5 productos de mayor monto: precio pagado frente a la referencia
+             */
+            price_points?: components["schemas"]["PricePointOut"][];
+            /**
+             * Below Reference Pct
+             * @description Promedio ponderado por monto de price_points (estimado)
+             */
+            below_reference_pct?: number | null;
+            /**
+             * Invoice Discount
+             * @description Descuento de línea en factura del período, sin IGV
+             */
+            invoice_discount?: number | null;
+            /**
+             * List Amount
+             * @description Monto antes del descuento de línea
+             */
+            list_amount?: number | null;
             /** Warnings */
             warnings: string[];
             /**
@@ -1865,6 +2279,24 @@ export interface components {
              * Format: date
              */
             last_period_end: string;
+            /**
+             * Units 12M
+             * @description Unidades pedidas en los 12 meses hasta la fecha del stock, sin bonificadas
+             */
+            units_12m: number;
+            /** Last Sale Date */
+            last_sale_date: string | null;
+            /**
+             * Coverage Days
+             * @description Días que alcanza el stock al ritmo de 12 meses (estimado)
+             */
+            coverage_days: number | null;
+            /**
+             * Status
+             * @description Provisional: sobrestock > 120 días de cobertura; lento = sin pedidos en 90 días
+             * @enum {string}
+             */
+            status: "out_with_demand" | "slow" | "overstock" | "normal" | "out";
             /**
              * Data Origin
              * @default real
@@ -2341,6 +2773,43 @@ export interface operations {
             };
         };
     };
+    get_customer_brief_api_v1_customers__ruc__brief_get: {
+        parameters: {
+            query?: {
+                /** @description Por defecto, 12 meses antes de `to` */
+                from?: string | null;
+                /** @description Por defecto, la fecha de corte de los datos */
+                to?: string | null;
+                projection?: "month" | "semester" | "year";
+            };
+            header?: never;
+            path: {
+                ruc: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomerBriefOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_customer_orders_api_v1_customers__ruc__orders_get: {
         parameters: {
             query?: {
@@ -2601,26 +3070,6 @@ export interface operations {
         };
     };
     pending_get_alerts_alert_id_explanation_api_v1_alerts__alert_id__explanation_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    pending_get_customers_ruc_brief_api_v1_customers__ruc__brief_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -3128,6 +3577,8 @@ export interface operations {
             query?: {
                 from?: string | null;
                 to?: string | null;
+                /** @description Solo los pedidos que tomó ese vendedor */
+                salesperson_code?: string | null;
             };
             header?: never;
             path?: never;
@@ -3355,7 +3806,7 @@ export interface operations {
             };
         };
     };
-    pending_get_data_sources_api_v1_data_sources_get: {
+    list_data_sources_api_v1_data_sources_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -3364,93 +3815,144 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["DataSourcesOut"];
                 };
             };
         };
     };
-    pending_get_data_imports_api_v1_data_imports_get: {
+    list_imports_api_v1_data_imports_get: {
         parameters: {
-            query?: never;
+            query?: {
+                page?: number;
+                per_page?: number;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["DataImportPageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
     };
-    pending_post_data_imports_api_v1_data_imports_post: {
+    stage_import_api_v1_data_imports_post: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_stage_import_api_v1_data_imports_post"];
+            };
+        };
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["DataImportOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
     };
-    pending_get_data_imports_import_id_api_v1_data_imports__import_id__get: {
+    get_import_api_v1_data_imports__import_id__get: {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                import_id: number;
+            };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["DataImportOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
     };
-    pending_patch_data_imports_import_id_api_v1_data_imports__import_id__patch: {
+    decide_import_api_v1_data_imports__import_id__patch: {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                import_id: number;
+            };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DataImportDecisionIn"];
+            };
+        };
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["DataImportOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
