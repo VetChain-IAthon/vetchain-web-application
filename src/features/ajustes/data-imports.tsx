@@ -31,6 +31,45 @@ const STATUS_LABEL: Record<DataImport["status"], { text: string; cls: string }> 
   cancelled: { text: "Cancelado", cls: "bg-neutral-bg text-neutral-fg" },
 };
 
+type Preview = NonNullable<DataImport["preview"]>;
+type RowStatus = Preview["rows"][number]["status"];
+const ROW_STATUS: Record<RowStatus, { text: string; cls: string }> = {
+  new: { text: "Nuevo", cls: "bg-ok-bg text-ok-fg" },
+  update: { text: "Actualiza", cls: "bg-info-bg text-info-fg" },
+  error: { text: "Error", cls: "bg-danger-bg text-danger-fg" },
+};
+
+/** Qué pasará con cada fila al confirmar: se agrega, actualiza un registro existente o se descarta por error. */
+function PreviewTable({ preview }: { preview: Preview }) {
+  const [show, setShow] = useState<RowStatus | "all">("all");
+  const count = (s: RowStatus) => preview.rows.filter((r) => r.status === s).length;
+  const rows = preview.rows.filter((r) => show === "all" || r.status === show);
+  const tabs: [RowStatus | "all", string, number][] = [["all", "Todas", preview.rows.length], ["new", "Nuevas", count("new")],
+    ["update", "Actualizan", count("update")], ["error", "Con error", count("error")]];
+  return <div className="flex flex-col gap-2">
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <p className="text-sm font-semibold">Qué se va a cargar</p>
+      <div role="tablist" aria-label="Filtrar filas" className="inline-flex rounded border border-line-strong bg-surface p-0.5">
+        {tabs.map(([key, label, n]) => <button key={key} type="button" role="tab" aria-selected={show === key} onClick={() => setShow(key)} disabled={n === 0 && key !== "all"}
+          className={cn("rounded-sm px-3 py-1 text-[13px] font-semibold disabled:text-ink-muted/50", show === key ? "bg-brand-soft text-brand" : "text-ink-2 hover:bg-canvas")}>
+          {label} <span className="tabular-nums">{formatInt(n)}</span></button>)}
+      </div>
+    </div>
+    <div className="max-h-96 overflow-auto rounded border border-line">
+      <Table>
+        <THead><TR className="sticky top-0 bg-surface"><TH numeric>Línea</TH><TH>Estado</TH>{preview.columns.map((c) => <TH key={c}>{c}</TH>)}</TR></THead>
+        <TBody>{rows.map((r) => <TR key={r.line} className={cn(r.status === "error" && "bg-danger-bg/40")}>
+          <TD numeric className="text-ink-muted">{formatInt(r.line)}</TD>
+          <TD><span className={cn("whitespace-nowrap rounded-xs px-2 py-0.5 text-xs font-semibold", ROW_STATUS[r.status].cls)}>{ROW_STATUS[r.status].text}</span></TD>
+          {r.values.map((v, i) => <TD key={i} className={cn("whitespace-nowrap", i < 2 && "font-semibold")}>{v || <span className="text-ink-muted">—</span>}</TD>)}
+        </TR>).flatMap((tr, i) => rows[i].message ? [tr, <TR key={`${rows[i].line}-msg`} className="bg-danger-bg/40">
+          <TD /><TD colSpan={preview.columns.length + 1} className="pt-0 text-[13px] text-danger-fg">{rows[i].message}</TD></TR>] : [tr])}</TBody>
+      </Table>
+    </div>
+    {preview.rows.length >= 500 && <p className="text-[13px] text-ink-muted">Se muestran las primeras 500 filas del archivo.</p>}
+  </div>;
+}
+
 function formatSize(bytes: number) {
   return bytes < 1024 * 1024 ? `${formatInt(Math.max(1, Math.round(bytes / 1024)))} KB` : `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
@@ -73,8 +112,12 @@ export function DataImports() {
   const uploader = useRef<HTMLDivElement>(null);
 
   const items = sources.data?.items ?? [];
+  const byNumber = [...items].sort((a, b) => a.number - b.number);
   const total = items.reduce((s, i) => s + i.rows_in_db, 0);
   const source = items.find((i) => i.source === selected);
+  // Archivo con el nombre de otro de los 7 (mederi-1-clientes.csv elegido como Vendedores): se avisa antes de revisar.
+  const detected = file ? items.find((i) => file.name.toLowerCase().endsWith(i.file_name)) : undefined;
+  const mismatch = detected && source && detected.source !== source.source ? detected : undefined;
 
   const pick = (key: string) => { setSelected(key); setReview(null); setDone(null); setError(null); };
   const pickAndScroll = (key: string) => { pick(key); uploader.current?.scrollIntoView({ behavior: "smooth", block: "start" }); };
@@ -149,9 +192,11 @@ export function DataImports() {
         <div><h2 className="text-lg font-semibold">Cargar archivo CSV</h2>
           <p className="text-sm text-ink-muted">Tres pasos. Nada cambia hasta que confirmes.</p></div>
         <Step n={1} title="¿Qué archivo vas a cargar?" done={!!source}>
-          <p className="-mt-2 mb-3 text-[13px] text-ink-muted">En el orden en que conviene cargarlos: un pedido necesita que antes existan su cliente y su vendedor.</p>
+          <p className="-mt-2 mb-3 text-[13px] text-ink-muted">
+            Orden de carga: 7 Vendedores → 1 Clientes → 4 Productos → 2 Pedidos → 3 Detalle → 5 Kardex → 6 Cobros.
+            Un pedido necesita que antes existan su cliente y su vendedor.</p>
           <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
-            {items.map((s) => <button key={s.source} type="button" onClick={() => pick(s.source)} aria-pressed={s.source === selected}
+            {byNumber.map((s) => <button key={s.source} type="button" onClick={() => pick(s.source)} aria-pressed={s.source === selected}
               className={cn("flex flex-col items-start gap-0.5 rounded border px-4 py-3 text-left transition-colors",
                 s.source === selected ? "border-brand bg-brand-soft" : "border-line bg-surface hover:border-line-strong hover:bg-canvas")}>
               <span className={cn("text-sm font-semibold", s.source === selected && "text-brand")}>{s.number}. {s.description}</span>
@@ -178,6 +223,10 @@ export function DataImports() {
               <div className="min-w-0 flex-1"><p className="truncate font-semibold">{file.name}</p><p className="text-[13px] text-ink-muted">{formatSize(file.size)}{source && ` · se cargará como ${source.description.toLowerCase()}`}</p></div>
               <Button variant="ghost" size="sm" onClick={() => { reset(); setReview(null); }} disabled={busy}><X size={14} aria-hidden />Quitar</Button>
             </div>}
+            {mismatch && source && <div role="alert" className="flex flex-wrap items-center justify-between gap-3 rounded border border-warn-fg/20 bg-warn-bg px-4 py-3 text-sm text-warn-fg">
+              <span><strong>{file?.name}</strong> parece ser de <strong>{mismatch.description.toLowerCase()}</strong>, pero elegiste {source.description.toLowerCase()}.</span>
+              <Button size="sm" onClick={() => pick(mismatch.source)}>Cargar como {mismatch.number}. {mismatch.description}</Button>
+            </div>}
 
             {source && <div className="rounded bg-canvas p-4">
               <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
@@ -188,7 +237,8 @@ export function DataImports() {
                 className={cn("rounded-xs px-2 py-0.5 font-mono text-xs", /^c\d+$/.test(h) ? "bg-surface text-ink-muted" : "border border-line bg-surface text-ink-2")}
                 title={/^c\d+$/.test(h) ? "Columna de Defontana que no se usa: puede ir vacía" : undefined}>
                 <span className="mr-1 text-ink-muted">{i + 1}</span>{h}</li>)}</ol>
-              <p className="mt-2 text-xs text-ink-muted">Las columnas en gris (cN) no se usan y pueden ir vacías.</p>
+              <p className="mt-2 text-xs text-ink-muted">Las columnas en gris (cN) no se usan y pueden ir vacías. Si abriste el CSV en Excel y se perdieron
+                los ceros a la izquierda (008 → 8), VetChain los repone en los códigos al revisar.</p>
             </div>}
           </div>
         </Step>
@@ -216,21 +266,22 @@ export function DataImports() {
             <div><p className="font-semibold">{review.file_name}</p><p className="text-sm text-ink-muted">Revisión antes de cargar · {source?.description}</p></div>
             {review.origin === "real" ? <OriginBadge origin="real" /> : <OriginBadge origin={review.origin as "synthetic" | "simulated"} />}
           </div>
-          <dl className="grid grid-cols-3 gap-4 text-center">
+          <dl className="grid grid-cols-2 gap-3 text-center md:grid-cols-4">
             <div className="rounded bg-canvas p-3"><dt className="text-xs text-ink-muted">Filas leídas</dt><dd className="text-2xl font-semibold tabular-nums">{formatInt(review.rows_read)}</dd></div>
-            <div className="rounded bg-ok-bg p-3"><dt className="text-xs text-ok-fg">Válidas</dt><dd className="text-2xl font-semibold tabular-nums text-ok-fg">{formatInt(review.valid_rows)}</dd></div>
+            <div className="rounded bg-ok-bg p-3"><dt className="text-xs text-ok-fg">Nuevas</dt><dd className="text-2xl font-semibold tabular-nums text-ok-fg">{formatInt(review.preview?.new_rows ?? review.valid_rows)}</dd></div>
+            <div className="rounded bg-info-bg p-3"><dt className="text-xs text-info-fg">Actualizan</dt><dd className="text-2xl font-semibold tabular-nums text-info-fg">{formatInt(review.preview?.updated_rows ?? 0)}</dd></div>
             <div className={cn("rounded p-3", review.rows_with_error ? "bg-danger-bg" : "bg-canvas")}><dt className={cn("text-xs", review.rows_with_error ? "text-danger-fg" : "text-ink-muted")}>Con error</dt>
               <dd className={cn("text-2xl font-semibold tabular-nums", review.rows_with_error ? "text-danger-fg" : "")}>{formatInt(review.rows_with_error)}</dd></div>
           </dl>
-          {review.errors.length > 0 && <div className="max-h-64 overflow-y-auto rounded border border-line">
+          {review.preview ? <PreviewTable preview={review.preview} /> : review.errors.length > 0 && <div className="max-h-64 overflow-y-auto rounded border border-line">
             <Table><THead><TR><TH numeric>Línea</TH><TH>Problema</TH></TR></THead>
               <TBody>{review.errors.map((e) => <TR key={`${e.line}-${e.message}`}><TD numeric>{formatInt(e.line)}</TD><TD>{e.message}</TD></TR>)}</TBody></Table>
           </div>}
           {review.rows_with_error > review.errors.length && <p className="text-[13px] text-ink-muted">Se muestran {formatInt(review.errors.length)} de {formatInt(review.rows_with_error)} errores.</p>}
-          <p className="text-[13px] text-ink-muted">Las filas con error no se cargan. Al confirmar, las {formatInt(review.valid_rows)} filas válidas actualizan los registros que ya existen y agregan los nuevos.</p>
+          <p className="text-[13px] text-ink-muted">Las filas con error no se cargan. Al confirmar se agregan las nuevas y se actualizan las que ya existen (se reemplazan sus datos por los del archivo). Nada se borra.</p>
           <div className="flex flex-wrap justify-end gap-2">
             <Button variant="outline" disabled={busy} onClick={() => decide("cancel")}>Cancelar carga</Button>
-            <Button disabled={busy || review.valid_rows === 0} onClick={() => decide("confirm")}>{busy ? "Cargando…" : `Confirmar y cargar ${formatInt(review.valid_rows)} filas`}</Button>
+            <Button disabled={busy || review.valid_rows === 0} onClick={() => decide("confirm")}>{busy ? "Cargando…" : `Confirmar y cargar ${formatInt(review.valid_rows)} ${review.valid_rows === 1 ? "fila" : "filas"}`}</Button>
           </div>
         </div>}
       </Card>
