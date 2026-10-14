@@ -11,6 +11,7 @@ Fuente: frecuencia de uso en `design/prototipo/*.dc.html`. Implementados en `tai
 | `brand-strong` | #A8161F | Texto de error y de chips de alerta |
 | `ink` / `ink-2` / `ink-muted` | #161616 / #3A3A3A / #5F6368 | Texto principal, secundario y apagado |
 | `canvas` / `surface` | #F5F5F5 / #FFFFFF | Fondo de página / tarjetas y menú |
+| `night` / `night-muted` / `night-faint` | #111111 / #B5B5B5 / #8A8A8A | Panel oscuro del login: fondo, texto secundario y nota |
 | `line` / `line-strong` | #E3E3E3 / #CFCFCF | Bordes y divisores / bordes de inputs |
 | `ok` | #E5F3EA / #1E6B3A | Éxito, «Contactado», datos reales |
 | `warn` | #FDF1DC / #8A5300 | Estimado, atención |

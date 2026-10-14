@@ -152,8 +152,8 @@
       "is_interactive": true,
       "title": "12. Hoy (vendedor)",
       "w": 1280,
-      "x": -337,
-      "y": 5800
+      "x": 8083,
+      "y": 5349
     },
     "VendedorClientes.dc.html": {
       "expand": "fill",
@@ -161,8 +161,8 @@
       "is_interactive": true,
       "title": "13. Vendedor · Mis clientes",
       "w": 1280,
-      "x": -337,
-      "y": 7029
+      "x": 8083,
+      "y": 6578
     },
     "VendedorCotizaciones.dc.html": {
       "expand": "fill",
@@ -170,8 +170,8 @@
       "is_interactive": true,
       "title": "14. Vendedor · Cotizaciones",
       "w": 1280,
-      "x": 1178,
-      "y": 5710
+      "x": 9598,
+      "y": 5259
     },
     "VendedorPerfil.dc.html": {
       "expand": "fill",
@@ -179,8 +179,8 @@
       "is_interactive": true,
       "title": "15. Vendedor · Mi perfil",
       "w": 1280,
-      "x": 2720,
-      "y": 5800
+      "x": 11140,
+      "y": 5349
     },
     "Vendedores-45z4.dc.html": {
       "expand": "fill",
@@ -210,12 +210,6 @@
     "view": "canvas"
   },
   "notes": {
-    "note-822k4r": {
-      "text": "Pendiente:\n\nValidar la rentabilidad por clientes",
-      "w": 240,
-      "x": -288,
-      "y": 1464
-    },
     "note-c98s8n": {
       "kind": "title1",
       "maxW": 4000,
@@ -229,8 +223,8 @@
       "maxW": 4000,
       "text": "Prototipo VetChain · Mederi | Vista de los vendedores",
       "w": 240,
-      "x": 997,
-      "y": 5338
+      "x": 9417,
+      "y": 4887
     },
     "titulo": {
       "kind": "title1",

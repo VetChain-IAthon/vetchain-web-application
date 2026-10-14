@@ -1,5 +1,5 @@
-import { ScreenStub } from "@/components/layout/screen-stub";
+import { SalespeopleReportPage } from "@/features/reportes/report-pages";
 
 export default function Page() {
-  return <ScreenStub screenKey="vendedores" />;
+  return <SalespeopleReportPage />;
 }

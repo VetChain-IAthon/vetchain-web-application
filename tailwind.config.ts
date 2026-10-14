@@ -9,6 +9,7 @@ const config: Config = {
         brand: { DEFAULT: "#D01F29", hover: "#8E1119", soft: "#FBE8E9", softBorder: "#F0C9CC", strong: "#A8161F" },
         ink: { DEFAULT: "#161616", 2: "#3A3A3A", muted: "#5F6368" },
         canvas: "#F5F5F5",
+        night: { DEFAULT: "#111111", muted: "#B5B5B5", faint: "#8A8A8A" },
         surface: "#FFFFFF",
         line: { DEFAULT: "#E3E3E3", strong: "#CFCFCF" },
         ok: { bg: "#E5F3EA", fg: "#1E6B3A" },
