@@ -1,0 +1,270 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Alertas.dc.html": {
+      "expand": "fill",
+      "h": 920,
+      "is_interactive": true,
+      "title": "3. Alertas del día",
+      "w": 1280,
+      "x": 2720,
+      "y": 0
+    },
+    "Clientes-9xcu.dc.html": {
+      "expand": "fill",
+      "h": 2400,
+      "is_interactive": true,
+      "title": "4 · Clientes: retención y reactivación",
+      "w": 1280,
+      "x": -4840,
+      "y": 3331
+    },
+    "Clientes.dc.html": {
+      "expand": "fill",
+      "h": 1500,
+      "is_interactive": true,
+      "title": "6. Clientes",
+      "w": 1280,
+      "x": 2720,
+      "y": 1320
+    },
+    "Cobranza-6f07.dc.html": {
+      "expand": "fill",
+      "h": 2100,
+      "is_interactive": true,
+      "title": "6 · Cartera y cobranza",
+      "w": 1280,
+      "x": -6200,
+      "y": 5951
+    },
+    "Configuracion.dc.html": {
+      "expand": "fill",
+      "h": 1306,
+      "is_interactive": true,
+      "title": "9. Ajustes",
+      "w": 1280,
+      "x": -48,
+      "y": 3039
+    },
+    "Cotizaciones.dc.html": {
+      "expand": "fill",
+      "h": 1281,
+      "is_interactive": true,
+      "title": "8. Cotizaciones",
+      "w": 1280,
+      "x": 1440,
+      "y": 3064
+    },
+    "Ficha-icvr.dc.html": {
+      "expand": "fill",
+      "h": 3400,
+      "is_interactive": true,
+      "title": "1 · Ficha de cliente para reunión",
+      "w": 1280,
+      "x": -4840,
+      "y": -189
+    },
+    "Integracion.dc.html": {
+      "expand": "fill",
+      "h": 1113,
+      "is_interactive": true,
+      "title": "5. Ajustes · Carga de datos",
+      "w": 1298,
+      "x": 1360,
+      "y": 1320
+    },
+    "KPIs-svux.dc.html": {
+      "expand": "fill",
+      "h": 2000,
+      "is_interactive": true,
+      "title": "2 · Indicadores clave (KPIs)",
+      "w": 1280,
+      "x": -3480,
+      "y": -189
+    },
+    "Login.dc.html": {
+      "expand": "fill",
+      "h": 759,
+      "is_interactive": true,
+      "title": "0. Iniciar sesión",
+      "w": 1440,
+      "x": -1680,
+      "y": 349
+    },
+    "Main-nsyj.dc.html": {
+      "expand": "fill",
+      "h": 1900,
+      "is_interactive": true,
+      "title": "Reportes · inicio",
+      "w": 1280,
+      "x": -6200,
+      "y": -189
+    },
+    "Main.dc.html": {
+      "expand": "fill",
+      "h": 1040,
+      "is_interactive": true,
+      "title": "1. Panel gerencial",
+      "w": 1440,
+      "x": -160,
+      "y": 0
+    },
+    "Perfil.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "title": "10. Mi perfil",
+      "w": 1280,
+      "x": 2928,
+      "y": 3039
+    },
+    "Planificacion.dc.html": {
+      "expand": "fill",
+      "h": 1114,
+      "is_interactive": true,
+      "title": "2. Planificación de importación",
+      "w": 1280,
+      "x": 1360,
+      "y": -74
+    },
+    "Rutas.dc.html": {
+      "expand": "fill",
+      "h": 1500,
+      "is_interactive": true,
+      "title": "7. Rutas (fase 2, simulada)",
+      "w": 1280,
+      "x": 6803,
+      "y": 1434
+    },
+    "Stock-uwfm.dc.html": {
+      "expand": "fill",
+      "h": 2300,
+      "is_interactive": true,
+      "title": "5 · Stock, vencimientos y merma",
+      "w": 1280,
+      "x": -3480,
+      "y": 3331
+    },
+    "Vendedor.dc.html": {
+      "expand": "fill",
+      "h": 1100,
+      "is_interactive": true,
+      "title": "12. Hoy (vendedor)",
+      "w": 1280,
+      "x": -337,
+      "y": 5800
+    },
+    "VendedorClientes.dc.html": {
+      "expand": "fill",
+      "h": 1145,
+      "is_interactive": true,
+      "title": "13. Vendedor · Mis clientes",
+      "w": 1280,
+      "x": -337,
+      "y": 7029
+    },
+    "VendedorCotizaciones.dc.html": {
+      "expand": "fill",
+      "h": 1281,
+      "is_interactive": true,
+      "title": "14. Vendedor · Cotizaciones",
+      "w": 1280,
+      "x": 1178,
+      "y": 5710
+    },
+    "VendedorPerfil.dc.html": {
+      "expand": "fill",
+      "h": 900,
+      "is_interactive": true,
+      "title": "15. Vendedor · Mi perfil",
+      "w": 1280,
+      "x": 2720,
+      "y": 5800
+    },
+    "Vendedores-45z4.dc.html": {
+      "expand": "fill",
+      "h": 2100,
+      "is_interactive": true,
+      "title": "7 · Vendedores y seguimiento",
+      "w": 1280,
+      "x": -4840,
+      "y": 5951
+    },
+    "Ventas-ubd8.dc.html": {
+      "expand": "fill",
+      "h": 2500,
+      "is_interactive": true,
+      "title": "3 · Ventas y rentabilidad",
+      "w": 1280,
+      "x": -6200,
+      "y": 3331
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-10T20:25:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "note-822k4r": {
+      "text": "Pendiente:\n\nValidar la rentabilidad por clientes",
+      "w": 240,
+      "x": -288,
+      "y": 1464
+    },
+    "note-c98s8n": {
+      "kind": "title1",
+      "maxW": 4000,
+      "text": "Prototipo VetChain · Mederi | Fase 2",
+      "w": 240,
+      "x": 7520,
+      "y": 1104
+    },
+    "note-vhqem6": {
+      "kind": "title1",
+      "maxW": 4000,
+      "text": "Prototipo VetChain · Mederi | Vista de los vendedores",
+      "w": 240,
+      "x": 997,
+      "y": 5338
+    },
+    "titulo": {
+      "kind": "title1",
+      "maxW": 4000,
+      "text": "Prototipo VetChain · Mederi | Vista de dueño de negocio",
+      "w": 240,
+      "x": 1048,
+      "y": -699
+    }
+  },
+  "order": [
+    "Login.dc.html",
+    "Main.dc.html",
+    "Vendedor.dc.html",
+    "Planificacion.dc.html",
+    "Alertas.dc.html",
+    "Rutas.dc.html",
+    "Cotizaciones.dc.html",
+    "Clientes.dc.html",
+    "Integracion.dc.html",
+    "Configuracion.dc.html",
+    "Perfil.dc.html",
+    "VendedorClientes.dc.html",
+    "VendedorCotizaciones.dc.html",
+    "VendedorPerfil.dc.html",
+    "Main-nsyj.dc.html",
+    "Ficha-icvr.dc.html",
+    "KPIs-svux.dc.html",
+    "Ventas-ubd8.dc.html",
+    "Clientes-9xcu.dc.html",
+    "Stock-uwfm.dc.html",
+    "Cobranza-6f07.dc.html",
+    "Vendedores-45z4.dc.html"
+  ],
+  "pages": [],
+  "title": "Prototipo VetChain"
+}

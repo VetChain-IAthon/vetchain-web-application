@@ -1,0 +1,13 @@
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body { @apply bg-canvas font-sans text-ink antialiased; font-variant-numeric: tabular-nums; min-width: 1200px; }
+  a { @apply text-brand hover:text-brand-hover; }
+  a:focus-visible, button:focus-visible { outline: 2px solid #D01F29; outline-offset: 2px; }
+}

@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Reportes</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F3F3F2}
+button,input,select{font:inherit}
+button{cursor:pointer}
+a{color:#B3141F}a:hover{color:#8E0F18}
+</style>
+</helmet>
+<div style="min-height: 100vh; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: stretch; background: #F3F3F2; color: #1B1B1B; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 15px; line-height: 1.45">
+
+<nav aria-label="Menú principal" style="flex: 1 1 232px; box-sizing: border-box; background: #FFFFFF; border-right: 1px solid #E3E3E3; padding: 28px 16px 24px; display: flex; flex-direction: column; justify-content: space-between; gap: 32px">
+<div style="display: flex; flex-direction: column; gap: 22px">
+<div style="padding: 0 12px; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 20px; font-weight: 700; letter-spacing: -0.01em">VetChain</span>
+<span style="font-size: 13px; color: #5F5F5F">Mederi Pharma · piloto</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="padding: 0 12px 4px; font-size: 12px; font-weight: 500; color: #6B6B6B">Inicio</span>
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #3A3A3A; font-weight: 500; text-decoration: none">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1"></rect><rect x="13.5" y="3.5" width="7" height="7" rx="1"></rect><rect x="3.5" y="13.5" width="7" height="7" rx="1"></rect><rect x="13.5" y="13.5" width="7" height="7" rx="1"></rect></svg>
+Panel gerencial
+</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="padding: 0 12px 4px; font-size: 12px; font-weight: 500; color: #6B6B6B">Trabajo comercial</span>
+<a href="Clientes.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #3A3A3A; font-weight: 500; text-decoration: none">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"></path><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8"></path><path d="M18 14.8c1.8.7 3 2.4 3.5 5.2"></path></svg>
+Clientes
+</a>
+<a href="Cotizaciones.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #3A3A3A; font-weight: 500; text-decoration: none">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"></path><path d="M14 3v5h5"></path><path d="M8.5 13h7M8.5 17h5"></path></svg>
+Cotizaciones
+</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="padding: 0 12px 4px; font-size: 12px; font-weight: 500; color: #6B6B6B">Gestión del negocio</span>
+<a href="Planificacion.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #3A3A3A; font-weight: 500; text-decoration: none">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5z"></path><path d="M3.5 7.5 12 12l8.5-4.5M12 12v9"></path></svg>
+Planificación de importación
+</a>
+<button type="button" onClick="{{toggleNav}}" aria-expanded="{{navOpen}}" aria-controls="sub-reportes" style="display: flex; align-items: center; gap: 12px; width: 100%; min-height: 44px; padding: 0 12px; border: none; border-radius: 8px; background: transparent; color: #B3141F; font-size: 15px; font-weight: 600; text-align: left">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D3202E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"></path><path d="M7 16v-5M12 16V6M17 16v-8"></path></svg>
+<span style="flex: 1 1 auto">Reportes</span>
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate({{navRotate}}); transition: transform 150ms"><path d="m6 9 6 6 6-6"></path></svg>
+</button>
+<sc-if value="{{navOpen}}" hint-placeholder-val="{{ true }}">
+<div id="sub-reportes" style="display: flex; flex-direction: column; gap: 2px; margin: 2px 0 6px 21px; padding-left: 10px; border-left: 1px solid #E3E3E3">
+<sc-for list="{{navReports}}" as="n" hint-placeholder-count="8">
+<a href="{{n.href}}" aria-current="{{n.current}}" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 8px; background: {{n.bg}}; color: {{n.fg}}; font-size: 14px; font-weight: {{n.weight}}; text-decoration: none">{{n.label}}</a>
+</sc-for>
+</div>
+</sc-if>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="padding: 0 12px 4px; font-size: 12px; font-weight: 500; color: #6B6B6B">Administración</span>
+<a href="Configuracion.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #3A3A3A; font-weight: 500; text-decoration: none">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"></path><circle cx="15" cy="6" r="2"></circle><circle cx="9" cy="12" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg>
+Ajustes
+</a>
+</div>
+</div>
+<div style="display: flex; align-items: center; gap: 12px; padding: 16px 12px 0; border-top: 1px solid #E3E3E3">
+<span style="width: 40px; height: 40px; flex: none; border-radius: 50%; background: #D3202E; color: #FFFFFF; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center">GC</span>
+<div style="display: flex; flex-direction: column; min-width: 0">
+<span style="font-size: 14px; font-weight: 600">Gerencia comercial</span>
+<a href="Perfil.dc.html" style="font-size: 12.5px; color: #5F5F5F; text-decoration: none">Ver mi perfil</a>
+</div>
+</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px clamp(16px, 4vw, 48px) 56px">
+<div style="max-width: 1060px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px">
+
+<header style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+<h1 style="margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -0.015em">Reportes</h1>
+<span style="display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 6px; background: #FCECEC; color: #A3161F; font-size: 12.5px; font-weight: 600">
+<svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"></path></svg>
+Con IA
+</span>
+</div>
+<p style="margin: 0; color: #5F5F5F; font-size: 14px">Inteligencia comercial sobre el historial de Mederi · datos hasta el 20 de enero de 2026 · montos sin IGV</p>
+</div>
+<button type="button" aria-label="Notificaciones: 5 nuevas" style="position: relative; width: 44px; height: 44px; flex: none; border: 1px solid #E3E3E3; border-radius: 10px; background: #FFFFFF; color: #1B1B1B; display: inline-flex; align-items: center; justify-content: center">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"></path><path d="M10 20.5a2 2 0 0 0 4 0"></path></svg>
+<span style="position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 9px; background: #B3141F; color: #FFFFFF; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center">5</span>
+</button>
+</header>
+
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 4px 4px 18px; border-radius: 10px; background: #1B1B1B; color: #FFFFFF; font-size: 14px">
+<span>{{toast}}</span>
+<button type="button" aria-label="Cerrar aviso" onClick="{{closeToast}}" style="width: 44px; height: 44px; flex: none; border: none; border-radius: 8px; background: transparent; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+</button>
+</div>
+</sc-if>
+
+<section aria-labelledby="ficha-titulo" style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 14px; padding: 28px; display: flex; flex-wrap: wrap; gap: 28px">
+<div style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: #A3161F">Reporte principal · antes de reunirte con un cliente</span>
+<h2 id="ficha-titulo" style="margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.01em">Ficha de cliente para reunión</h2>
+<p style="margin: 0; color: #3A3A3A; font-size: 15px; max-width: 620px">Cuánto le vendiste, a qué precio, si hubo descuentos, cuánto ganaste, cuánto proyectamos venderle y qué ofrecerle según el stock y los lotes por vencer. Lista para imprimir o enviar.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; align-items: end">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3A3A3A; grid-column: 1 / -1">
+Cliente
+<span style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 12px; border: 1px solid #CFCFCF; border-radius: 8px; background: #FFFFFF">
+<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#6B6B6B" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg>
+<input type="text" defaultValue="Corporacion Farmaceutica Veterinaria S.A.C." style="flex: 1 1 auto; min-width: 0; border: none; outline: none; background: transparent; font-size: 15px; font-weight: 500; color: #1B1B1B">
+</span>
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3A3A3A">
+Ventas desde
+<input type="date" defaultValue="2025-02-01" style="height: 44px; box-sizing: border-box; padding: 0 12px; border: 1px solid #CFCFCF; border-radius: 8px; background: #FFFFFF; font-size: 14.5px; color: #1B1B1B">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3A3A3A">
+Hasta
+<input type="date" defaultValue="2026-01-20" style="height: 44px; box-sizing: border-box; padding: 0 12px; border: 1px solid #CFCFCF; border-radius: 8px; background: #FFFFFF; font-size: 14.5px; color: #1B1B1B">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3A3A3A">
+Proyectar
+<select defaultValue="semestre" style="height: 44px; box-sizing: border-box; padding: 0 10px; border: 1px solid #CFCFCF; border-radius: 8px; background: #FFFFFF; font-size: 14.5px; color: #1B1B1B">
+<option value="mes">Próximo mes</option>
+<option value="semestre">Próximo semestre</option>
+<option value="anio">Próximo año</option>
+</select>
+</label>
+<a href="Ficha-icvr.dc.html" style="height: 44px; box-sizing: border-box; padding: 0 20px; border-radius: 8px; background: #D3202E; color: #FFFFFF; font-size: 14.5px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px">
+Generar ficha
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+</a>
+</div>
+</div>
+<div style="flex: 1 1 260px; min-width: 0; box-sizing: border-box; padding: 20px; border-radius: 12px; background: #F7F7F6; display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 14px; font-weight: 600">Qué trae la ficha</span>
+<sc-for list="{{includes}}" as="it" hint-placeholder-count="6">
+<div style="display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: #3A3A3A">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F6B3A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex: none; margin-top: 1px"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+<span>{{it.text}}</span>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section aria-labelledby="preguntar-titulo" style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 14px; padding: 24px 28px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h2 id="preguntar-titulo" style="margin: 0; font-size: 18px; font-weight: 600">Pregúntale a tus datos</h2>
+<p style="margin: 0; font-size: 14px; color: #5F5F5F">Escribe como le preguntarías a un analista. La respuesta dice de qué datos sale.</p>
+</div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap">
+<label style="flex: 1 1 380px; display: flex; align-items: center; gap: 8px; height: 46px; padding: 0 14px; border: 1px solid #CFCFCF; border-radius: 10px; background: #FFFFFF">
+<span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Pregunta</span>
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B6B6B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"></path></svg>
+<input type="text" placeholder="Ej.: ¿cuánto le vendimos a Diservet este año?" style="flex: 1 1 auto; min-width: 0; border: none; outline: none; background: transparent; font-size: 15px; color: #1B1B1B">
+</label>
+<button type="button" onClick="{{askFree}}" style="height: 46px; padding: 0 20px; border: none; border-radius: 10px; background: #1B1B1B; color: #FFFFFF; font-size: 14.5px; font-weight: 600">Preguntar</button>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
+<sc-for list="{{questions}}" as="q" hint-placeholder-count="3">
+<button type="button" onClick="{{q.pick}}" style="min-height: 40px; padding: 6px 14px; border: 1px solid #CFCFCF; border-radius: 20px; background: {{q.bg}}; color: #1B1B1B; font-size: 13.5px; font-weight: 500; text-align: left">{{q.text}}</button>
+</sc-for>
+</div>
+<sc-if value="{{hasAnswer}}" hint-placeholder-val="{{ true }}">
+<div style="padding: 18px 20px; border-radius: 12px; background: #F7F7F6; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 13px; font-weight: 600; color: #5F5F5F">{{answer.q}}</span>
+<p style="margin: 0; font-size: 15.5px; line-height: 1.55">{{answer.a}}</p>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
+<span style="font-size: 12.5px; color: #5F5F5F">Fuente: pedidos y detalle de Mederi, feb 2025 – ene 2026</span>
+<a href="{{answer.href}}" style="font-size: 14px; font-weight: 600">{{answer.link}}</a>
+</div>
+</div>
+</sc-if>
+</section>
+
+<section aria-labelledby="pulso-titulo" style="display: flex; flex-direction: column; gap: 12px">
+<h2 id="pulso-titulo" style="margin: 0; font-size: 18px; font-weight: 600">Pulso del negocio</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px">
+<div style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; color: #5F5F5F; font-weight: 500">Venta últimos 12 meses</span>
+<span style="font-size: 24px; font-weight: 600; letter-spacing: -0.01em">S/ 2 297 816</span>
+<span style="font-size: 13px; color: #5F5F5F">+0,05 % frente a los 12 meses anteriores</span>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; color: #5F5F5F; font-weight: 500">Clientes activos</span>
+<span style="font-size: 24px; font-weight: 600; letter-spacing: -0.01em">331</span>
+<span style="font-size: 13px; color: #8A5300; font-weight: 500">39 menos que el año anterior (370)</span>
+</div>
+<a href="KPIs-svux.dc.html" style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; color: #1B1B1B; text-decoration: none">
+<span style="font-size: 13px; color: #5F5F5F; font-weight: 500">Indicadores en meta</span>
+<span style="font-size: 24px; font-weight: 600; letter-spacing: -0.01em">1 de 12</span>
+<span style="font-size: 13px; color: #A3161F; font-weight: 500">4 en estado crítico · ver KPIs</span>
+</a>
+<a href="Stock-uwfm.dc.html" style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; color: #1B1B1B; text-decoration: none">
+<span style="font-size: 13px; color: #5F5F5F; font-weight: 500">Por vencer en 90 días</span>
+<span style="font-size: 24px; font-weight: 600; letter-spacing: -0.01em">S/ 38 750</span>
+<span style="font-size: 13px; color: #5F5F5F">5 lotes · dato de ejemplo</span>
+</a>
+</div>
+</section>
+
+<section aria-labelledby="lista-titulo" style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap">
+<h2 id="lista-titulo" style="margin: 0; font-size: 18px; font-weight: 600">Reportes de negocio</h2>
+<span style="font-size: 13px; color: #5F5F5F">Todos se descargan en PDF y se envían por correo o WhatsApp</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px">
+<sc-for list="{{reports}}" as="r" hint-placeholder-count="6">
+<article style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 10px">
+<span style="width: 30px; height: 30px; border-radius: 50%; background: #FCECEC; color: #A3161F; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center">{{r.n}}</span>
+<sc-if value="{{r.isReal}}" hint-placeholder-val="{{ true }}">
+<span style="padding: 3px 9px; border-radius: 6px; background: #E5F3EA; color: #1F6B3A; font-size: 12px; font-weight: 600">Datos reales</span>
+</sc-if>
+<sc-if value="{{r.isParcial}}" hint-placeholder-val="{{ false }}">
+<span style="padding: 3px 9px; border-radius: 6px; background: #FDF0D5; color: #8A5300; font-size: 12px; font-weight: 600">Parcial</span>
+</sc-if>
+<sc-if value="{{r.isEjemplo}}" hint-placeholder-val="{{ false }}">
+<span style="padding: 3px 9px; border-radius: 6px; background: #EFEFEF; color: #4A4A4A; font-size: 12px; font-weight: 600">Ejemplo</span>
+</sc-if>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h3 style="margin: 0; font-size: 16.5px; font-weight: 600">{{r.title}}</h3>
+<span style="font-size: 14px; color: #5F5F5F">{{r.q}}</span>
+</div>
+<p style="margin: 0; padding: 12px 14px; border-radius: 10px; background: #F7F7F6; font-size: 14px; line-height: 1.5; flex: 1 1 auto">{{r.insight}}</p>
+<a href="{{r.href}}" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; font-size: 14px; font-weight: 600; text-decoration: none">
+Abrir reporte
+<svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+</a>
+</article>
+</sc-for>
+</div>
+</section>
+
+<section aria-labelledby="envios-titulo" style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 14px; padding: 24px 28px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h2 id="envios-titulo" style="margin: 0; font-size: 18px; font-weight: 600">Envíos programados</h2>
+<p style="margin: 0; font-size: 14px; color: #5F5F5F">Los reportes llegan solos a quien los necesita, sin entrar a VetChain.</p>
+</div>
+<button type="button" onClick="{{schedule}}" style="height: 44px; padding: 0 16px; border: 1px solid #CFCFCF; border-radius: 8px; background: #FFFFFF; color: #1B1B1B; font-size: 14px; font-weight: 600">Programar envío</button>
+</div>
+<div style="display: flex; flex-direction: column">
+<sc-for list="{{sends}}" as="s" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 14px 0; border-top: 1px solid #EDEDED">
+<div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 320px">
+<span style="font-size: 15px; font-weight: 600">{{s.name}}</span>
+<span style="font-size: 13.5px; color: #5F5F5F">{{s.when}} · {{s.what}}</span>
+</div>
+<button type="button" onClick="{{s.toggle}}" aria-pressed="{{s.on}}" style="display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 6px 0 14px; border: 1px solid #CFCFCF; border-radius: 22px; background: #FFFFFF; color: #1B1B1B; font-size: 13.5px; font-weight: 600">
+{{s.label}}
+<span style="width: 40px; height: 24px; border-radius: 12px; background: {{s.track}}; display: inline-flex; align-items: center; padding: 0 3px; box-sizing: border-box; justify-content: {{s.justify}}">
+<span style="width: 18px; height: 18px; border-radius: 50%; background: #FFFFFF"></span>
+</span>
+</button>
+</div>
+</sc-for>
+</div>
+</section>
+
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { q: 0, sends: { s1: true, s2: true, s3: false }, toast: '' };
+  }
+
+  renderVals() {
+    const qs = [
+      {
+        text: '¿Cuánto le vendimos a Mapevas en los últimos 12 meses?',
+        a: 'S/ 140 207,64 sin IGV en 51 pedidos: el 6,1 % de la venta de Mederi. Su pedido promedio es S/ 2 749,17 y hoy lleva 5 días de atraso en su ritmo de compra.',
+        href: 'Ficha-icvr.dc.html',
+        link: 'Abrir ficha de cliente'
+      },
+      {
+        text: '¿Qué producto vende más?',
+        a: 'NUTRAPRO K9 CANINE X 30 SOBRES: S/ 229 882,68 en 12 meses (10 % de la venta) y 1 822 unidades. Se vendió a S/ 126,17 en promedio, 21,6 % bajo su precio de referencia de S/ 161,02.',
+        href: 'Ventas-ubd8.dc.html',
+        link: 'Ver Ventas y rentabilidad'
+      },
+      {
+        text: '¿Cuántos clientes dejaron de comprar?',
+        a: '999 de los 1 330 clientes del maestro no compraron en los últimos 12 meses. 500 de ellos sí habían comprado antes: son los que conviene recuperar primero.',
+        href: 'Clientes-9xcu.dc.html',
+        link: 'Ver Clientes dormidos'
+      }
+    ];
+    const q = this.state.q;
+    const sendsBase = [
+      { id: 's1', name: 'Resumen semanal de Gerencia', when: 'Lunes 8:00', what: 'WhatsApp y correo · ventas, alertas y KPIs en 5 líneas' },
+      { id: 's2', name: 'KPIs del mes', when: 'Día 1 de cada mes', what: 'Correo · tablero de indicadores en PDF' },
+      { id: 's3', name: 'Ficha de cliente antes de cada reunión', when: 'Un día antes de la reunión', what: 'Correo del vendedor · versión interna' }
+    ];
+    const st = this.state.sends;
+    const reports = [
+      { n: 2, title: 'Indicadores clave (KPIs)', q: '¿Cómo vamos frente a las metas?', insight: '1 de 12 indicadores en meta y 4 críticos: crecimiento, clientes activos, dependencia de un vendedor y cartera vencida.', href: 'KPIs-svux.dc.html', kind: 'parcial' },
+      { n: 3, title: 'Ventas y rentabilidad', q: '¿Qué vendemos, a qué precio y con cuánta ganancia?', insight: 'El descuento en factura es 0, pero los 5 productos principales se venden 15,9 % bajo su precio de referencia.', href: 'Ventas-ubd8.dc.html', kind: 'real' },
+      { n: 4, title: 'Clientes: retención y reactivación', q: '¿Quién deja de comprar y a quién recuperar?', insight: '8 clientes hacen el 52 % de la venta, y 500 clientes que ya compraron llevan más de un año sin hacerlo.', href: 'Clientes-9xcu.dc.html', kind: 'real' },
+      { n: 5, title: 'Stock, vencimientos y merma', q: '¿Qué podemos perder y a quién ofrecerlo?', insight: 'S/ 38 750 en 5 lotes vence en 90 días. La IA sugiere a qué clientes ofrecer cada lote.', href: 'Stock-uwfm.dc.html', kind: 'ejemplo' },
+      { n: 6, title: 'Cartera y cobranza', q: '¿Quién nos debe y a quién darle crédito?', insight: 'El 23,5 % de la cartera está vencida. El crédito debería depender de cómo paga cada cliente.', href: 'Cobranza-6f07.dc.html', kind: 'ejemplo' },
+      { n: 7, title: 'Vendedores y seguimiento', q: '¿Qué pasa con cada alerta, de la llamada al pedido?', insight: 'Un vendedor concentra el 57 % de la venta. El embudo mide cuánto recupera cada uno.', href: 'Vendedores-45z4.dc.html', kind: 'parcial' }
+    ];
+    return {
+      includes: [
+        { text: 'Compras y precios por producto, con su evolución mensual' },
+        { text: 'Descuento en factura y descuento real frente al precio de lista' },
+        { text: 'Ganancia estimada y proyección a 1, 6 o 12 meses' },
+        { text: 'Ofertas según stock y lotes por vencer' },
+        { text: 'Guion de preguntas para la reunión' },
+        { text: 'PDF para el cliente, correo y WhatsApp' }
+      ],
+      questions: qs.map((x, i) => ({
+        text: x.text,
+        bg: i === q ? '#FCECEC' : '#FFFFFF',
+        pick: () => this.setState({ q: i })
+      })),
+      hasAnswer: q !== null && q !== undefined,
+      answer: { q: qs[q].text, a: qs[q].a, href: qs[q].href, link: qs[q].link },
+      askFree: () => this.setState({ toast: 'En el producto, la IA responde con los datos de Mederi. En el prototipo prueba una de las preguntas sugeridas.' }),
+      reports: reports.map((r) => Object.assign({}, r, {
+        isReal: r.kind === 'real',
+        isParcial: r.kind === 'parcial',
+        isEjemplo: r.kind === 'ejemplo'
+      })),
+      sends: sendsBase.map((s) => {
+        const on = !!st[s.id];
+        return Object.assign({}, s, {
+          on: on,
+          label: on ? 'Activo' : 'Pausado',
+          track: on ? '#1F6B3A' : '#B5B5B5',
+          justify: on ? 'flex-end' : 'flex-start',
+          toggle: () => {
+            const next = Object.assign({}, this.state.sends);
+            next[s.id] = !on;
+            this.setState({ sends: next });
+          }
+        });
+      }),
+      schedule: () => this.setState({ toast: 'Elige el reporte, a quién va, el canal (correo o WhatsApp) y la frecuencia. Simulado en el prototipo.' }),
+      navOpen: !this.state.navClosed,
+      navRotate: this.state.navClosed ? '0deg' : '180deg',
+      toggleNav: () => this.setState({ navClosed: !this.state.navClosed }),
+      navReports: [['Main-nsyj.dc.html', 'Todos los reportes'], ['Ficha-icvr.dc.html', 'Ficha de cliente'], ['KPIs-svux.dc.html', 'Indicadores (KPIs)'], ['Ventas-ubd8.dc.html', 'Ventas y rentabilidad'], ['Clientes-9xcu.dc.html', 'Retención de clientes'], ['Stock-uwfm.dc.html', 'Stock y merma'], ['Cobranza-6f07.dc.html', 'Cartera y cobranza'], ['Vendedores-45z4.dc.html', 'Vendedores']].map((n) => {
+        const on = n[0] === 'Main-nsyj.dc.html';
+        return { href: n[0], label: n[1], current: on ? 'page' : 'false', bg: on ? '#FCECEC' : 'transparent', fg: on ? '#B3141F' : '#3A3A3A', weight: on ? 600 : 500 };
+      }),
+      hasToast: !!this.state.toast,
+      toast: this.state.toast,
+      closeToast: () => this.setState({ toast: '' })
+    };
+  }
+}
+</script>
+</body>
+</html>

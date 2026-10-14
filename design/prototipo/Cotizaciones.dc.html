@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Cotizaciones</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+
+<style>
+body{margin:0}
+a{color:#D01F29}a:hover{color:#A8161F}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: nowrap; min-width: 1200px; font-family: 'IBM Plex Sans', sans-serif; font-variant-numeric: tabular-nums; color: #161616; background: #F5F5F5">
+
+  <aside style="flex: 0 0 240px; box-sizing: border-box; background: #FFFFFF; border-right: 1px solid #E3E3E3; padding: 24px 16px; display: flex; flex-direction: column; gap: 28px; position: sticky; top: 0; align-self: flex-start; height: 100vh; overflow-y: auto">
+    <div style="padding: 0 8px; display: flex; flex-direction: column; gap: 2px">
+      <div style="font-size: 18px; font-weight: 600; letter-spacing: -0.01em">VetChain</div>
+      <div style="font-size: 13px; color: #5F6368">Mederi Pharma · piloto</div>
+    </div>
+    <nav aria-label="Secciones" style="display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{navItems}}" as="it" hint-placeholder-count="10">
+        <sc-if value="{{ it.esTitulo }}" hint-placeholder-val="{{ false }}">
+          <div style="padding: 14px 12px 6px; font-size: 12px; font-weight: 600; color: {{it.cTitulo}}">{{it.texto}}</div>
+        </sc-if>
+        <sc-if value="{{ it.esItem }}" hint-placeholder-val="{{ true }}">
+          <a href="{{it.href}}" aria-current="{{it.actual}}" style="display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; background: {{it.bg}}; color: {{it.fg}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="{{it.d}}"></path></svg><span>{{it.texto}}</span></a>
+        </sc-if>
+        <sc-if value="{{ it.esGrupo }}" hint-placeholder-val="{{ false }}">
+          <a href="{{it.href}}" aria-current="{{it.actual}}" style="display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; background: {{it.bg}}; color: {{it.fg}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="{{it.d}}"></path></svg><span style="flex: 1 1 auto">{{it.texto}}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="m6 9 6 6 6-6"></path></svg></a>
+        </sc-if>
+      </sc-for>
+    </nav>
+  
+    <div style="margin-top: auto; border-top: 1px solid #E3E3E3; padding-top: 16px; display: flex; flex-direction: column; gap: 12px">
+      <a href="Perfil.dc.html" aria-label="Ver mi perfil" style="display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 8px; text-decoration: none; color: #161616">
+        <span style="flex: none; width: 36px; height: 36px; border-radius: 50%; background: #D01F29; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600">{{rolIni}}</span>
+        <span style="display: flex; flex-direction: column; min-width: 0"><span style="font-size: 14px; font-weight: 600">{{rolNombre}}</span><span style="font-size: 12px; color: #5F6368">Ver mi perfil</span></span>
+      </a>
+    </div>
+  </aside>
+
+  <main style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 32px 48px 48px; display: flex; flex-direction: column; gap: 24px">
+
+    <header style="display: flex; justify-content: space-between; align-items: center; gap: 16px">
+      <div>
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+          <h1 style="margin: 0; font-size: 26px; font-weight: 600; letter-spacing: -0.02em">Cotizaciones</h1>
+          <span style="padding: 2px 8px; border-radius: 4px; background: #FDF1DC; color: #8A5300; font-size: 12px; font-weight: 600">Costos sin validar</span>
+        </div>
+        <p style="margin: 6px 0 0; font-size: 14px; color: #5F6368">Nueva cotización {{numero}} · {{fecha}}</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px"><sc-if value="{{ bellVisible }}" hint-placeholder-val="{{ true }}">
+<div style="position: relative; font-family: 'IBM Plex Sans', sans-serif; font-variant-numeric: tabular-nums; line-height: 1.4">
+  <button type="button" onClick="{{ bellToggle }}" aria-label="{{ bellLabel }}" aria-expanded="{{ bellAria }}" aria-haspopup="true" title="Alertas del día" style="position: relative; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; border-radius: 6px; border: 1px solid {{ bellBd }}; background: {{ bellBg }}; color: {{ bellFg }}; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg><sc-if value="{{ bellShowCount }}" hint-placeholder-val="{{ true }}"><span style="position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; box-sizing: border-box; padding: 0 5px; border-radius: 999px; background: #A63224; color: #FFFFFF; border: 2px solid #F5F5F5; font-size: 11px; font-weight: 600; line-height: 14px; text-align: center">{{ bellCount }}</span></sc-if></button>
+  <sc-if value="{{ bellOpen }}" hint-placeholder-val="{{ false }}">
+    <div>
+      <button type="button" onClick="{{ bellClose }}" aria-label="Cerrar alertas" tabindex="-1" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 40; padding: 0; border: none; background: transparent; cursor: default"></button>
+      <div role="dialog" aria-label="Alertas del día" style="position: absolute; right: 0; top: 48px; z-index: 50; width: 400px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 8px; box-shadow: 0 8px 24px rgba(17,17,17,0.14); text-align: left; font-weight: 400">
+        <div style="padding: 16px 20px 12px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px">
+          <div>
+            <div style="font-size: 16px; font-weight: 600; color: #161616">Alertas del día</div>
+            <div style="margin-top: 2px; font-size: 13px; color: #5F6368">{{ bellTitulo }}</div>
+          </div>
+          <span style="flex: none; padding: 2px 8px; border-radius: 4px; background: #E5F3EA; color: #1E6B3A; font-size: 12px; font-weight: 600">Calculado</span>
+        </div>
+        <div style="border-top: 1px solid #EEEEEE; max-height: 340px; overflow-y: auto">
+          <sc-for list="{{ bellItems }}" as="b" hint-placeholder-count="5">
+            <a href="Alertas.dc.html" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid #EEEEEE; text-decoration: none; color: #161616; opacity: {{ b.op }}">
+              <span style="min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; font-weight: 600">{{ b.cliente }}</span><span style="font-size: 13px; color: #5F6368">{{ b.detalle }}</span></span>
+              <span style="flex: none; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; background: {{ b.chipBg }}; color: {{ b.chipFg }}">{{ b.chip }}</span>
+            </a>
+          </sc-for>
+        </div>
+        <div style="padding: 12px 20px 14px; display: flex; flex-direction: column; gap: 10px">
+          <div style="font-size: 12px; line-height: 1.5; color: #5F6368">Calculadas con el ritmo de compra de cada cliente. Datos hasta enero de 2026.</div>
+          <a href="Alertas.dc.html" style="display: block; padding: 9px 12px; border-radius: 8px; background: #D01F29; text-align: center; font-size: 14px; font-weight: 600; text-decoration: none; color: #FFFFFF">Ver todas las alertas</a>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</sc-if></div>
+    </header>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+
+      <div style="flex: 3 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+
+        <section style="box-sizing: border-box; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+          <h2 style="margin: 0; font-size: 18px; font-weight: 600">1. Cliente</h2>
+          <div style="position: relative">
+            <div style="position: relative; display: flex; align-items: center"><span style="position: absolute; left: 12px; color: #5F6368; display: flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M11 3a8 8 0 1 0 0 16 8 8 0 0 0 0-16z M21 21l-4.3-4.3"></path></svg></span><input type="text" aria-label="Buscar cliente" placeholder="Buscar cliente por nombre (todos los clientes)" value="{{cqVal}}" onChange="{{cBuscar}}" style="box-sizing: border-box; width: 100%; min-height: 44px; padding: 0 12px 0 40px; border-radius: 8px; border: 1px solid #C4C4C4; background: #FFFFFF; font-family: inherit; font-size: 14px; color: #161616"></div>
+            <sc-if value="{{ hayBusqueda }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top: 6px; border: 1px solid #E3E3E3; border-radius: 8px; background: #FFFFFF; overflow: hidden">
+                <sc-for list="{{resultados}}" as="r" hint-placeholder-count="5">
+                  <button type="button" onClick="{{r.elegir}}" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; box-sizing: border-box; min-height: 44px; padding: 8px 14px; border: none; border-bottom: 1px solid #EEEEEE; background: #FFFFFF; color: #161616; font-family: inherit; font-size: 14px; text-align: left; cursor: pointer"><span style="font-weight: 600; min-width: 0; overflow-wrap: anywhere">{{r.nombre}}</span><span style="flex: none; font-size: 13px; color: #5F6368">{{r.venta}}</span></button>
+                </sc-for>
+                <sc-if value="{{ sinResultados }}" hint-placeholder-val="{{ false }}"><div style="padding: 14px; font-size: 14px; color: #5F6368">Ningún cliente coincide. Prueba con otra parte del nombre.</div></sc-if>
+              </div>
+            </sc-if>
+          </div>
+          <div style="font-size: 13px; color: #5F6368">Mayores clientes por venta de 12 meses:</div>
+          <div role="group" aria-label="Cliente" style="display: flex; flex-wrap: wrap; gap: 8px">
+            <sc-for list="{{tabs}}" as="t" hint-placeholder-count="5">
+              <button type="button" aria-pressed="{{t.on}}" onClick="{{t.pick}}" style="min-height: 44px; padding: 8px 14px; border-radius: 4px; border: 1px solid {{t.bd}}; background: {{t.bg}}; color: {{t.fg}}; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer">{{t.nombre}}</button>
+            </sc-for>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 12px">
+            <div style="flex: 2 1 240px; background: #F5F5F5; border-radius: 8px; padding: 12px 14px"><div style="font-size: 12px; color: #5F6368">Cliente seleccionado</div><div style="font-size: 15px; font-weight: 600; overflow-wrap: anywhere">{{cliSel}}</div></div>
+            <div style="flex: 1 1 140px; background: #F5F5F5; border-radius: 8px; padding: 12px 14px"><div style="font-size: 12px; color: #5F6368">Nivel de volumen</div><div style="font-size: 15px; font-weight: 600">{{nivel.nombre}}</div></div>
+            <div style="flex: 1 1 140px; background: #F5F5F5; border-radius: 8px; padding: 12px 14px"><div style="font-size: 12px; color: #5F6368">Venta de 12 meses</div><div style="font-size: 15px; font-weight: 600">{{ventaCli}}</div></div>
+            <div style="flex: 1 1 160px; background: #F5F5F5; border-radius: 8px; padding: 12px 14px"><label style="display: block; font-size: 12px; color: #5F6368">Descuento a este cliente</label><div style="display: flex; align-items: center; gap: 6px; margin-top: 4px"><input type="text" inputmode="decimal" aria-label="Descuento en porcentaje" placeholder="0" value="{{descVal}}" onChange="{{descEscribir}}" style="box-sizing: border-box; width: 72px; min-height: 36px; padding: 0 8px; border-radius: 6px; border: 1px solid #C4C4C4; background: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; color: #161616; text-align: right"><span style="font-size: 15px; font-weight: 600">%</span></div></div>
+            <div style="flex: 1 1 140px; background: #F5F5F5; border-radius: 8px; padding: 12px 14px"><div style="font-size: 12px; color: #5F6368">Condición de pago</div><div style="font-size: 15px; font-weight: 600">{{nivel.pago}}</div></div>
+          </div>
+          <p style="margin: 0; font-size: 12px; color: #5F6368">Nivel y condiciones vienen de Configuración; la venta de 12 meses es real (sin IGV). Si los cambias allá y guardas, vuelve a abrir esta pantalla para verlos.</p>
+        </section>
+
+        <section style="box-sizing: border-box; background: #FDF1DC; border: 1px solid #F0D9A8; border-radius: 8px; padding: 14px 20px; display: flex; flex-direction: column; gap: 10px">
+          <button type="button" onClick="{{ promosAlternar }}" aria-expanded="{{ promosAria }}" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; padding: 0; border: none; background: transparent; font-family: inherit; cursor: pointer; text-align: left"><span style="font-size: 15px; font-weight: 600; color: #6B4200">Promociones vigentes · {{promosN}} productos próximos a vencer</span><span style="font-size: 14px; font-weight: 600; color: #6B4200">{{ promosTxt }}</span></button>
+          <sc-if value="{{ promosOpen }}" hint-placeholder-val="{{ false }}">
+          <p style="margin: 0; font-size: 13px; color: #6B4200">Ofrecerlos ayuda a reducir la merma. Se cotizan con {{promoPts}} % menos que el último precio vendido. Los vencimientos son de ejemplo: los archivos aún no traen lotes ni fechas.</p>
+          <sc-for list="{{promos}}" as="m" hint-placeholder-count="3">
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; padding-top: 10px; border-top: 1px solid #F0D9A8; font-size: 14px">
+              <div><div style="font-weight: 600">{{m.nombre}}</div><div style="font-size: 12px; color: #6B4200">Lote vence en {{m.vence}} días (ejemplo)</div></div>
+              <div style="text-align: right"><span style="font-weight: 600">{{m.precio}}</span> <span style="font-size: 12px; color: #8A6A30; text-decoration: line-through">{{m.normal}}</span></div>
+            </div>
+          </sc-for>
+          </sc-if>
+        </section>
+
+        <section style="box-sizing: border-box; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+          <div>
+            <h2 style="margin: 0; font-size: 18px; font-weight: 600">2. Productos</h2>
+            <p style="margin: 4px 0 0; font-size: 13px; color: #5F6368">Por ahora el precio es el último precio vendido, sin IGV. Cuando se carguen los costos, saldrá del costo más el margen del nivel de volumen</p>
+          </div>
+          <div>
+            <div style="min-width: 0">
+              <div style="display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr) 120px; gap: 12px; padding: 8px 0; border-bottom: 1px solid #E3E3E3; font-size: 12px; font-weight: 600; color: #5F6368">
+                <div>Producto</div><div style="text-align: right">Precio unitario</div><div style="text-align: right">Acción</div>
+              </div>
+              <sc-for list="{{catalogo}}" as="p" hint-placeholder-count="7">
+                <div style="display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr) 120px; gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px solid #EEEEEE; font-size: 14px">
+                  <div><div style="font-weight: 600">{{p.nombre}}</div><div style="font-size: 12px; color: #5F6368">Se suele pedir de a {{p.paso}} unidades</div><div style="font-size: 12px; font-weight: 600; color: #8A5300">{{p.promoTxt}}</div></div>
+                  <div style="text-align: right"><div style="font-weight: 600">{{p.precio}}</div><div style="font-size: 12px; color: #8E8E8E; text-decoration: line-through">{{p.tachado}}</div></div>
+                  <div style="text-align: right"><button type="button" onClick="{{p.alternar}}" style="min-height: 44px; padding: 8px 14px; border-radius: 8px; border: 1px solid {{p.bd}}; background: {{p.bg}}; color: {{p.fg}}; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer">{{p.txt}}</button></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </section>
+
+        <section style="box-sizing: border-box; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+          <h2 style="margin: 0; font-size: 18px; font-weight: 600">3. Detalle de la cotización</h2>
+          <sc-if value="{{ vacia }}" hint-placeholder-val="{{ false }}">
+            <p style="margin: 0; padding: 20px; border-radius: 8px; background: #F5F5F5; font-size: 14px; color: #5F6368">Aún no agregaste productos. Elige alguno de la lista de arriba.</p>
+          </sc-if>
+          <sc-for list="{{lineas}}" as="l" hint-placeholder-count="2">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding-top: 12px; border-top: 1px solid #EEEEEE">
+              <div style="flex: 1 1 220px; min-width: 0"><div style="font-size: 14px; font-weight: 600">{{l.nombre}}</div><div style="font-size: 13px; color: #5F6368">{{l.precio}} por unidad</div></div>
+              <div style="display: flex; align-items: center; gap: 8px">
+                <button type="button" aria-label="Menos unidades de {{l.nombre}}" onClick="{{l.menos}}" style="width: 44px; height: 44px; border-radius: 8px; border: 1px solid #C4C4C4; background: #FFFFFF; color: #161616; font-family: inherit; font-size: 18px; font-weight: 600; cursor: pointer">−</button>
+                <input type="text" inputmode="numeric" aria-label="Cantidad de {{l.nombre}}" value="{{l.cantTxt}}" onChange="{{l.escribir}}" style="box-sizing: border-box; width: 72px; height: 44px; padding: 0 8px; border-radius: 8px; border: 1px solid #C4C4C4; background: #FFFFFF; color: #161616; font-family: inherit; font-size: 15px; font-weight: 600; text-align: center">
+                <button type="button" aria-label="Más unidades de {{l.nombre}}" onClick="{{l.mas}}" style="width: 44px; height: 44px; border-radius: 8px; border: 1px solid #C4C4C4; background: #FFFFFF; color: #161616; font-family: inherit; font-size: 18px; font-weight: 600; cursor: pointer">+</button>
+              </div>
+              <div style="min-width: 110px; text-align: right; font-size: 15px; font-weight: 600">{{l.total}}</div>
+            </div>
+          </sc-for>
+        </section>
+      </div>
+
+      <aside style="flex: 1 1 300px; min-width: 0; box-sizing: border-box; background: #FFFFFF; border: 2px solid #D01F29; border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+        <h2 style="margin: 0; font-size: 18px; font-weight: 600">Resumen</h2>
+        <div role="note" style="font-size: 13px; line-height: 1.5; color: #8A5300; background: #FDF1DC; border-radius: 8px; padding: 10px 12px">El descuento máximo de cada nivel se define en Ajustes. Si el nivel no tiene máximo definido, el descuento es referencial (hasta 30 %): falta confirmar la política de precios con Mederi.</div>
+        <div style="display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1px solid #E3E3E3; font-size: 14px">
+          <div style="display: flex; justify-content: space-between"><span style="color: #5F6368">Subtotal</span><span>{{subtotal}}</span></div>
+          <div style="display: flex; justify-content: space-between"><span style="color: #5F6368">Descuento</span><span>− {{descuento}}</span></div>
+          <div style="display: flex; justify-content: space-between"><span style="color: #5F6368">Valor de venta</span><span>{{neto}}</span></div>
+          <div style="display: flex; justify-content: space-between"><span style="color: #5F6368">IGV ({{igv}} %)</span><span>{{impuesto}}</span></div>
+          <div style="display: flex; justify-content: space-between; padding-top: 10px; border-top: 1px solid #E3E3E3; font-size: 18px; font-weight: 600"><span>Total</span><span>{{total}}</span></div>
+        </div>
+        <sc-if value="{{ verGestion }}" hint-placeholder-val="{{ true }}">
+        <div style="background: #F5F5F5; border-radius: 8px; padding: 12px 14px; font-size: 13px; color: #5F6368">Margen de ganancia resultante: <span style="font-weight: 600; color: #161616">{{margenReal}}</span></div>
+        </sc-if>
+        <div role="status" style="border-radius: 8px; padding: 12px 14px; font-size: 13px; line-height: 1.5; font-weight: 600; background: {{estadoBg}}; color: {{estadoFg}}">{{estadoTxt}}</div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <button type="button" onClick="{{exportarHtml}}" aria-disabled="{{bloqueada}}" style="min-height: 44px; padding: 10px 16px; border-radius: 8px; border: 1px solid {{btnBd}}; background: {{btnBg}}; color: {{btnFg}}; font-family: inherit; font-size: 14px; font-weight: 600; cursor: {{btnCursor}}">Descargar cotización (imprimible)</button>
+          <button type="button" onClick="{{exportarCsv}}" aria-disabled="{{bloqueada}}" style="min-height: 44px; padding: 10px 16px; border-radius: 8px; border: 1px solid #C4C4C4; background: #FFFFFF; color: {{csvFg}}; font-family: inherit; font-size: 14px; font-weight: 600; cursor: {{btnCursor}}">Descargar para Excel (CSV)</button>
+          <div style="height: 1px; background: #E3E3E3; margin: 4px 0"></div>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px"><span style="font-size: 13px; color: #5F6368">Enviar como</span><div role="group" aria-label="Formato del mensaje" style="display: flex; border: 1px solid #C4C4C4; border-radius: 8px; overflow: hidden">
+            <sc-for list="{{waOpts}}" as="o" hint-placeholder-count="2">
+              <button type="button" aria-pressed="{{o.on}}" onClick="{{o.elegir}}" style="min-height: 36px; padding: 0 14px; border: none; background: {{o.bg}}; color: {{o.fg}}; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer">{{o.txt}}</button>
+            </sc-for>
+          </div></div>
+          <button type="button" onClick="{{waEnviar}}" aria-disabled="{{bloqueada}}" style="min-height: 44px; padding: 10px 16px; border-radius: 8px; border: 1px solid {{waBd}}; background: {{waBg}}; color: {{waFg}}; font-family: inherit; font-size: 14px; font-weight: 600; cursor: {{btnCursor}}; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="flex: none"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.300.5 1.700.6.7.2 1.400.2 1.900.1.600-.1 1.800-.7 2-1.400.3-.7.3-1.300.2-1.400-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.600 15.100L2 22l5-1.300A10 10 0 1 0 12 2zm0 18.200c-1.500 0-2.900-.4-4.200-1.200l-.3-.2-3 .8.8-2.900-.2-.3A8.200 8.200 0 1 1 12 20.200z"/></svg><span>Enviar por WhatsApp</span></button>
+        </div>
+        <sc-if value="{{ descargado }}" hint-placeholder-val="{{ false }}">
+          <div role="status" style="border-radius: 8px; background: #E5F3EA; color: #1E6B3A; padding: 10px 14px; font-size: 13px; font-weight: 600">{{descargadoTxt}}</div>
+        </sc-if>
+        <p style="margin: 0; font-size: 12px; line-height: 1.5; color: #5F6368">El archivo imprimible se abre en el navegador y se guarda como PDF con Imprimir. Vigencia de la cotización: {{validez}} días.</p>
+      </aside>
+    </div>
+
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1750}}'>
+class Component extends DCLogic {
+constructor(props) {
+  super(props);
+  this.state = { bellOpen: false, promosOpen: false, cli: 0, cq: '', cantDraft: {}, waFmt: 'texto', lineas: {}, desc: 0, descTxt: undefined, descargado: '' };
+}
+defaults() {
+  return {
+    igv: 18, validez: 7, piso: 12, promo: 3,
+    niveles: [
+      { id: 'bajo', nombre: 'Nivel C', margen: 30, desc: 0, credito: 0 },
+      { id: 'medio', nombre: 'Nivel B', margen: 22, desc: 0, credito: 30 },
+      { id: 'alto', nombre: 'Nivel A', margen: 16, desc: 0, credito: 45 }
+    ],
+    clientes: { A: 'medio', B: 'alto', C: 'bajo', E: 'alto', D: 'bajo' }
+  };
+}
+cargar() {
+  try {
+    const raw = window.localStorage.getItem('vetchain_config_v2');
+    if (raw) { const c = JSON.parse(raw); if (c && c.niveles && c.niveles.length === 3 && c.clientes) { if (typeof c.promo !== 'number') c.promo = 3; c.igv = 18; c.niveles.forEach((n) => { n.desc = (typeof n.desc === 'number' && n.desc >= 0 && n.desc <= 30) ? n.desc : 0; n.nombre = { bajo: 'Nivel C', medio: 'Nivel B', alto: 'Nivel A' }[n.id] || n.nombre; }); return c; } }
+  } catch (e) {}
+  return this.defaults();
+}
+renderVals() { return Object.assign(this.renderBase(), this.navVals()); }
+navVals() {
+  let rol = 'gerencia';
+  rol = 'gerencia';
+  const roles = { gerencia: { n: 'Gerencia comercial', i: 'GC' }, vendedor: { n: 'Vendedor B2B', i: 'VB' }, logistica: { n: 'Logística', i: 'LG' } };
+  const col = { t:'#5F6368', fg:'#3A3A3A', bg:'transparent', afg:'#D01F29', abg:'#FBE8E9' };
+  const D = {
+    panel: 'M3 3h7v9H3z M14 3h7v5h-7z M14 12h7v9h-7z M3 16h7v5H3z',
+    alertas: 'M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9 M13.73 21a2 2 0 0 1-3.46 0',
+    clientes: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z M22 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75',
+    cotiz: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8',
+    rutas: 'M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z M12 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',
+    import: 'M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z M3.3 7 12 12l8.7-5 M12 22V12',
+    rent: 'M22 7 13.5 15.5 8.5 10.5 2 17 M16 7h6v6',
+    integ: 'M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8 M3 3v5h5 M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16 M16 16h5v5',
+    config: 'M4 21v-7 M4 10V3 M12 21v-9 M12 8V3 M20 21v-5 M20 12V3 M1 14h6 M9 8h6 M17 16h6'
+  };
+  const grupos = [
+    { t: 'Inicio', items: [ ['Panel gerencial', 'Main.dc.html', D.panel, ['gerencia']] ] },
+    { t: 'Trabajo comercial', items: [
+      ['Clientes', 'Clientes.dc.html', D.clientes, ['gerencia']],
+      ['Cotizaciones', 'Cotizaciones.dc.html', D.cotiz, ['gerencia']] ] },
+    { t: 'Gestión del negocio', items: [
+      ['Planificación de importación', 'Planificacion.dc.html', D.import, ['gerencia']],
+      ['Reportes', 'Main-nsyj.dc.html', 'M4 20h16 M7 16v-5 M12 16V6 M17 16v-8', ['gerencia'], 'grupo'] ] },
+    { t: 'Administración', items: [
+      ['Ajustes', 'Configuracion.dc.html', D.config, ['gerencia']] ] }
+  ];
+  const actual = 'Cotizaciones.dc.html';
+  const navItems = [];
+  grupos.forEach((g) => {
+    const vis = g.items.filter((x) => x[3].indexOf(rol) >= 0);
+    if (!vis.length) return;
+    navItems.push({ esTitulo: true, esItem: false, texto: g.t, cTitulo: col.t });
+    vis.forEach((x) => {
+      const on = x[1] === actual || (x[1] === 'Configuracion.dc.html' && actual === 'Integracion.dc.html');
+      navItems.push({ esTitulo: false, esItem: x[4] !== 'grupo', esGrupo: x[4] === 'grupo', texto: x[0], href: x[1], d: x[2], actual: on ? 'page' : 'false', bg: on ? col.abg : col.bg, fg: on ? col.afg : col.fg });
+    });
+  });
+  const bellOn = rol === 'gerencia';
+  let hechas = {};
+  try { hechas = JSON.parse(window.localStorage.getItem('vetchain_alertas_done') || '{}') || {}; } catch (e) {}
+  const alBase = [
+    ['a1', "Corporacion Farmaceutica Veterinaria S.A.C.", "TRITOHEXIDIN PLUS X 50 ML · 24 unidades", 18],
+    ['a2', "H & P Distribuciones Y Representaciones S.A.C.", "TRITOHEXIDIN SHAMPOO X 250 ML · 25 unidades", '12,5'],
+    ['a5', "Corporacion Veterinaria Andes S.A.C.", "DOXILINA 150 MG · 12 unidades", 19],
+    ['a3', "Mapevas S.A.C.", "LEVOTIROXINA T4 TRITON 0,4 MG X 100 COMP · 2 unidades", 5],
+    ['a4', "Grupo Orlando S.A.C.", "NUTRAPRO K9 CANINE X 30 SOBRES · 3 unidades", 6]
+  ];
+  const bellPend = alBase.filter((a) => !hechas[a[0]]).length;
+  const bellItems = alBase.slice().sort((x, y) => (hechas[x[0]] ? 1 : 0) - (hechas[y[0]] ? 1 : 0)).map((a) => {
+    const h = !!hechas[a[0]];
+    return { cliente: a[1], detalle: a[2], chip: h ? 'Contactado' : '+' + a[3] + ' días', chipBg: h ? '#E5F3EA' : '#FBE8E9', chipFg: h ? '#1E6B3A' : '#A8161F', op: h ? '0.6' : '1' };
+  });
+  const bellAbierto = !!this.state.bellOpen;
+  const bellAct = (typeof actual !== 'undefined') && actual === 'Alertas.dc.html';
+  return { navItems, verGestion: rol !== 'vendedor', soloVend: rol === 'vendedor', rolNombre: roles[rol].n, rolIni: roles[rol].i, rolActual: rol,
+    bellVisible: bellOn, bellOpen: bellAbierto && bellOn, bellAria: bellAbierto ? 'true' : 'false',
+    bellCount: bellPend, bellShowCount: bellPend > 0,
+    bellLabel: 'Alertas del día: ' + bellPend + (bellPend === 1 ? ' pendiente' : ' pendientes'),
+    bellTitulo: bellPend + (bellPend === 1 ? ' pendiente' : ' pendientes') + ' de 5',
+    bellBd: bellAct || bellAbierto ? '#D01F29' : '#E3E3E3', bellBg: bellAct || bellAbierto ? '#FBE8E9' : '#FFFFFF', bellFg: bellAct || bellAbierto ? '#D01F29' : '#3A3A3A',
+    bellItems, bellToggle: () => this.setState({ bellOpen: !this.state.bellOpen }), bellClose: () => this.setState({ bellOpen: false }) };
+}
+rebajaDe(nombre) {
+  try { const rb = JSON.parse(window.localStorage.getItem('vetchain_rebajas') || '{}') || {}; const k = Object.keys(rb).find((x) => x.toLowerCase().replace(/[^a-z0-9]/g, '') === String(nombre).toLowerCase().replace(/[^a-z0-9]/g, '')); const v = k ? parseFloat(String(rb[k]).replace(',', '.')) : 0; return isNaN(v) ? 0 : v; } catch (e) { return 0; }
+}
+renderBase() {
+  const s = this.state;
+  const cfg = this.cargar();
+  const nb = (t) => String(t).replace(/ /g, ' ');
+  const r2 = (n) => Math.round(n * 100) / 100;
+  const sol = (n) => 'S/ ' + r2(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ').replace('.', ',');
+  const pct1 = (n) => (Math.round(n * 10) / 10).toString().replace('.', ',') + ' %';
+
+  const CL = [["CORPORACION FARMACEUTICA VETERINARIA S.A.C.",316974.87],["H & P DISTRIBUCIONES Y REPRESENTACIONES S.A.C.",264324.71],["GRUPO PHARMAX VETERINARIA S.A.C.",173193.07],["MAPEVAS S.A.C.",140207.64],["DISERVET PERU E.I.R.L.",99540.67],["VETER PERU S.A.C.",83374.59],["DISTRIBUCIONES AGROVENS E.I.R.L.",70811.37],["GRUPO ORLANDO S.A.C.",56860.53],["NOR VETERINARIOS S.R.L.",49074.89],["CORPORACION VETERINARIA ANDES S.A.C.",40018.57],["INVERSIONES COMERCIALES CANADA S.A.C.",35027.37],["CEV BUSTAMANTE E.I.R.L.",34506.67],["GRUPO VETERINARIO ADF S.A.C.",29474.23],["TORRES GARCIA GIULIANA ELVA",25876.82],["PET SHOP LA MOLINA S.A.C.",23525.57],["PHARMAVET MARKET E.I.R.L.",23163.75],["SEFAVET E.I.R.L.",22176.86],["DOG CAT E.I.R.L.",19023.21],["VETERINARIAS INTEGRADAS S.A.C.",18373.98],["NEGOCIOS CHUCAN E I R L",17887.31],["VETFAR PERU S.A.C",16872.9],["GROUP VET S.A.C.",15544.26],["ARCA SERVICIOS GENERALES SRL",15254.57],["SCF ASOCIADOS S.A.C.",14784.14],["VETERINARIA BLASVET SURCO E.I.R.L.",14056.19],["VETCORP S.A.C",12959.51],["GABU VET S.A.C.",11128.26],["HEALTHY PETS E.I.R.L.",11034.9],["CONSORCIO AGRO VETERINARIO E.I.R.L.",10540.73],["CAVERO & COCHELLA INVERSIONES S.A.C.",10408.52],["LINEAS VETERINARIAS EIRL",10126.37],["NATVET AGRO S.A.C",9958.23],["VETLAB MEDIC E.I.R.L.",9711.04],["TIENDANIMAL E.I.R.L.",9629.89],["PAREDES APAZA MAGDA MARCIA IRENE",9496.94],["SURCO VET SERVICE S.A.C.",9195.12],["MI PATAZA E.I.R.L.",9029.0],["GUERRERO MARTINEZ HENRY",8605.18],["KOKOVET E.I.R.L.",8085.71],["SALVADOR HOSPITAL VETERINARIO E.I.R.L.",7974.74],["SCF INVERSIONES S.A.C.",7729.79],["ZUAZO CORTEZ MILAGRITOS ADRIANA",7612.89],["MEDERI E.I.R.L.",7521.19],["VETERINARIA D TAISA S.A.C.",7412.88],["PET S PLACE VETERINARIAS S.A.C.",6877.29],["HIDALGO PASQUEL DUNYA GREGORIA",6736.65],["DISTRIBUIDORA VETERINARIA GLOBAL E.I.R.L.",6655.95],["GONZALES MEDINA JOHANNA PATRICIA",6612.01],["CLINICA VETERINARIA PROVETS E.I.R.L.",6583.17],["VETAURORA SRL",6490.88],["VETERINARIA ANIMAL LIFE S.A.C",6484.87],["YAURI PISCONTE SUSAN ANGELA",6479.88],["LIDERVET SUR E.I.R.L.",6325.45],["PET S LIFE E.I.R.L.",6286.56],["PET LIMA S.A.C.",6138.23],["GILES CHUMPITAZ PEDRO WILLIAM",5978.97],["COCA CARPENA LUZ EDHIT",5946.72],["VETERINARIA UNIDAS SJL E.I.R.L.",5917.87],["MALPARTIDA CAMPOS LUIS ENRIQUE",5811.09],["ECOS SOTO HECTOR ANTHONY",5706.03],["VITAL PETS S.A.C.",5286.53],["CONSORCIO VETERINARIO ANIMAL HELP E.I.R.L.",5285.59],["INVERSIONES CIRILO E.I.R.L.",5133.92],["VGN S.A.C.",5028.95],["GUTIERREZ SALAZAR ELBA DE JESUS",4775.51],["AGROPEC S.R.L.",4742.62],["SAN MARTIN 33 DISTRIBUIDORA VETERINARIA S.A.C.",4728.04],["L & G VETERINARIOS S.A.C.",4572.98],["CASTRO WHU MIRKO ALEXIS",4453.51],["SERVICIOS VETERINARIOS ESPECIALIZADOS S.A.C.",4388.23],["INVERSIONES AGRO VETERINARIOS COMERCIALES C&C E.I.R.L.",4358.49],["ECHEVARRIA GUTIERREZ GIANCARLO",4155.19],["INVERSIONES VETERINARIAS KFLP E.I.R.L.",4055.18],["MUNDO LAB VET S.A.C.",4008.53],["GRUPO VETERINARIO LAS VIÑAS S.A.C.",3927.18],["HL MARKETVET E.I.R.L.",3844.1],["SALAS RAMOS ANDRES JUAN",3837.37],["ESPINOSA SANTIVAÑEZ FERNANDO ARTURO",3813.56],["AGRIVET E INVERSIONES S.A.C.",3806.01],["LESCANO VETS E.I.R.L.",3717.03],["ALARCON CABALLERO EDITH PAOLA",3669.6],["GUEVARA GALLEGOS YULIANA JULIA",3617.02],["VETERINARIA MARIATEGUI S.A.C.",3604.33],["UZURIAGA ALVARADO ELIZABETH EMILIA",3591.66],["ZOOLUCIONES CYR S.A.C",3542.46],["ASOCIADOS M & J PETS S.A.C.",3497.53],["CLINICA VETERINARIA CANALES S.A.C.",3446.72],["LEON TENORIO MICHAEL MAYCO",3429.72],["CENTRO VETERINARIO MEDIKA VET S.A.C.",3410.23],["CE.RO.A S.A.C.",3222.1],["CENTRO MEDICO VETERINARIO SURCO S.A.C.",3218.7],["P.K. VET S.A.C.",3176.33],["ALFREDO ORTEGA CLINICA DERMATOLOGICA VETERINARIA E.I.R.L.",3150.01],["NEGOCIOS E INVERSIONES C & C EIRL",3147.49],["EVERPETS S.A.C.",3130.54],["CEDEÑO ZEGARRA OMAR ANTONIO",3076.31],["MEDI PETS S.R.L.",3071.22],["IRIS MEDICINA FELINA E.I.R.L.",3054.28],["ORTIZ GARCIA DESIRE MARYORI",3050.03],["UCIVET E.I.R.L.",3010.21],["VETERINARIA SAN MARTIN F & N E.I.R.L.",2978.87],["PET HOME & BEAUTY E.I.R.L.",2957.69],["RAZURI GAMIO ITALO ROBERTO",2949.21],["SOCIALVET S.A.C.",2948.35],["VETERINARIAS TORRES AREVALO E.I.R.L.",2918.72],["VETERINARIA AMORES PERROS S.A.C",2884.81],["VETERINARIA MY PET S.A.C.",2883.19],["GRAVEGA S.A.C.",2861.92],["SOLUCIONES Y DESARROLLO VETERINARIO S.A.C.",2834.8],["ALI PETS E.I.R.L.",2800.96],["SERVICIOS GENERALES ARIEL S E.I.R.L.",2762.74],["CLINICA VETERINARIA URPI E.I.R.L.",2737.31],["SERVICIOS VETERINARIOS PETS MEDIC S.A.C.",2667.03],["VETERINARIA GUTIERREZ E.I.R.L.",2655.98],["PET SHOP RONDON S.A.C.",2572.94],["MARSEV S.A.C.",2542.4],["CLINICA VETERINARIA DEL NORTE S.A.C.",2519.57],["EMPRESA DE SERVICIOS VETERINARIOS BLUE PETS S.A.C.",2499.18],["GONZALES MALDONADO LUIS",2366.97],["CUATRO PATAS S.A.C.",2288.16],["PETSLIFE S.A.C.",2279.68],["NOLASCO ALTAMIRANO VIOLETA",2272.91],["INSTITUTO VETERINARIO DE ESPECIALIDADES MEDICAS S.A.C.",2265.33],["CLEAN DOG S.R.L.",2207.65],["SOSA SANDOVAL MARIA ELENA",2203.46],["IZARRA ARROYO YASSEL ADRIAN KIMBERLI",2108.5],["SALCEDO RIOJA OMAR HUMBERTO",2096.65],["DISTRIBUCIONES CRUZ DE MOTUPE & ALKHOVET E.I.R.L.",2068.67],["ORTIZ POLO ANIBAL RAFAEL",2050.84],["SERVICIOS E INVERSIONES VETERINARIAS ANIMAUX E.I.R.L.",2035.66],["HUAMAN LUNA SILVIA ROSARIO",1989.86],["DE LA CRUZ DEUDOR JOSE LUIS",1985.66],["NATHALY ENCISO BENAVIDES",1957.66],["PET SHOP VETERINARIA HUELLITAS E.I.R.L.",1952.57],["VETERINARIA WASY VET E.I.R.L.",1931.39],["BUSTAMANTE OCHOA NATALY PATRICIA",1931.38],["MIGUEL ANGEL GARCIA MEDINA",1905.97],["ALBAN CARCAMO HENRY MAGUIN",1900.1],["ALLTOPETS S.R.L.",1891.55],["DARWILL PET SOCIETY S.A.C.",1850.02],["PET S ASTETE VETERINARY E.I.R.L.",1837.32],["ET & KP REPRESENTACIONES Y DISTRIBUCIONES S.A.C.",1820.4],["LA ROSA VELARDE VIRGILIO RAFAEL",1797.49],["CLINICA VETERINARIA SAN GABRIEL S.A.C.",1766.97],["CLINICA VETERINARIA SAN JUAN MACIAS S.R.L",1718.66],["FILOTHER ANTINEDORO TORDECILLO INOCENTE",1698.36],["MALPARTIDA PEREZ LUIS ALEJANDRO",1689.0],["PRETTY PET PERU S.A.C.",1658.5],["HOSPITAL VETERINARIO HUELLAS Y MAS HUELLAS S.A.C.",1653.39],["BELLOTA DE MIRANDA ASUNTA ARMIDA",1632.23],["HEALTHY PETS HERMANOS S.A.C.",1627.99],["PIAZZE LOVATON CLAUDIA GIULIANA",1627.2],["ALERTA VETERINARIA S.A.C.",1622.88],["PET HOME S.A.C. CLINICA VETERINARIA",1618.63],["CLINICA VETERINARIA VET HOUSE S.A.C",1610.22],["EUGENIA BOZA OBISPO",1606.78],["DAVILA ZENDER CRISTHIAN OSWALDO",1594.91],["VETERINARIA AMA E.I.R.L.",1591.6],["PETS SERVICIOS VETERINARIOS E.I.R.L.",1589.84],["CLINICA VETERINARIA PREVI S.A.C.",1579.66],["PHARMY CORPORATION S.A.C.",1546.61],["RONDON BUSTAMANTE SYLVIA HELENA",1519.55],["DISTRIBUIDORA AGRO SUNI DEL PERU S.A.C.",1507.63],["VETERINARIAS RUNA LUNA E.I.R.L.",1494.96],["VETERINARIA CABRERA J & P S.A.C.",1492.43],["COTRINA DEL CAMPO OSCAR DANIEL",1487.33],["ESPINOZA RENTERIA FAVIO RENATO",1482.22],["CENTRO VETERINARIO LA AURORA S.A.C.",1452.54],["MIYO MIROSLAV MUSTAPICH JOYO",1440.7],["GAPA VET S.A.C.",1433.92],["LLAQUE DIAZ CESAR AUGUSTO",1418.66],["LA HERRADURA ASOCIADOS S.A.C.",1408.5],["MIVET S.A.C.",1383.17],["MARTIN WILFREDO BENDEZU PARRAGA",1381.37],["LEVANO PACHAS RACIEL ANTONIO",1374.61],["INVETMONT S.A.C.",1356.03],["COORPORACION HOYOS E.I.R.L.",1342.42],["INVERSIONES VETERINARIAS SAN MATEO S.A.C",1332.22],["PRIVET E.I.R.L",1323.76],["NEGOCIOS E INVERSIONES VETERINARIAS FERREL S.A.C.",1311.88],["CACERES PASTOR RAUL EFRAIN",1308.5],["OLIVARES MAÑUICO JOSUE DAVID",1306.81],["CORTEGANA GOMEZ MARIETTA ROSA",1293.26],["CORPORACION & SERVICIOS GENERALES DOGTOR HOUSE E.I.R.L.",1284.77],["MIAN VETERINARIOS E.I.R.L.",1282.22],["GRUPO LLANARDO E.I.R.L.",1274.61],["CLINICA VETERINARIA PET PARTY E.I.R.L",1254.26],["LEUYACC COTAQUISPE MIGDONIO",1250.87],["GUILLINTA PRADO YURI ADRIAN",1231.38],["CUETO DELGADO CINTHYA MARGARITA",1228.85],["FERNANDO JULIAN RAYMUNDO TINTAYO",1224.6],["ALCOSER PATIÑO GONZALO NICOLAS",1223.74],["VETERINARIA ARBOLEDA EIRL",1200.01],["VETERINARIA BLASVET LINCE E.I.R.L.",1200.01],["TEMPLE BALVIN VICTOR ROLANDO",1177.99],["ALEMYA VETERINARIA PET SHOP S.A.C.",1169.5],["ANIMEDICA VET S.A.C.",1159.33],["RIVAS PIZARRO JOSE MIGUEL",1147.48],["ARIEL S CLINIC HOSPITAL VETERINARIO E.I.R.L",1128.82],["NEVET S.A.C.",1109.33],["MEDICOSAS E.I.R.L.",1080.52],["DISTRIBUCIONES E INVERSIONES MATTVET EIRL",1069.5],["SAN MIGUEL ARCANGEL VETERINARIAS S.A.C",1060.18],["TERRONES REYNAFARJE MONICA JANETH",1023.53],["P.Y. SERVET E.I.R.L.",998.31],["ADMINISTRADORA DE SERVICIOS VETERINARIOS S.A.C.",993.23],["SAN FELIPE PETS E.I.R.L.",983.95],["INVERSIONES ICATAR E.I.R.L.",976.3],["ORTIZ PEÑA DE MARQUINA ROSA MARIA ANDREA",961.89],["QUIJADA ROJAS MARIELA",961.04],["M & C VET S.A.C.",958.49],["CLINICA DEYANIRA SANCHEZ E.I.R.L.",927.97],["VETMUNDO ANIMAL S.A.C.",920.39],["HUAMANCHUMO PELAEZ JUAN CARLOS",913.58],["VENTURA RAFFO ISHY TALIA DEL ROSARIO",903.39],["CLINICA VETERINARIA AURIS S.A.C.",886.49],["CLINICA VETERINARIA ARISTOCAT E.I.R.L.",880.51],["VETERINARIA DR. OSORIO E.I.R.L.",850.02],["CLINICAS VETERINARIAS SAN FELIPE S.A.C.",832.22],["INVERSIONES SIMPET S.A.C.",813.58],["VILLANUEVA VETERINARIOS S.A.C.",772.91],["VETERINARIA PETCLUB CUETO E.I.R.L.",760.21],["BELLIDO DOMINGUEZ ROCIO",738.99],["DISTRIBUCIONES Y SERVICIOS CRUZ DE MOTUPE S.C.R.L.",736.47],["RAMIREZ RIERA LISYANY NOHELY",720.34],["ANIMAL HELP E.I.R.L.",710.17],["JULCA SILVA LUIS ALFREDO",709.32],["GOCO SPET S.A.C.",700.86],["FLOR DE MARIA HUARACA DELGADO",678.0],["JULIA LASSARINA ENCISO GUTIERREZ",674.57],["ADERVET S.A.C",669.5],["DELGADO VERA AIMEE",667.81],["CONSORCIO EMA DKF E.I.R.L.",666.94],["ARNALDO NIQUE MEDRANO VERASTEGUI",655.1],["CENTRO VETERINARIO FRIENDLY PETS S.A.C.",649.16],["SERVICIOS VETERINARIOS INTEGRALES EL PORVENIR E.I.R.L.",649.15],["ENROS VET E.I.R.L.",644.08],["VETERINARIA JOSE GRANDA SOCIEDAD ANONIMA CERRADA",644.08],["PAOLA INES NAVARRO ORTIZ",638.98],["PETS CANADA S.A.C.",636.45],["TITO PEDRAZA PATTY NOHELY",635.6],["VETERINARIA LOS FLAMENCOS E.I.R.L.",634.75],["CLINICA VETERINARIA PORTALINO & RONDON S.A.C.",608.47],["ROMASA VET S.A.C.",600.01],["TURPO BARRIOS FELIX ALFONSO",595.76],["CLINICA VETERINARIA CAVERO S.A.C.",588.14],["ALVARADO HARO JUAN RODOLFO",586.44],["AURIS ESCOBAR FEDOR INTI",580.51],["CLINICA VETERINARIA ZEBALLOS E.I.R.L.",579.68],["COLQUE ALAVE ELIZABETH GABY",579.67],["LA CASA DE BELLOTA E.I.R.L.",559.32],["MI MEJOR PATITA E.I.R.L.",555.95],["VETERINARIA Y ESTETICA ANIMALITOS Y MAS E.I.R.L.",547.47],["IMPORTADORA ABACAN PUPPY S.A.C.",539.84],["ZUZVET S.A.C.",523.75],["SANCHEZ ROSALES LILIAN GIOVANNA",523.73],["TABOADA SERAS PAUL ENRIQUE",518.65],["NAKURA S.A.C.",516.95],["LUHHOCOONS EMPRESA INDIVIDUAL DE RESPONSABILIDAD LIMITADA",493.24],["VETERINARIA ANIMALES DEL MUNDO E.I.R.L.",484.75],["VETERINARIA MI FIEL AMIGO S.A.C.",484.73],["ALOMASCOTAS.COM S.A.C.",481.37],["MARTINEZ CASTILLO JOSE PABLO",477.98],["ECHEVARRIA PATIÑO MARISABEL IRENE",468.65],["ESPECIALIDADES VETERINARIAS E.I.R.L.",466.95],["SALAS MATOS JULIANA ROSARIO",455.08],["RAMIREZ LEGONIA SILVIA JESUS",454.25],["BREEDER E.I.R.L.",434.75],["ANIMAL SURCO 24 HORAS SEDE SAN MIGUEL E.I.R.L.",433.92],["HOSPITAL VETERINARIO 24 HORAS ANIMAL SURCO E.I.R.L.",433.92],["BIOSERVET E.I.R.L.",424.59],["CARLOS VALENZUELA TZVETAN FERMIN",416.96],["GUERRERO OVALLES MARISOL",416.96],["JULCAPARI PORTUGUEZ VIGNI RAUL",416.96],["ORFANOS CRISOSTOMO NIKOLAS",416.96],["PURI CAPILLO OSWALDO MANUEL",416.96],["ROMANI GAMIÓN MARGARITA GLADYS",413.57],["QUISPE SANCHEZ LILIANE",406.78],["VETERINARIA MAZVET S.A.C.",391.55],["PILCO VERONA ERICK ROBERTO",383.05],["VETERINARIA PETTOYS E.I.R.L.",375.44],["CASTILLO RUBIN PAUL WERNER",375.43],["ERAGAR INVERSIONES S.A.C.",368.65],["SERMISSA S.A.",356.78],["REPRESENTACIONES WIDI E.I.R.L.",350.85],["IMAGENES DIAGNOSTICO VETERINARIO LAS RAZAS E.I.R.L.",336.45],["ROSAS JARA MARIBEL GLADYS",320.35],["SERVICIOS VETERINARIOS A & G S.A.C.",303.38],["ROBLES CARRANZA PERCY ADOLFO",297.46],["CLINICA VETERINARIA HOPE S.A.C.",294.08],["ROLANDO VIOLETA GARCIA",287.3],["R.V.S.T S.A.C.",282.2],["SILVA MAVILA DE VILCARA ROSA YNES",268.65],["CASTRO FRETEL MARGGORY ALEXANDRA",265.26],["SANCHEZ-SILVA GUTIERREZ MILENA VANESSA",264.42],["MONTES JAIMES JORGE RAUL",254.25],["E & L INVERSIONES VETERINARIAS S.A.C.",254.24],["SANCHEZ GUZMAN GUIDO YSMAEL",252.54],["TORRES CHACALTANA ANGEL ARMANDO",242.37],["INVERSIONES VETERINARIAS COSSMO E.I.R.L.",227.12],["VETERINARIA COSSIO S.A.C",227.12],["CORIPETS E.I.R.L.",216.95],["PIPÓS VET E.I.R.L.",216.95],["CORPORATIVO VETERINARIO S.A.C.",214.41],["MARINAZOO E.I.R.L.",205.93],["ATM SERVET S.A.C.",203.4],["VETERINARIA MAGIC DOG S.A.C.",203.39],["INVERSIONES GABAL S.A.C.",188.14],["DR. TONG E.I.R.L.",181.36],["B & B INVERSIONES VETERINARIAS S.A.C.",177.97],["CROSBY ALEGRE FAVIA NATALIA",151.69],["GUZMAN ITURBE HECTOR RICARDO",144.07],["LEON NAVARRO ALEJANDRA ISABELLA",144.07],["360° HOME VET S.A.C.",142.38],["ANIMAL GARDEN S.A.C.",131.36],["MASCOTAS MARKET S.R.L.",131.36],["ROJAS AYLAS KATTY ISABEL",131.36],["VET SANTA LUCIA S.A.C.",126.27],["RICANQUI LEONARDO JESSICA FIORELA",123.73],["VIP DOG S.A.C.",123.73],["R.H.K. SOLUCIONES VETERINARIAS E.I.R.L.",119.49],["BERRIOS BARRIONUEVO LIZETH STEPHANIE",106.79],["ZAMBRANO SANDOVAL NATALIA",103.39],["MULTISERVICIOS FERDI HNOS E.I.R.L.",101.02],["HEFEST SERVICIOS Y PLUS S.A.C.",94.91],["CUCHO VILCHEZ ALEXEIVICH",62.71],["GARAMENDI ALARCON JANETH MERCEDES",62.71],["FEEL VET S.A.C.",47.46],["YEPEZ GRANDE GIOVANNA MILUSKA",44.92],["BLAS ACOSTA DANIEL",40.68],["FERHATI ASTUDILLO LINDA",40.68],["A & L SERVICIOS VETERINARIOS E.I.R.L.",0.0],["A J PETS VETERINARIAS E.I.R.L.",0.0],["ACCEVET S.A.C.",0.0],["ACEVEDO CORZO LUCERO MARGARITA",0.0],["ACUÑA PEREZ JHON MARIO",0.0],["ACVET PERU E.I.R.L.",0.0],["AGRARIS INTERNACIONAL S.A",0.0],["AGRO VETERINARIA S.O.S MASCOTAS S.A.C",0.0],["AGROSEL VET FARMACIA SAC",0.0],["AGUAYO GALLARDO CIRO CESAR",0.0],["AGUILAR BAUTISTA ANDRES WALTER",0.0],["AGUILAR JAUREGUI RAFAEL VLADIMIR",0.0],["AGUINAGA CHAVEZ ROSAURA LILIANA",0.0],["AGUIRRE BELLIDO DE JARA CARLA SANDRIA AMALIA",0.0],["AIJA QUISPE MARIA ROSA",0.0],["AKAMARU E.I.R.L.",0.0],["ALARCON CASTRO CLAUDIA VICTORIA",0.0],["ALAYO ATOCHE EDITH VANESSA",0.0],["ALCALDE POMA ROBERTO RONALD",0.0],["ALDO LUIS CORTEGANA RODRIGUEZ",0.0],["ALFARO OLIVEROS MARIO ANTONIO",0.0],["ALFAVET E.I.R.L.",0.0],["ALPAS CANCHARI JACKELINE ELIZABETH",0.0],["ALTAVISTA MEDIC E.I.R.L.",0.0],["ALVA GUTIERREZ GUSTAVO ROBERTO",0.0],["ALVAREZ MONTEVERDE JUAN DIEGO",0.0],["AMAYA SIESQUEN YNES",0.0],["AMAZON VET S.A.C.",0.0],["AMBULODEGUI DOMENACK CARLOS YGOR",0.0],["AMIPET VETERINARIA E.I.R.L.",0.0],["ANA LUISA VICTORIA GARCIA NEYRA",0.0],["ANCAJIMA CONDORE HERNAN ENRIQUE",0.0],["ANDEANVET S.A.C.",0.0],["ANDRADE PALOMINO ANDREA VICTORIA",0.0],["ANGELICA PORTOCARRERO CHAPARRO",0.0],["ANGELITOS PET S E.I.R.L.",0.0],["ANIMAL ACTION FILMS S.A.C.",0.0],["ANIMAL CARE S.A.C",0.0],["ANIMAL FRIENDS S.A.C.",0.0],["ANIMAL HEART E.I.R.L.",0.0],["ANIMAL HOUSE S.A.C.",0.0],["ANIMAL LAND S.A.C.",0.0],["ANIMAL LIFE EXTRA CARE S.A.C.",0.0],["ANIMAL NET E.I.R.L",0.0],["ANIMALIA REPRESENTACIONES E.I.R.L.",0.0],["ANIMARKET DISTRIBUCIONES VETERINARIAS S.A.C.",0.0],["AQUAFARMA S.A.C.",0.0],["ARANA RODRIGUEZ MANUEL ENRIQUE",0.0],["ARANDA ARANDA MONICA",0.0],["ARAUCO CAMARGO SOCRATES JESUS",0.0],["ARAUJO SANCHEZ LUIS FERNANDO",0.0],["ARCAYA FAFRFAN JOSE MANUEL",0.0],["ARDIVET E.I.R.L.",0.0],["ARIAS DE LA CRUZ GISSELA",0.0],["ARIAS QUISPE DENNIS SANDY",0.0],["ARIAS REMUZGO JUAN",0.0],["ARISTOCAT 24 HORAS E.I.R.L.",0.0],["ARRIAGA CORTEZ IRMA MARYLIN",0.0],["ARRIOLA LOPEZ, ANDREA ALEJANDRA",0.0],["ARROYO TOVAR GISELLE KARIN",0.0],["ARTEAGA YUPANQUI JOSE LUIS",0.0],["ASCATE ASPIROS JAIME",0.0],["ASENCIOS GAMBOA JUAN DIEGO",0.0],["ASLLA ESPINOZA JULIA ALICIA",0.0],["AVILA VICENTE DE SUICA TEODORA MARIA",0.0],["AYJARI REYES CINTHIA MELISSA",0.0],["AYON VARILLAS ALCIRA BETTY",0.0],["BAEZ DE PINA ALFREDO ARMANDO",0.0],["BALLON PRINCIPE SANDRA GLORIA",0.0],["BASARAI UEDA JOSE",0.0],["BATALLA LOZANO LUIS ALBERTO",0.0],["BAUTISTA CUADROS ALFREDO",0.0],["BAZAN ALBITRES CLORINDA JULIA ANA",0.0],["BAZAN OLIVOS PILAR NOLY",0.0],["BELLIDO FUENTES AMADOR",0.0],["BENAVENTE DIAZ SABDIEL ISAI",0.0],["BENAVENTE DIAZ YAMIR KALEB",0.0],["BENITO ZEVALLOS PEDRO WALTER",0.0],["BERAKAH SERVICES S.A.C.",0.0],["BERROCAL TORRES FLOR MARIA",0.0],["BETKAR S.A.C.",0.0],["BIBOLOTTI REATEGUI MARIA FERNANDA",0.0],["BLAS VET E.I.R.L.",0.0],["BOCKOS VALENCIA KARLA",0.0],["BONE A PET TREAT E.I.R.L.",0.0],["BR SERVICIOS VETERINARIOS E.I.R.L.",0.0],["BRACAMONTE TELLO SHEYLA MABEL",0.0],["BRUMA PET S S.A.C.",0.0],["BULLON ALDAVE ANTONIO ERNESTO",0.0],["BUSINESS AGRAMONTE S.A.C.",0.0],["BUSTAMANTE OCHOA AMELIA ROXANA",0.0],["BUSTINZA RODRIGUEZ OLGA MARINA",0.0],["BUSTIOS MENDOZA LIZETH SANDRA",0.0],["C & N M.V. DADI S.A.C.",0.0],["C.A SERVICIOS VETERINARIOS S.A.C.",0.0],["CABALLERO GARCIA JESSICA MELISSA",0.0],["CABALLERO HUAMANI RUTH SOFIA",0.0],["CABALLERO LUCANO KAREN IVET",0.0],["CABELLOS NARVAEZ JOSE ANTONIO",0.0],["CABRERA CALDERON JORGE LUIS",0.0],["CABRERA CARBAJAL RICARDO ERNESTO",0.0],["CABRERA MARTINEZ BERTHA REGINA",0.0],["CAHUATA ROLDAN OCTAVIA CARMEN",0.0],["CALDERON ROMERO ROGER CARLOS",0.0],["CALDERON VDA DE CABRERA SARA",0.0],["CALDERON VELARDE CESAR RENAN",0.0],["CALERO ABARCA CAYETANO",0.0],["CALLIRGOS BOZZO MIRKO MANUEL",0.0],["CAMASCA LAUREANO MIGUEL ANGEL",0.0],["CAMAYO LANDA CAROLA DOMITILA",0.0],["CAMILO S VET S.A.C.",0.0],["CANALES FLORES JAVIER PABLO",0.0],["CANALES RIOS FRANCISCO JAVIER",0.0],["CANEM CLINICA VETERINARIA E.I.R.L",0.0],["CANIL TARUMA S.A.C.",0.0],["CANISHOP SERVICE E.I.R.L.",0.0],["CAPCHA ORTIZ MANUEL",0.0],["CAPCHA RODRIGUEZ VANESSA",0.0],["CAPURRO VILLARAN RENZO ANIBAL MARTIN",0.0],["CARAPULKRA FILMS S.A.C.",0.0],["CARBAJAL ALMERCO ARNOL",0.0],["CARBAJAL ALMERCO MAGNO SIXTO",0.0],["CARBAJAL ALMERCO ROGER",0.0],["CARBAJAL ALTAMIRANO CARLOS ALEJANDRO",0.0],["CARBAJAL ALTAMIRANO LUIS ALBERTO",0.0],["CARBAJAL VASQUEZ LESLIE CAROLL",0.0],["CARDENAS CERVANTES LIDIA",0.0],["CARDENAS MARTINEZ MARIA DEL CARMEN",0.0],["CARDENAS PAREDES FIORELLA CARMIN",0.0],["CARIBBEAN PROBIOTICS INDUSTRIES S.A.",0.0],["CARLOS VALENZUELA OMAR DANIEL",0.0],["CARMEN MILAGROS CLORINDA HERNANDEZ BAZAN",0.0],["CARRASCO LOPEZ CARLOS ARTURO",0.0],["CARRASCO ORDOÑEZ YESENIA PILAR",0.0],["CARRERA CARRERA MELISSA PAOLA",0.0],["CASALLO GALVEZ CESAR LUIS",0.0],["CASAS GONZALES PAOLA FRANCESCA",0.0],["CASMELVET S.A.C.",0.0],["CASSVER & ASOCIADOS S.A.C.",0.0],["CASTAÑEDA VASQUEZ SANDRA CAROLINA",0.0],["CASTAÑON ANAYA JENNIFER CINTHYA",0.0],["CASTILLA YATACO MARITZA ROSARIO",0.0],["CASTILLEJOS RICAPA JESUS MICHEL",0.0],["CASTILLO QUILCAT SEGUNDO ROMULO",0.0],["CASTRO PAZ ROSSANA DEL SOCORRO",0.0],["CASTRO PONCE RAUL EDGARDO",0.0],["CASVI S.A.C.",0.0],["CCACCYA RODAS ABEL",0.0],["CCACCYA RODAS WILFREDO",0.0],["CEDEÑO ZEGARRA MARIEL MILAGROS",0.0],["CEDIVET E.I.R.L.",0.0],["CELI ARELLANO ROXANA OLENKA",0.0],["CENTENO GABANCHO CLAUDIO MARCIANO",0.0],["CENTRAL PETS E.I.R.L.",0.0],["CENTRO DE ESPECIALIDADES VETERINARIAS S.A.C.",0.0],["CENTRO ESPECIALIZADO SOLUCIONES ORTOPEDICAS Y NEUROQUIRURGI.",0.0],["CENTRO MEDICO VETERINARIO MEDIC VET E.I.R.L.",0.0],["CENTRO MEDICO VETERINARIO OASIS S.A.C.",0.0],["CENTRO VETERINARIO AI PETS S.A.C.",0.0],["CEQVET S.A.C.",0.0],["CERVANTES APONTE ELIZABETH PAOLA",0.0],["CHALCO CARPIO DE QUIROZ CECILIA GLORIA",0.0],["CHALINVEST S.A.C.",0.0],["CHANGANAQUI ARRIOLA CLAUDIA INES",0.0],["CHAVEZ GONZALES SANDRA VANESSA",0.0],["CHAVEZ RIVERA EDITH ROSARIO",0.0],["CHESTER PET SHOP S.A.C.",0.0],["CHINCHAZO MONTOYA JOEL SAUL",0.0],["CHIPANA MUÑOZ JORGE MOISES",0.0],["CHORRES CALDAS LESLEY ANTHUANETH",0.0],["CHOTON LINARES ALBERTO ANDRE",0.0],["CHRISTIAN HALL UGAZ",0.0],["CHRISTIAN SANDOR JESUS GARCIA SANCHEZ",0.0],["CHUCAN VILLAIZAN JORGE DANTE",0.0],["CHUMBES SEGOVIA SIMON MISAEL",0.0],["CHUMPITAZ OSCATEGUI HENRY FREDDY",0.0],["CIRILO CALSIN ERICK",0.0],["CISEMP S.A.C.",0.0],["CITY.VET.PERU S.A.C.",0.0],["CLINICA SAN PABLO HERNANDEZ S.A.C.",0.0],["CLINICA VETERINARIA & PET SHOP DEJANDO HUELLAS S.A.C.",0.0],["CLINICA VETERINARIA ACEVEDO E.I.R.L.",0.0],["CLINICA VETERINARIA ALLQU VET E.I.R.L.",0.0],["CLINICA VETERINARIA ANIMAL S CARE E.I.R.L.",0.0],["CLINICA VETERINARIA ARGOS E.I.R.L.",0.0],["CLINICA VETERINARIA ARZ E.I.R.L.",0.0],["CLINICA VETERINARIA B & B PET HOME E.I.R.L.",0.0],["CLINICA VETERINARIA BENDEZU S.A.C.",0.0],["CLINICA VETERINARIA BETANCOURT E.I.R.L.",0.0],["CLINICA VETERINARIA BIENESTAR ANIMAL E.I.R.L.",0.0],["CLINICA VETERINARIA CAM ICAZA E.I.R.L.",0.0],["CLINICA VETERINARIA CONSORCIO PET S.A.C.",0.0],["CLINICA VETERINARIA CORPAC E.I.R.L.",0.0],["CLINICA VETERINARIA D MASKOTAS S.A.C.",0.0],["CLINICA VETERINARIA DIAZ DEL OLMO E.I.R.L.",0.0],["CLINICA VETERINARIA DR LAU S.A.C.",0.0],["CLINICA VETERINARIA EL POLO S.A.C.",0.0],["CLINICA VETERINARIA ENCISO S.A.C.",0.0],["CLINICA VETERINARIA FLORA TRISTAN E.I.R.L.",0.0],["CLINICA VETERINARIA FRANCISCO PIZARRO S.R.LTDA",0.0],["CLINICA VETERINARIA GONZALEZ S.A.C.",0.0],["CLINICA VETERINARIA HAPPY PET S S.R.L.",0.0],["CLINICA VETERINARIA HERCULES E.I.R.L.",0.0],["CLINICA VETERINARIA LA COLONIAL E.I.R.L.",0.0],["CLINICA VETERINARIA LA RINCONADA E.I.R.L.",0.0],["CLINICA VETERINARIA MARTINEZ E.I.R.L.",0.0],["CLINICA VETERINARIA MASCOLANDIA E.I.R.L.",0.0],["CLINICA VETERINARIA MUNDO MASCOTA S.A.C.",0.0],["CLINICA VETERINARIA MUNDO NATURA S.A.C",0.0],["CLINICA VETERINARIA PACHACAMAC E.I.R.L.",0.0],["CLINICA VETERINARIA PATOTA S.A.C.",0.0],["CLINICA VETERINARIA PET CENTER S.A.C.",0.0],["CLINICA VETERINARIA PET PARTY E.I.R.L.",0.0],["CLINICA VETERINARIA PETS CARE S.A.C.",0.0],["CLINICA VETERINARIA PETSALUD E.I.R.L.",0.0],["CLINICA VETERINARIA PET´S LAND E.I.R.L.",0.0],["CLINICA VETERINARIA PRANA S.R.L.",0.0],["CLINICA VETERINARIA PREVET S.A.C.",0.0],["CLINICA VETERINARIA ROJAS SORIA S.A.C.",0.0],["CLINICA VETERINARIA SAN DIEGO S.A.C.",0.0],["CLINICA VETERINARIA SAN ROQUE LIMA E.I.R.L.",0.0],["CLINICA VETERINARIA SANTA ANITA",0.0],["CLINICA VETERINARIA SASH S.A.",0.0],["CLINICA VETERINARIA SURCO S.A.C.",0.0],["CLINICA VETERINARIA UNIVERSAL PETS S.A.C.",0.0],["CLINICA VETERINARIA VALLEMOUNT E.I.R.L.",0.0],["CLINICA VETERINARIA VELASQUEZ AQP S.A.C.",0.0],["CLINICA VETERINARIA VIRGEN DEL CARMEN S.A.C.",0.0],["CLINICA VETERINARIA VIVALDI S.A.C.",0.0],["CLINICA VETERINARIA ZOOLAND E.I.R.L.",0.0],["CLINICAS VETERINARIAS SMALL FRIENDS S.A.C.",0.0],["CLINIPETS S.A.C.",0.0],["CLINIVET S.A.C.",0.0],["CLINIVET SANTA PATRICIA E.I.R.L.",0.0],["CLIVET PANDA S.A.C.",0.0],["CLUB MASCOTA VETERINARIA S.A.C.",0.0],["CODIVET S.A.C.",0.0],["COMERCIAL GAVETAS S.A.C.",0.0],["CONCEITED PET S S.A.C.",0.0],["CONDESPET S.A.C",0.0],["CONDOR RAMOS EVARISTO",0.0],["CONDORI GARCIA REYNA MIRIAM",0.0],["CONSORCIO ELIMAR S.A.C.",0.0],["CONSORCIO NAVEL E.I.R.L.",0.0],["CONSORCIO VETERINARIO ASLI E.I.R.L.",0.0],["CONSULTORIOS VETERINARIOS S.A.C.",0.0],["CONTRERAS CASTRO IVAN ELVIS ALEX",0.0],["COPAIRA MORO MARCOS RAMIRO",0.0],["COQUITOS DEL PERU TRADING S.A.C.",0.0],["CORDOVA DE LA CRUZ NANCY",0.0],["COTAQUISPE LEDESMA FREDY",0.0],["COYQUITO S.A.C.",0.0],["CUBA ASCARZA IVAN",0.0],["CUBA NEUMAN ADELA MELISA",0.0],["CUBAS HUAMAN DAVID PAULINO",0.0],["CUIDADOS VETERINARIOS G & M S.A.C.",0.0],["CUNI FOOD E.I.R.L.",0.0],["CUTIMBO CONCHE YURIKO JACKELINE",0.0],["CUTIPA PACHO FELIZ EUSEBIO",0.0],["DANI PETS & VET S.A.C.",0.0],["DANITZA SOSA CARDOZA",0.0],["DANTO VET S.A.C.",0.0],["DASH VET S S.A.C.",0.0],["DASHY PETS S.A.C.",0.0],["DAVILA JORGE HUGO MANUEL",0.0],["DE PAZ MENDOZA JMMY PERCY",0.0],["DEL VALLE BALLON PAOLA ELISABETH",0.0],["DELGADO CALLE WILMER EDUARDO",0.0],["DELRO INVERSIONES S.A.C.",0.0],["DENNYS ENRIQUE BRACAMONTE OBLITAS",0.0],["DERMATO VET E.I.R.L.",0.0],["DERMIVET S.A.C.",0.0],["DESARROLLO Y SERVICIO EN VETERINARIA S.A.C.",0.0],["DEYANIRA SANCHEZ GARCIA",0.0],["DGS VETERINARIOS S.A.C.",0.0],["DIAGNOVET S.A.C.",0.0],["DIAZ DE LAMA ALISSON XIMENA",0.0],["DIAZ GARAY CRISTIAN",0.0],["DIAZ MINAYA CARLOS ALBERTO",0.0],["DIAZ PALACIOS LUIS ALFREDO",0.0],["DIEDRA S.A.C.",0.0],["DISPROVET EMANUEL PERU S.A.C.",0.0],["DISTRIBUIDORA ZEBALLOS DE PRODUCTOS VETERINARIOS DEL SUR E.I.R.L.",0.0],["DOGGY S FRIENDS S.R.L.",0.0],["DRA. FREIRE VETERINARIA S.A.C.",0.0],["ECOSPET E.I.R.L.",0.0],["EDITORIAL ROLDAN & HIJOS S.A.C.",0.0],["EF VETERINARIA Y PELUQUERIA DE MASCOTAS S.A.C.",0.0],["EGUCHE HUERTA JOSE MANUEL",0.0],["EILEEN KATINA PEREZ ROJAS",0.0],["EL HURON AZUL E.I.R.L.",0.0],["EL MUNDO DE LAS MASCOTAS S.R.L.",0.0],["ELIZABETH COLQUE ALAVE",0.0],["ELKA GERALDINE GARNIQUE MONCADA",0.0],["ELMA DUEÑAS PIZAN",0.0],["ELMER IVAN LOPEZ PORTELLA",0.0],["ENCISO GUTIERREZ JAVIER ALEJANDRO",0.0],["ENCISO RIOS EMILIA CRISTINA",0.0],["ERIK RAUL VALDIVIA SEGURA",0.0],["ES PA MASCOTAS S.A.C.",0.0],["ESCALANTE PINTO NELSON LUIS",0.0],["ESCOBAR VASQUEZ MERY ROSARIO",0.0],["ESMERALDA PET SHOP S.A.C.",0.0],["ESPECIALIDADES VETERINARIAS DEL PERU E.I.R.L.",0.0],["ESPINOZA CHACALTANA HUGO ALAIN",0.0],["ESPINOZA FERNANDEZ CARLOS DANIEL",0.0],["ESPINOZA GARCIA MILTON",0.0],["ESPINOZA PEÑA CESAR GUSTAVO",0.0],["ESPINOZA RENTERIA INVERSIONES E.I.R.L.",0.0],["ESPINOZA VILCHEZ ANTAR JOSE",0.0],["ESQUIVEL NAITO ANGELICA MILAGROS",0.0],["ESTACION VETERINARIA S.A.C.",0.0],["ESTRADA VILLAROEL VICTOR ENRIQUE",0.0],["EUROVET S.A.C.",0.0],["EVANGELISTA BAUTISTA KARLA GRACE",0.0],["EVENTOS GALLISTICOS Y CULTURALES E.I.R.L.",0.0],["F & F CONSORCIO VETERINARIO S.A.C.",0.0],["FA CHING CAVALIE SERGIO ANDRES",0.0],["FABIAN ORTIZ ENTNA KAREM",0.0],["FALIVET E.I.R.L.",0.0],["FAMONT PETS S.A.C.",0.0],["FARMACIAS VETERINARIAS DEL PERU S.A.C.",0.0],["FASHION PETS E.I.R.L.",0.0],["FELICES CARHUAPOMA ALBERLTO SABINO",0.0],["FERNANDEZ JIMENEZ MARLON FELIX",0.0],["FERNANDEZ LIZARBE MARGOT",0.0],["FERNANDEZ PALZA ALFONSO MARTIN",0.0],["FERNANDEZ SANCHEZ IVAN STEVEN",0.0],["FERNANDO MAITA ROMANI",0.0],["FIGUEROA OCAMPO ADRIAN RICARDO",0.0],["FISIOPET S.A.C.",0.0],["FLOR DE MARIA BUSTAMANTE JAVIER",0.0],["FLOR DE MARIA HUARACA DELGADO",0.0],["FLORES CASTILLO MIGUEL ANGEL",0.0],["FLORES GOMEZ CELINDA FELICITA",0.0],["FLORES HUAILLASCO SILVIA DORIS",0.0],["FLORES JAIME JOHANA RUTH",0.0],["FLORES OLIVERA JESSICA PAOLA",0.0],["FLORES PADILLA LORENA YANEL",0.0],["FLORES ROJAS HECTOR RODOLFO",0.0],["FLORES SUTTA ALFREDO",0.0],["FLORES TIPISMANA DE HUAMAN YENNY PAOLA",0.0],["FONSECA SIFUENTES EDER",0.0],["FRANCO CABRERA VANESSA PAOLA",0.0],["FRESH FOOD COMPANY S.A.C.",0.0],["FREUNDT COELLO MICHELLE",0.0],["FRISANCHO VALDEIGLESIAS FABRIZIO",0.0],["FUENTES SOLIS ROBERT WILLIAM",0.0],["FUNNYPET VET S.A.C.",0.0],["G & G VETS FAMILY E.I.R.L.",0.0],["GABUS VET S.A.C.",0.0],["GALCO VETERINARIA E.I.R.L.",0.0],["GALVEZ ARAMBURU JUAN CARLOS",0.0],["GAMARRA BECERRA LUCERITO BELEN",0.0],["GAONA CORDOVA DAYTON MARCIAL",0.0],["GARCIA ALARCON DE RAMOS LILIA",0.0],["GARCIA BRACAMONTE RENAN FERNANDO",0.0],["GARCIA MORENO MARINA MILAGROS",0.0],["GARCIA PEZO JUAN",0.0],["GARCIA VIDAL ANGELA",0.0],["GARNIQUE MONCADA PATRICIA YSABEL",0.0],["GARRIDO ABAD SARA ELIZABETH",0.0],["GARROTE AMAYA HUGO",0.0],["GARROTE OCARES MARIO FELICIANO",0.0],["GARUKA PET STORE E.I.R.L.",0.0],["GAVAPA S A C",0.0],["GAYOSO VELASQUEZ ELLA MARIA",0.0],["GINES MILLA MYRIAM NATALIE",0.0],["GIRAO OLIVA MARIA DEL CARMEN LUCRECIA",0.0],["GLOBAL PET S S.A.C.",0.0],["GLOBAL TORRES S.C.R.L.",0.0],["GODOY ZEGARRA ROXANA BEATRIZ",0.0],["GOMEZ DE LA TORRE VIERA JUAN EDUARDO",0.0],["GOMEZ PALOMINO PAOLA MILAGROS",0.0],["GONVET PERU S.A.C.",0.0],["GONZALES CORRALES BELLERMINA",0.0],["GONZALES CRUZ KARIN ALEJANDRINA",0.0],["GONZALES MONDRAGON KATHERINE MELISA",0.0],["GONZALES PEÑARRIETA RICARDO",0.0],["GONZALES TORRES AIME LEONOR",0.0],["GONZALES VILLANUEVA ANA CECILIA",0.0],["GONZALEZ JANAMPA EDWIN",0.0],["GONZALEZ JANAMPA EFRAIN",0.0],["GONZALEZ TORREJON SANTIAGO LUIS",0.0],["GRACIELA MEZA BACA",0.0],["GRECIA PIERINA GRADOS CAAMAÑO",0.0],["GRISOLLE ZOLEZZI MELISA",0.0],["GROOMERS S.R.L.",0.0],["GROOMING & VET E.I.R.L.",0.0],["GRUPO ARQTEC S.A.C-G ARQTEC SAC",0.0],["GRUPO SANITOVET S.A.C.",0.0],["GRUPO VETERINARIO S.A - GRUVETSA",0.0],["GRUPO VETERINARIO VISE S.A.C.",0.0],["GUADALUPE GAMARRA GABRIELA ANJULY",0.0],["GUARDERAS GOTTFRIED JENNY OTILIA",0.0],["GUERRERO CABRERA VERONICA ELENA",0.0],["GUERRERO DIAZ CARLOS ANTONIO",0.0],["GUEVARA CRISANTO JUAN ERNESTO",0.0],["GUTIERREZ APONTE RUMUALDO EDWAR",0.0],["GUTIERREZ GUTIERREZ MIGUEL ANGEL",0.0],["HAL CONTROL S.A.C.",0.0],["HAPPY FAMILY VET S.A.C.",0.0],["HATZUMI ZAMBRANO FLORES",0.0],["HEALTH & FOOD PETS S.A.C.",0.0],["HEALTHY PAWS S.C.R.L",0.0],["HECTOR ALFREDO ECOS RAMIREZ",0.0],["HELVETIKA S.A.C.",0.0],["HERNAN SWAYNE",0.0],["HIDALGO TORRES LUCIA",0.0],["HIDALGO YANCE FLORA MIRIAM",0.0],["HOLDING VISE S.A.C.",0.0],["HOSPITAL CLINICO VETERINARIO \"MEVET\" S.A.C.",0.0],["HOSPITAL VETERINARIO DEL SUR S.A.C.",0.0],["HOSPITAL VETERINARIO S.A.C.",0.0],["HOSPITAL VETERINARIO S.A.C.",0.0],["HUALLPA HUAMAN WILMER",0.0],["HUAMAN LOZANO JOSE LUIS",0.0],["HUAMAN NAJARRO LILY LUZ",0.0],["HUAMAN PALACIOS DARCY ANTUANET",0.0],["HUARAC CADILLO CRISTIAN ALEX",0.0],["HUATUCO CABEZUDO DAVID JESUS",0.0],["HUAYNATES ORELLANA GAZELLE MARINA",0.0],["ICAZA ESCOBEDO S.A.C.",0.0],["IMAGENES VETERINARIAS E.I.R.L.",0.0],["IMAGENESVET E.I.R.L.",0.0],["IMPORT MUNDO VET E.I.R.L.",0.0],["IMPORT VET S.A.C",0.0],["IMPORTADORA A1 VANDERPET S.A.C.",0.0],["INGA AQUINO KARINA BERTHA",0.0],["INNOVA VETERINARIA S.A.C",0.0],["INNOVAVET S.R.L.",0.0],["INSTITUTO VETERINARIO BIENESTAR ANIMAL S.A.C",0.0],["INTEGRAL VET S.A.C.",0.0],["INVERSIONES ALOHA PERU S.A.C.",0.0],["INVERSIONES BASHAR S.A.C.",0.0],["INVERSIONES BORE S.A.C.",0.0],["INVERSIONES CASSINELLI NUTRICION Y SALUD ANIMAL S.A.C.",0.0],["INVERSIONES EL HURON AZUL E.I.R.L.",0.0],["INVERSIONES GAP PERU E.I.R.L.",0.0],["INVERSIONES GATTY S.A.C.",0.0],["INVERSIONES GROOMERS Y ASOCIADOS S.R.L.",0.0],["INVERSIONES NAREL & ASOCIADOS S.R.L.",0.0],["INVERSIONES NORVET S.A.C.",0.0],["INVERSIONES PEDRO CABELLOS S.R.L.",0.0],["INVERSIONES PERUCAN S.A.C.",0.0],["INVERSIONES POKIS S.A.C.",0.0],["INVERSIONES RIVERO & CALVO E.I.R.L.",0.0],["INVERSIONES VAGU S.A.C.",0.0],["INVERSIONES VARGAS S.A.C",0.0],["INVERSIONES VETERINARIAS S.A.",0.0],["INVERSIONES VETERINARIAS URIARTE Y GARAY S.A.C.",0.0],["INVERSIONES Y SERVICIOS ONE LINE E.I.R.L",0.0],["INVESTIGACION Y ASESORIA PECUARIA S.A.C.",0.0],["IPARRAGUIRRE GUTIERREZ FERNANDO RENATO",0.0],["IPROVET E.I.R.L.",0.0],["IRIS AGUILAR HUAMANI",0.0],["ISLA QUISPE ANANIAS EDUARDO",0.0],["ITURI JARA MARIA",0.0],["IVIZA E.I.R.L.",0.0],["J & L NEW GROUP E.I.R.L.",0.0],["JACOBO CASTILLA JESUS ANGELO",0.0],["JAIME GANOZA E.I.R.L.",0.0],["JAML S.A.C.",0.0],["JAVIER HUGO ESPINOZA HUAMAN",0.0],["JERI MOLINA FLOR MIRIAM",0.0],["JERI RIOS SERGIO ENRIQUE",0.0],["JHONNY FRANK OCHOA ABRIGO",0.0],["JJOPVET E.I.R.L.",0.0],["JORDAN PADILLA SILVA STELA",0.0],["JORGE MARTIN PAZ ESPINOZA",0.0],["JORMANVET S.R.L.",0.0],["JUAN ALFREDO YATACO POICON",0.0],["JUAN CHU LAMAS",0.0],["JUAN MANUEL ACEVEDO DIAZ",0.0],["JUAN MANUEL CUEVA FLORENTINO",0.0],["JULCA PERALTA JUAN CARLOS",0.0],["JUSTINIANO ESTEBAN CYNTHIA MARLENE",0.0],["JUSTINIANO ESTEBAN ROSA MARIA",0.0],["JVET E.I.R.L.",0.0],["KAREN ELIZABETH SANCHEZ CACHAY",0.0],["KENE TEXTILES S.A.C.",0.0],["KMEDIC SAN FRANCISCO S.A.C.",0.0],["L & A SPECIAL FRIENDS E.I.R.L.",0.0],["L. S. SERGEVET S.A.C.",0.0],["LA CASA DEL CRIADOR E.I.R.L.",0.0],["LA IGUANA PET SHOP S.R.L.",0.0],["LA MADRID TRIAY DANIEL HUBERTO",0.0],["LA MASCOTIENDA S.A.C.",0.0],["LABORATORIOS MIDAF S.A.C.",0.0],["LANDA ANDIA JESSICA NIEVES",0.0],["LANDAURO SAENZ RICARDO CARLO",0.0],["LANDI BULLON RICARDO ALBERTO",0.0],["LAR SERVICIOS VETERINARIOS S.A.C.",0.0],["LAVADO ROJAS ELVIS PERCY",0.0],["LAVARELLO ALVARADO RONNIE ARTURO",0.0],["LEANDRO INOCENCIO YAMES JESUS",0.0],["LECCA ANTICONA ELMER",0.0],["LEON VERA CHRISTIAN RICARDO",0.0],["LESCANO VILLAGOMEZ ALEXIS JHONATAN",0.0],["LESMA E.I.R.L.",0.0],["LIBERATO LORENZO WILLIAM",0.0],["LIMAVET E.I.R.L.",0.0],["LINARES ALVA ANGELY LISSETH",0.0],["LIONEL OSMARK PINEDO CARPIO",0.0],["LIZANO ESPINOZA CELIA YESENIA",0.0],["LLANOS BUITRON AMBAR KARINA",0.0],["LLANOS BUITRON NANCY GIOVANNA",0.0],["LLAQUE DIAZ CESAR",0.0],["LLERENA POLO GERARDO MANUEL",0.0],["LOAYZA LEON ALEXANDER ANATOLY",0.0],["LOPEZ GUILLEN CESAR AUGUSTO",0.0],["LOPEZ MORI ISABEL ZORAIDA",0.0],["LOPEZ MUNANTE CAMILO MANUEL",0.0],["LOPEZ TORRES JESSICA TALIA",0.0],["LOPEZ YNGUNZA CATHERINE SUSAN",0.0],["LORD PETS E.I.R.L.",0.0],["LOYO MOYANO MARTIN CRISTIAN",0.0],["LUA S VET S.A.C.",0.0],["LUGGER CORPORATION S.R.L",0.0],["LUHHO PETS S.A.C.",0.0],["LUIS ALEXIS URBANO TORRICO",0.0],["LUIS BALBIN NANCY GLORIA",0.0],["LUIS MANUEL LOPEZ COSTA",0.0],["LÓPEZ VILLANUEVA MARLENY MELISSA",0.0],["M & L VETERINARIOS S.A.C.",0.0],["MAC PHERSON BURGA JOHNNY RICARDO",0.0],["MACHACA HUAMAN LEONARDO LUIS",0.0],["MACROPET S.A.C.",0.0],["MAKROSVET S.A.C.",0.0],["MALAGA MORALES MIRTHA CLOTILDE",0.0],["MALDONADO RODRIGUEZ PATRICIA LUCIA",0.0],["MANUEL FERNANDO HERNANDEZ SOTO",0.0],["MANUYAMA MEDINA JEAN PAUL",0.0],["MARCE E.I.R.L.",0.0],["MARIELA MIRNA BLAS DAVILA",0.0],["MARILU MARGOT HUAYNATE HUAMAN",0.0],["MARQUINA MELGAR ANDREA DEL PILAR",0.0],["MARQUINA RODRIGUEZ BRENDA GISELLE",0.0],["MARQUINA RODRIGUEZ MAURO FRANCISCO",0.0],["MARSALVI S.A.C.",0.0],["MARTIN WILFREDO BENDEZU PARRAGA",0.0],["MARTINEZ BORRERO FLOR DE MARIA",0.0],["MARTINEZ MONTAÑEZ JOSE WILFREDO",0.0],["MARTINEZ SANCHEZ PAOLA ISABEL",0.0],["MASCARO VARILLAS JORGE ENRIQUE",0.0],["MASCOTAS Y MAS MASCOTAS S.A.C.",0.0],["MASCOTITAS A.B.A. E.I.R.L.",0.0],["MASKOTEKA S.A.C.",0.0],["MASKOTOPIA CLINICAS VETERINARIAS SPA PET SHOP S.A.C.",0.0],["MASTER IN PETS E.I.R.L.",0.0],["MASTER KENNEL S.R.L.",0.0],["MATIAS VET E.I.R.L.",0.0],["MATOS AQUILES CARLOS ANDRES",0.0],["MATT ADDERLY VASQUEZ HERRERA",0.0],["MAVILA PRATO CARLOS ALBERTO",0.0],["MDCPET E.I.R.L.",0.0],["MEDICVET INTEGRATIVA S.A.C.",0.0],["MEDVET S.R.L.",0.0],["MEGA MASCOTA S.A.C.",0.0],["MENDEZ SERRANO KENNE PETER",0.0],["MENDOZA CAHUANA MERCEDES ANGELICA",0.0],["MENDOZA CASTRO CARMEN",0.0],["MENDOZA ESCALANTE MILAGROS LISSETH",0.0],["MERA RODRIGUEZ ROCIO DEL PILAR",0.0],["MEZA RUIZ DONALD ANTHONY",0.0],["MI PATA Y YO S.A.C.",0.0],["MINERA ALMAX S.A.C.",0.0],["MIRANDA MORE WILLIAM ROLANDO",0.0],["MIS ANIMALITOS S.R.L.",0.0],["MIS ENGREIDOS PET S S.A.C.",0.0],["MIS MASKOTAS E.I.R.L.",0.0],["MISIVET S.A.C.",0.0],["MISSY ALL PET SERVICES E.I.R.L.",0.0],["MISTER CAN VETERINARIAS SCRL",0.0],["MK SERVICIOS VETERINARIOS S.A.C.",0.0],["MOLINOPET VETERINARIA E.I.R.L.",0.0],["MONTES DIAZ MONICA LISSETH",0.0],["MONTEVERDE LIMAS ERNESTO CPRIANO",0.0],["MONTEVET S.A.C.",0.0],["MONTOYA ARAUCO GIANINA ELIZABETH",0.0],["MONTOYA ARAUCO GINO PAOLO",0.0],["MONTOYA BARREDA GUILLERMO ALFONSO",0.0],["MORALES MONTEJO LUIS ABELARDO",0.0],["MORAN BOBADILLA SIBIA YANETT",0.0],["MORENO ZARAZU MARGEORY ALESSANDRA",0.0],["MORGAN VETS E.I.R.L.",0.0],["MORI ALVARADO CHRISTIAN DANIEL",0.0],["MORILLO QUEZADA CLARITA SELINDA",0.0],["MOROMI ANICAMA MONICA MIEKO",0.0],["MORON CANCHARI PAOLA ELENA",0.0],["MOVILVET RADEL S.A.C.",0.0],["MOYA DEL CUADRO S.A.C.",0.0],["MOYA GOMEZ LUIS ROBERTO",0.0],["MULTI MASCOT E.I.R.L.",0.0],["MULTISERVICIOS VONDER MEMBLIN E.I.R.L.",0.0],["MUNDO ANIMAL S.C.R.L.",0.0],["MUNGUIA LEONARDO ROCIO MARIEL",0.0],["MURILLO GONZALES LUZ ESTHER",0.0],["MUÑOZ ALIAGA ARMINDA ADELA",0.0],["MUÑOZ RENGIFO ROGER",0.0],["N Y A ALERTA VET S.A.C.",0.0],["NADIA LISSETTE CESPEDES RODRIGUEZ",0.0],["NARICES HUMEDAS S.A.C",0.0],["NASCA VET SERVICIOS VETERINARIOS S.A.C.",0.0],["NECIOSUP VILCAS PATRICIA ALEJANDRA",0.0],["NEGOCIACIONES VETERINARIAS DEL CENTRO S.A.C.",0.0],["NEGOCIACIONES VETERINARIAS S.A.C.",0.0],["NEIRA CHANG JOSE ALONSO",0.0],["NELDO SANCHEZ FIGARI",0.0],["NEYRA ORCSO OLIVIA MARIBEL",0.0],["NIMROD LOGISTIC S.A.C.",0.0],["NOW PET FOOD DELIVERY S.A.C.",0.0],["NUTRIBARF.PE E.I.R.L.",0.0],["OCAMPO ROJAS DE FIGUEROA CARMEN CONSUELO",0.0],["OH MY DOG PET BOUTIQUE E.I.R.L.",0.0],["OJEDA CASAS GABRIELLA VICTORIA",0.0],["OLC S.A.",0.0],["OMNIA BUSINESS TRADING E.I.R.L.",0.0],["ONOFRE FLORES YESSICA",0.0],["ORE GIUSTI MARTIN SEBASTIAN",0.0],["ORTEGA PRIETO ALFREDO RICARDO",0.0],["ORTIZ LAM FELIPE ARTURO",0.0],["ORTIZ MOSQUERA ANDREA KATHERINE",0.0],["OSDAY S.A.C.",0.0],["OSORIO LEON MILAGRO ROSALI",0.0],["OSORIO LEYVA JAIME ALEJANDRO",0.0],["OSORIO MARTINEZ MIGUEL ANGEL",0.0],["P & B VETERINARIOS E.I.R.L.",0.0],["P.H.C VETERINARIA E.I.R.L.",0.0],["PACHECO SANCHEZ VICTOR SIMON",0.0],["PACUS CASTRO DANIK KATHERYN",0.0],["PADILLA VALDETTARO ROXANA CECILIA",0.0],["PAIT & GAVAZZO VETERINARIOS S.A.C.",0.0],["PALACIOS BARBA DANIELA DEL ROSARIO",0.0],["PALACIOS HURTADO LISSIE MARILUZ",0.0],["PALAOUSE E.I.R.L.",0.0],["PALI INVERSIONES E.I.R.L.",0.0],["PALMISANO COLUCCELLI GUGLIELMO MARZIO",0.0],["PALOMINO CARDENAS DIANA YSABEL",0.0],["PALOMINO MONTES VICTORIA",0.0],["PANCANVET E.I.R.L.",0.0],["PANTOJA AQUINO MARILU",0.0],["PAREDES MUÑOZ EDUARDO",0.0],["PATITAS CON ESPERANZA CLINICA VETERINARIA E.I.R.L.",0.0],["PATOVET S.A.C.",0.0],["PATRICIA CECILIA HURTADO REY",0.0],["PAZ PALACIOS JOSUE ENRIQUE",0.0],["PEKUS S.A.C.",0.0],["PELLISSIER ESTACIO EDGAR ROBINSON",0.0],["PEQUEÑAS MASCOTAS E.I.R.L.",0.0],["PEREZ CASQUINO CLAUDIA MELISSA",0.0],["PEREZ PRADO FLOR JENNYFER",0.0],["PEREZ YABAR FREISI LEONOR",0.0],["PERROS Y MASCOTAS VB S.R.L.",0.0],["PET BOUTIQUE E.I.R.L.",0.0],["PET CARE E.I.R.L.",0.0],["PET COMPANY S.A.C.",0.0],["PET FRIEND S.A.C.",0.0],["PET HEALTH CENTER S.A.C.",0.0],["PET HOME CENTER S.A.C.",0.0],["PET LAND S.A.",0.0],["PET LOVER PERU S.A.C.",0.0],["PET MARKET PERU E.I.R.L.",0.0],["PET MASTER SOC. COM. DE RESP. LTDA.",0.0],["PET MOVIL S.R.L.",0.0],["PET PRODUCTS S.A.",0.0],["PET S KINGDOM S.A.C.",0.0],["PET S PARADISE E.I.R.L.",0.0],["PET SHOP CANDY S.A.C.",0.0],["PET SHOP CHARTERHOUSE S.A.C.",0.0],["PET VET ANIMAL PLANET S.A.C.",0.0],["PET VET E.I.R.L.",0.0],["PETCORP S.A.C.",0.0],["PETFRIENDLY S.A.C.",0.0],["PETS & VETS CARE E.I.R.L.",0.0],["PETS LOVE S.A.C.",0.0],["PETS MANIACOS S.A.C.",0.0],["PETS SITES E.I.R.L.",0.0],["PETSYVET MC VETERINARIA S.A.C.",0.0],["PHARMAVET HOSPITAL VETERINARIO E.I.R.L.",0.0],["PILLCO PET E.I.R.L.",0.0],["PINEDO RAMOS MIGUEL ANGEL",0.0],["PINTO CALDAS MARGOT ROXANA",0.0],["PITA LEON GLENNA YIADRANKA",0.0],["PLANETVET E.I.R.L.",0.0],["POLO GARNICA MILAGROS LUCIA",0.0],["POMA MENDO JESUS RAFAEL",0.0],["PONCE PIÑA DE VISSER JEANNETTE GERMANA",0.0],["PORMUA S.A.C.",0.0],["PROFIVET V & C E.I.R.L.",0.0],["PUCHURI ALVARADO MARIA ISABEL",0.0],["PUJAY APONTE DE CONTRERAS CARMEN EDIT",0.0],["PULGUITAS VETERINARIAS PET SHOP S.R.L.",0.0],["PUMA TINCO VICTOR MANUEL ADEMIR",0.0],["QSVET S.A.C.",0.0],["QUEVEDO PERALES NOELIA AIME",0.0],["QUINCHO VILCHEZ CARLOS ROMAN",0.0],["QUINCHO VILCHEZ FLOR CELESTINA",0.0],["QUIROZ DAVALOS DE PAREDES ANA MARIA",0.0],["QUISPE FIGUEROA LIZBETH JOHANNA",0.0],["QUISPE MAYTA WILBERT",0.0],["R & C INVERSIONES Y SOLUCIONES VETERINARIAS S.A.C.",0.0],["RACING TIRE S.A.C.",0.0],["RAFAEL GONZALES RAUL OSWALDO",0.0],["RAFAEL TERREROS REY",0.0],["RAMIREZ BRAVO MAYCOLL EDUARDO",0.0],["RAMIREZ CARRILLO TANIA ELVIRA",0.0],["RAMIREZ JIMENEZ AYDE",0.0],["RAMOS ANGULO JOSE ALONSO",0.0],["RAMOS CHAVEZ URSULA ZARINA",0.0],["RAMOS DIAZ JACELYN CARMEN",0.0],["RAMOS REYES PEDRO JOSE",0.0],["RANGEL LIZARZABURU ELLIETTE ARIANNA",0.0],["RAYITO PERU",0.0],["RAYMIVET S.A.C",0.0],["REATEGUI PALLETE EDGAR MARTIN",0.0],["REFIASA S.A.C.",0.0],["REFLEXVET E.I.R.L.",0.0],["REINO ANIMAL S.A.C.",0.0],["RENGIFO IPARRAGUIRRE MARIELLA DEL CARMEN",0.0],["RENTERIA MORALES ELIANA ELIZABETH",0.0],["REPRESENTACIONES EL HURON AZUL E.I.R.L.",0.0],["REVOLLAR LOZADA ROSSINA CARMEN",0.0],["REVOREDO SALAS BERTHA LISHENKA",0.0],["REYVET S.A.C.",0.0],["RICALES CHAUCA GLADYS DENISSE",0.0],["RICARDO ANTONIO MALDONADO MARTEL",0.0],["RIOS SALGADO JACQUELINE BEATRIZ",0.0],["RIPAI E.I.R.L.",0.0],["RIQUE PEREZ DE GONZALES ELI JANET",0.0],["ROBLES MORALES MARIA DEL CARMEN",0.0],["ROBLES NUNOVERO VERONICA MAGALI",0.0],["ROBLES SALDAÑA ALEJANDRO JOSE",0.0],["RODRIGUEZ DAVILA LUIS EDUARDO ELOY",0.0],["RODRIGUEZ DELGADO JAVIER EDUARDO",0.0],["RODRIGUEZ NARIO ANGHELA CHRISTI",0.0],["RODRIGUEZ PEREZ MICHAEL EDWARD",0.0],["RODRIGUEZ SALAZAR INES IRENE",0.0],["RODRIGUEZ TUESTA CARLOS ALBERTO",0.0],["RODRIGUEZ VASQUEZ GERMAN ROBINSON",0.0],["ROFRAN E.I.R.L.",0.0],["ROJAS CHUMPITAZ OSCAR HUMBERTO",0.0],["ROJAS DIAZ SARA ELIZABETH",0.0],["ROJAS HERRERA KATTY PAOLA",0.0],["ROJAS MELGAR JUANA CONSUELO",0.0],["ROJAS OLORTEGUI ALONSO",0.0],["ROJAS ROJAS LLERME AKILA",0.0],["ROJAS SANCHEZ ABERTANO WALTER",0.0],["ROJAS SORIA JUAN CARLOS",0.0],["ROJAS TORRES MAGDA",0.0],["ROJAS VASQUEZ ANGELA FIORELLA",0.0],["ROLAND IMPORT E.I.R.L.",0.0],["ROMERO FLORES LINDA GABRIELA",0.0],["ROMERO GRANDA CARLOS HUMBERTO",0.0],["ROMERO JURADO JAIME",0.0],["ROMERO PEREYRA JUAN RONALD",0.0],["ROQUE SANCHEZ PEDRO PABLO",0.0],["ROQUE VILLARREAL JACQUES NER",0.0],["ROSA INES SOLIS BENDEZU",0.0],["ROSALES SILVA VICTOR HUGO",0.0],["ROSARIO FARIAS SERVICIOS VETERINARIOS E.I.R.L.",0.0],["ROSAS TORREJON JAVIER DAVID",0.0],["ROSIVET S.A.C.",0.0],["ROSSEL SANJINEZ LETICIA MILAGROS",0.0],["RUBEN RODAS FARRO",0.0],["RUBIO VALDIVIESO ALICIA MARIA",0.0],["RUIZ BUSTINZA JUAN ALEXANDER",0.0],["RUIZ GARCIA LUIS FELIPE",0.0],["RUIZ PUCCINELLI DE CANEPA ANA MARIA LUISA",0.0],["RW & JK REPRESENTACIONES Y DISTRIBUCIONES S.A.C.",0.0],["SACSA RAMIREZ ADELAIDA SONIA",0.0],["SAENZ ESTRADA JULIO ARMANDO",0.0],["SAENZ HUAMAN CARLOS",0.0],["SALAS ARATA JOSE LUIS FRANCISCO",0.0],["SALAZAR MONTANO ROYER MANUEL",0.0],["SALCEDO ARMAS FLORA ULDA",0.0],["SALDIAS CASTELLI OLGA MARIANA",0.0],["SALUD ANIMAL S.A.C.",0.0],["SAMAME DULANTO OSCAR MAURICIO",0.0],["SAN BERNARDO S VET E.I.R.L.",0.0],["SAN MARCOS PET SHOP S.A.C",0.0],["SANCHEZ ALVAREZ JULISA MABEL",0.0],["SANCHEZ ATAO JAQUE MILUZCA",0.0],["SANCHEZ CARRION FUENTES CAMILA GIANELLA",0.0],["SANCHEZ DE PEREZ LUISA",0.0],["SANCHEZ GARCIA RAFAEL ANGELO",0.0],["SANCHEZ OTERO NORA FIORELLA",0.0],["SANCHEZ VALDIVIA MABEL SORAIDA",0.0],["SANDOVAL OCAÑA SERGIO DENIS",0.0],["SANTACRUZ VIVANCO ANA TERESA",0.0],["SANTHOME BERNALES VICTOR MANUEL",0.0],["SANTILLANA ORMAECHE MANUEL GINO",0.0],["SANTOME CASTILLA JACINTO ROBERTO",0.0],["SANTOME MALPARTIDA NANCY OTILIA",0.0],["SANTOME MALPARTIDA VICTORIA ROSA",0.0],["SARTORI ANDRADE PEDRO",0.0],["SBL SPA BOUTIQUE HAPPY PETS S.A.C.",0.0],["SCORPION PET S E.I.R.L.",0.0],["SEDACORP E.I.R.L.",0.0],["SEGURA ORDINOLA JORGE LUIS",0.0],["SENOZAIN SALAZAR SILVANA PATRICIA",0.0],["SERNA VILLANUEVA SANDRA MILUSKA",0.0],["SERRANO GUILLEN ERIKA LISETH",0.0],["SERTEGEN S.R.LTDA",0.0],["SERVAT HENRIQUEZ ANALUCIA",0.0],["SERVETSA S.R.LTDA.",0.0],["SERVICE BRUALE S.A.C.",0.0],["SERVICIO VETERINARIO HINOSTROZA MORON S.R.L.",0.0],["SERVICIO VETERINARIO LA VIRREYNA E.I.R.L.",0.0],["SERVICIOS DE VETERINARIOS ESPECIALISTAS S.A.C.",0.0],["SERVICIOS GENERALES ROKA S.A.C",0.0],["SERVICIOS INTERNOS NACIONALES S.A.C.",0.0],["SERVICIOS VETERINARIOS BERIRG S.A.C.",0.0],["SERVICIOS VETERINARIOS FRAMEN SOCIEDAD ANONIMA CERRADA",0.0],["SERVICIOS VETERINARIOS INGE S.A.C.",0.0],["SERVICIOS VETERINARIOS INTEGRALES S.A.C.",0.0],["SERVICIOS VETERINARIOS SILVA Y AYON ASOCIADOS S.A.C.",0.0],["SERVICIOS VETERINARIOS SUKI E.I.R.L.",0.0],["SERVICIOS VETERINARIOS Y PRODUCCION PECUARIA EVASAC E.I.R.L.",0.0],["SERVICIOS Y INVERSIONES FENIX MJ E.I.R.L.",0.0],["SERVICIOS Y NEGOCIOS VETERINARIOS FELICAN PET S S.A.C.",0.0],["SEVILLA GARCIA JORGE BERNABE",0.0],["SF CENTRO DE LABORATORIO E.I.R.L.",0.0],["SFVET FARMA E.I.R.L.",0.0],["SHADOWPET E.I.R.L.",0.0],["SHOPPING PETS VETERINARY E.I.R.L.",0.0],["SIERRA SERRANO SILVERIO NOVATO",0.0],["SILVA CARDENAS GISELLA",0.0],["SILVA JORGE JOSE MANUEL",0.0],["SILVA MEZZICH PEDRO JOSE",0.0],["SILVA SANTISTEBAN HUARCAYA CESAR ENRIQUE",0.0],["SILVANA STEPHANIE CASTRO ALFARO",0.0],["SIMEL NEGOCIACIONES E.I.R.L.",0.0],["SIMPALO HUAMAN ROGER FELIX",0.0],["SIPIRAN ESPINOZA CINTHYA CAROLINA",0.0],["SOCIEDAD SILVANA S.A.C.",0.0],["SOLANO VELARDE ROSA MARIELLA",0.0],["SOLIS CANAL MARIA FERNANDA",0.0],["SOLIS CHAPPUIS GUILLERMO TITO",0.0],["SOLIS DIAZ JOSE ANTONIO",0.0],["SONIA VERONICA BERROSPI CCAMA",0.0],["SOSA TAPIA JUANA CELIA",0.0],["SOTO ALVA DANA CAROLINA",0.0],["SOTO VILLEGAS VICTOR ISIDRO",0.0],["SPA BARBER PET E.I.R.L.",0.0],["SPA PET LINE E.I.R.L.",0.0],["SPANKE HINOSTROZA PABLO MIGUEL MARTIN",0.0],["STAR PETS PERU S.A.C.",0.0],["SUCURSAL VETERINARIA SURCO S.A.C.",0.0],["SUPERPET S.A.C.",0.0],["TABOADA ZEGARRA HUGO RAFAEL",0.0],["TANTALEAN FERNANDEZ CATHERINE PAOLA",0.0],["TARA VET E.I.R.L.",0.0],["TARAZONA CABRERA LUISCARLO",0.0],["TASAYCO BERROCAL RICHARD OMAR",0.0],["TAXI GUAW S.A.C.",0.0],["THERAPY CLEAN PERU S A C",0.0],["TIERRA ANIMAL S.A.C.",0.0],["TIFFANY FOUNDATION S.A.C.",0.0],["TIOLINDA SABINA REVILLA MELGAR",0.0],["TOMEK ASOCIADOS S.A.C.",0.0],["TOP VETERINARIA DEL SUR S.A.C.",0.0],["TOP VETERINARIA S.A.C.",0.0],["TORRES AGUIRRE JORGE LUIS",0.0],["TORRES OLAZABAL ELIZABETH",0.0],["TORRES ROJAS LILIANA GUADALUPE",0.0],["TRANSPORTES DISCOVERY S.A.C.",0.0],["TRUJILLO BARDALES JORGE LUIS",0.0],["TUESTA REVOLLAR FRANCISCO",0.0],["TUNQUIPA CCAMA ANGELA",0.0],["UNIVERSIDAD PERUANA CAYETANO HEREDIA",0.0],["UNIVET S.A.C.",0.0],["URESHI PETS S.A.C",0.0],["V & N GLOBAL S.A.C.",0.0],["V.I. PETS S.A.C.",0.0],["VALDERRAMA LOPEZ PATRICIA IVONNE",0.0],["VALDIVIESO ROJAS JOSE LUIS",0.0],["VALENZUELA ORE GUSTAVO EDMUNDO",0.0],["VALENZUELA TELLO LUIS",0.0],["VALLE PEREZ ACEVEDO PABLO ALFONSO",0.0],["VALNIM S.A.C.",0.0],["VAMOS-PET SHOP S.A.C.",0.0],["VARA MARQUEZ MARINO DANTE",0.0],["VARGAS PURIZAGA ANGEL FERNANDO",0.0],["VASQUEZ DE LAS CASAS ALFREDO MANUEL ALBERTO",0.0],["VASQUEZ GARCIA MARIA ISABEL",0.0],["VEGA GONZALES MARCO ANTONIO",0.0],["VEGA PORRAS PFLUCKER HAROLD",0.0],["VEKAVET MEDICINA VETERINARIA S.A.C.",0.0],["VELA ZEGARRA MARIA EUGENIA CLAUDIA",0.0],["VELASQUEZ VILCHEZ WALTER CHRISTOFFER",0.0],["VELEZ RIVAS JANNET URSULA",0.0],["VERA GARCIA GODOS PATRICIA ELIZABETH CONSUELO",0.0],["VERANO SILVERA SANDRA LESLIE",0.0],["VET & PET PRODUCTS E.I.R.L.",0.0],["VET 360 S.A.C.",0.0],["VET CARE CLINICA VETERINARIA S.R.L.",0.0],["VET FRIENDS S.A.C.",0.0],["VET HOME S.R.L.",0.0],["VET MEDIC S.A.C.",0.0],["VET PARTNERS PERU S.A.C.",0.0],["VET PLUS E.I.R.L.",0.0],["VETDMASCOTA S.A.C.",0.0],["VETER/SALUD S.R.L.",0.0],["VETERINARIA ARIEL S E.I.R.L.",0.0],["VETERINARIA AURORA S.A.C.",0.0],["VETERINARIA BERTCHI S.A.",0.0],["VETERINARIA CABELLOS E.I.R.L.",0.0],["VETERINARIA CANDY S.A.C",0.0],["VETERINARIA CANI E GATTI E.I.R.L.",0.0],["VETERINARIA CHIPS E.I.R.L.",0.0],["VETERINARIA D NERON S.A.C",0.0],["VETERINARIA ESPECIALIZADA EN FISIOTERAPIA Y REHABILITACION FISICA S.A.C",0.0],["VETERINARIA FAMILY VETS S.A.C.",0.0],["VETERINARIA GARDENIAS PETS S.A.C.",0.0],["VETERINARIA GENKI PETS S.A.C.",0.0],["VETERINARIA HERNANDEZ S.A.C.",0.0],["VETERINARIA LA CALERA S.A.C.",0.0],["VETERINARIA LOS ANGELES S.A.C",0.0],["VETERINARIA MARINA PET E.I.R.L.",0.0],["VETERINARIA MEDICAN S.A.C",0.0],["VETERINARIA MERCADERES S.A.C.",0.0],["VETERINARIA MI CACHORRITO S.A.C",0.0],["VETERINARIA MIMITOS",0.0],["VETERINARIA MIRAFLORES",0.0],["VETERINARIA MONTE SUR E.I.R.L.",0.0],["VETERINARIA MUNDO ANIMAL S.A.C.",0.0],["VETERINARIA PANDA E.I.R.L.",0.0],["VETERINARIA PET CLUB LOS ALISOS S.A.C.",0.0],["VETERINARIA PET SHOP CUEVA E.I.R.L.",0.0],["VETERINARIA PET-SALUD E.I.R.L.",0.0],["VETERINARIA RAMAL E.I.R.L.",0.0],["VETERINARIA REY E.I.R.L.",0.0],["VETERINARIA RODRIGUEZ E.I.R.L.",0.0],["VETERINARIA RUSSO E.I.R.L.",0.0],["VETERINARIA SALAZAR E.I.R.L.",0.0],["VETERINARIA SAN LUIS E.I.R.L.",0.0],["VETERINARIA SAN MARCOS S.A.C.",0.0],["VETERINARIA SAN PABLO E.I.R.L.",0.0],["VETERINARIA SATELITE E.I.R.L.",0.0],["VETERINARIA SCORPION PET S S.A.C.",0.0],["VETERINARIA TILDA E.I.R.L.",0.0],["VETERINARIA VALETES S.R.L.",0.0],["VETERINARIA VIOLETA E.I.R.L.",0.0],["VETERINARIA Y ESTETICA TU AMIGO FIEL M & R S.A.C.",0.0],["VETERINARIAS JAVE S.A.C.",0.0],["VETERINARIAS LA PERROMANIA S.A.C.",0.0],["VETERINARIAS PERUANAS V.P S.A.C.",0.0],["VETERINARIAS PET TIME E.I.R.L.",0.0],["VETERINARIAS UNIDAS E.I.R.L.",0.0],["VETERINARIOS ASOCIADOS W & Y S.A.C.",0.0],["VETERINARIOS ESPECIALISTAS S.A.C",0.0],["VETERINARIOS HUMANITARIOS DEL PERU S.A.C.",0.0],["VETERMON S.A.C.",0.0],["VETPHARMA PERU E.I.R.L.",0.0],["VETSCAN E.I.R.L.",0.0],["VICENTELO ALVAN HUGO FRANCISCO",0.0],["VICENTELO ALVAN JOSE VICTOR",0.0],["VIDAL GONZALES JHONNY",0.0],["VIERA AREVALO ALAN PETER",0.0],["VILKO HNOS S.A.C.",0.0],["VILLA PET S E.I.R.L.",0.0],["VILLA SANCHEZ MORENO RICARDO ARTURO",0.0],["VILLA VET PHARM E.I.R.L.",0.0],["VILLAMARIN VOYSEST VICTOR ERNESTO",0.0],["VILLANUEVA AYALA MARIO MARTIN",0.0],["VILLARREAL RUIZ ALFREDO MARTIN",0.0],["VILLON OTAROLA JAIME EDWIN",0.0],["VILLON VET S.A.C",0.0],["VIPS REFLEXVET E.I.R.L.",0.0],["VIRAZON S.A.",0.0],["VITAVET S.A.C.",0.0],["VIZQUERRA BOZA MICAELA",0.0],["WHISKERS COMPANY S.A.C.",0.0],["WHISKERS COMPANY S.A.C.",0.0],["WILMER VASQUEZ RAMIREZ",0.0],["WONG MARCHENA CARLOS JESUS",0.0],["YACTAYO DELGADO RENZO CARLO",0.0],["YAMAMOTO NOGUCHI CLAUDIA CECILIA",0.0],["YEPEZ CUADROS SANDRA MITCHELL",0.0],["YSA MOROMISATO YURIKO ROSARIO",0.0],["YUCRA ÑAUPA PAULINO BERNARDINO",0.0],["YURIK FLORA PINEDA ALBORNOZ",0.0],["ZAPATA FUENTES FREDY JUANIZ",0.0],["ZAVALA CARLOS MAGALI INES",0.0],["ZAVALETA LUJAN JAVIER OMMAR",0.0],["ZEGARRA MEDINA ROSARIO AURORA",0.0],["ZERPA SERRANO ROCIO",0.0],["ZEVALLOS FELIPA JUAN ALBERTO",0.0],["ZEÑA JURADO JORGE ENRIQUE",0.0],["ZONA MASCOTA S.A.C.",0.0],["ZOO CENTER CLINICAS VETERINARIAS DEL PERU S.R.L.",0.0],["ZOO MUNDO S.A.C.",0.0],["ZOOMANIA S.A.C.",0.0],["ZOOMED S.R.L.",0.0],["ZOROZABAL & ASOCIADOS S.A.C.",0.0],["ZUBIAGA SALCEDO ABEL AGUSTIN",0.0],["ZUZUNAGA VACCARO PEDRO GUSTAVO",0.0],["ÑAUPARI ROBLES YOVANNA PATRICIA",0.0]];
+  const productos = [
+    { id: 'p1', nombre: 'TRITOHEXIDIN SHAMPOO X 250 ML', ultimo: 34.75, costo: null, paso: 5 },
+    { id: 'p2', nombre: 'NUTRAPRO K9 CANINE X 30 SOBRES', ultimo: 161.02, costo: null, paso: 2 },
+    { id: 'p3', nombre: 'NEUMOFLOGIN X 16 COMP', ultimo: 48.31, costo: null, paso: 3 },
+    { id: 'p4', nombre: 'ANTIBIOTICO BUCAL TRITON X 20 COMP', ultimo: 62.71, costo: null, paso: 3, vence: 30 },
+    { id: 'p5', nombre: 'TRITOHEXIDIN PLUS X 50 ML', ultimo: 40.68, costo: null, paso: 5 },
+    { id: 'p6', nombre: 'SOSTEN CG ORAL X 80 COMP', ultimo: 160.17, costo: null, paso: 2 },
+    { id: 'p7', nombre: 'PROPANTELINA X 80 COMP', ultimo: 116.95, costo: null, paso: 1, vence: 52 }
+  ];
+
+  const cli = Math.min(s.cli || 0, CL.length - 1);
+  const umb = cfg.umbral || { alto: 50000, medio: 10000 };
+  const idNivel = CL[cli][1] >= umb.alto ? 'alto' : (CL[cli][1] >= umb.medio ? 'medio' : 'bajo');
+  const nivel = cfg.niveles.find((n) => n.id === idNivel) || cfg.niveles[0];
+  const margen = nivel.margen / 100;
+  const margenPromo = Math.max(1, nivel.margen - cfg.promo) / 100;
+  const promoPct = Math.min(cfg.promo, nivel.margen - 1);
+  const precioNormal = (p) => p.costo != null ? r2(p.costo / (1 - margen)) : p.ultimo;
+  const precio = (p) => p.costo != null ? r2(p.costo / (1 - (p.vence ? margenPromo : margen))) : (p.vence ? r2(p.ultimo * (1 - promoPct / 100)) : p.ultimo);
+
+  const promos = productos.filter((p) => p.vence).map((p) => ({ nombre: p.nombre, vence: p.vence, stock: '', precio: sol(precio(p)), normal: sol(precioNormal(p)) }));
+  const tabs = CL.slice(0, 5).map((c, k) => {
+    const on = k === cli;
+    return { nombre: c[0], on: on ? 'true' : 'false', bg: on ? '#D01F29' : '#FFFFFF', fg: on ? '#FFFFFF' : '#161616', bd: on ? '#D01F29' : '#C4C4C4',
+      pick: () => this.setState({ cli: k, cq: '', desc: this.rebajaDe(c[0]), descTxt: undefined, descargado: '' }) };
+  });
+  const qn = String(s.cq || '').toLowerCase().trim();
+  const resultados = qn ? CL.map((c, k) => [c, k]).filter((x) => x[0][0].toLowerCase().indexOf(qn) >= 0).slice(0, 8).map((x) => ({ nombre: x[0][0], venta: x[0][1] > 0 ? sol(x[0][1]) : 'Sin compras en 12 meses', elegir: () => this.setState({ cli: x[1], cq: '', desc: this.rebajaDe(x[0][0]), descTxt: undefined, descargado: '' }) })) : [];
+  const hayBusqueda = !!qn;
+  const sinResultados = hayBusqueda && resultados.length === 0;
+  const waOpts = [['texto', 'Texto'], ['pdf', 'PDF adjunto']].map((o) => { const on = (s.waFmt || 'texto') === o[0]; return { txt: o[1], on: on ? 'true' : 'false', bg: on ? '#E5F3EA' : '#FFFFFF', fg: on ? '#1E6B3A' : '#161616', elegir: () => this.setState({ waFmt: o[0] }) }; });
+
+  const catalogo = productos.map((p) => {
+    const en = s.lineas[p.id] !== undefined;
+    return { nombre: p.nombre, stock: '', paso: p.paso, precio: sol(precio(p)), promoTxt: p.vence ? 'Promoción · lote vence en ' + p.vence + ' días' : '', tachado: p.vence ? sol(precioNormal(p)) : '',
+      txt: en ? 'Quitar' : 'Agregar', bg: en ? '#FFFFFF' : '#D01F29', fg: en ? '#161616' : '#FFFFFF', bd: en ? '#C4C4C4' : '#D01F29',
+      alternar: () => { const l = Object.assign({}, s.lineas); if (en) delete l[p.id]; else l[p.id] = p.paso * 2; this.setState({ lineas: l, cantDraft: {}, descargado: '' }); } };
+  });
+
+  let subtotal = 0, costoTotal = 0, sinCosto = false;
+  const detalle = [];
+  const lineas = productos.filter((p) => s.lineas[p.id] !== undefined).map((p) => {
+    const cant = s.lineas[p.id];
+    const pu = precio(p);
+    const tot = r2(pu * cant);
+    subtotal += tot; if (p.costo == null) sinCosto = true; else costoTotal += p.costo * cant;
+    detalle.push({ nombre: p.nombre, cant: cant, pu: pu, total: tot });
+    const dr = s.cantDraft && s.cantDraft[p.id];
+    return { nombre: p.nombre, precio: sol(pu), cant: cant, cantTxt: dr !== undefined ? dr : String(cant), total: sol(tot),
+      escribir: (e) => { const t = String(e.target.value).replace(/[^0-9]/g, '').slice(0, 5); const n = parseInt(t, 10); const l = Object.assign({}, s.lineas); if (!isNaN(n) && n >= 1) l[p.id] = n; this.setState({ lineas: l, cantDraft: Object.assign({}, s.cantDraft, { [p.id]: t }), descargado: '' }); },
+      menos: () => { const l = Object.assign({}, s.lineas); l[p.id] = Math.max(p.paso, cant - p.paso); this.setState({ lineas: l, cantDraft: {}, descargado: '' }); },
+      mas: () => { const l = Object.assign({}, s.lineas); l[p.id] = cant + p.paso; this.setState({ lineas: l, cantDraft: {}, descargado: '' }); } };
+  });
+
+  const descuento = r2(subtotal * s.desc / 100);
+  const neto = r2(subtotal - descuento);
+  const impuesto = r2(neto * cfg.igv / 100);
+  const total = r2(neto + impuesto);
+  const margenReal = neto > 0 ? (neto - costoTotal) / neto * 100 : 0;
+  const vacia = lineas.length === 0;
+  const excedeDesc = nivel.desc > 0 && s.desc > nivel.desc;
+  const bajoPiso = !vacia && !sinCosto && margenReal < cfg.piso;
+  const requiere = excedeDesc || bajoPiso;
+  const bloqueada = vacia || requiere;
+
+  let estadoTxt = 'Agrega productos para armar la cotización.', estadoBg = '#EEEEEE', estadoFg = '#484848';
+  if (!vacia && !requiere) { estadoTxt = 'Lista para enviar al cliente.'; estadoBg = '#E5F3EA'; estadoFg = '#1E6B3A'; }
+  if (requiere) {
+    estadoTxt = excedeDesc
+      ? 'El descuento supera el máximo de este nivel (' + nivel.desc + ' %). Requiere aprobación de Gerencia.'
+      : 'El margen queda por debajo del mínimo (' + cfg.piso + ' %). Requiere aprobación de Gerencia.';
+    estadoBg = '#FDF1DC'; estadoFg = '#8A5300';
+  }
+
+  const numero = 'COT-2026-0001';
+  const fecha = '10 de octubre de 2026';
+  const cliente = CL[cli][0];
+  const pago = nivel.credito === 0 ? 'Al contado' : 'Crédito a ' + nivel.credito + ' días';
+  const hoy = new Date(2026, 9, 10);
+  const vence = new Date(hoy.getTime() + cfg.validez * 86400000);
+  const venceTxt = vence.getDate() + '/' + (vence.getMonth() + 1) + '/' + vence.getFullYear();
+
+  const descargar = (nombre, contenido, tipo) => {
+    try {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([contenido], { type: tipo }));
+      a.download = nombre;
+      document.body.appendChild(a); a.click(); a.remove();
+    } catch (e) {}
+  };
+  const num = (n) => r2(n).toFixed(2);
+  const base = numero + '_' + cliente.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+
+  const exportarCsv = () => {
+    if (bloqueada) return;
+    const filas = [['Cotización', numero], ['Cliente', cliente], ['Fecha', fecha], ['Válida hasta', venceTxt], ['Condición de pago', pago], ['Datos ficticios de ejemplo'], [],
+      ['Producto', 'Cantidad', 'Precio unitario (sin IGV)', 'Total']];
+    detalle.forEach((d) => filas.push([d.nombre, d.cant, num(d.pu), num(d.total)]));
+    filas.push([], ['Subtotal', '', '', num(subtotal)], ['Descuento ' + s.desc + ' %', '', '', num(-descuento)], ['Valor de venta', '', '', num(neto)],
+      ['IGV ' + cfg.igv + ' %', '', '', num(impuesto)], ['Total', '', '', num(total)]);
+    const csv = '﻿' + filas.map((f) => f.map((v) => '"' + String(v).replace(/"/g, '""') + '"').join(';')).join('\r\n');
+    descargar(base + '.csv', csv, 'text/csv;charset=utf-8');
+    this.setState({ descargado: 'Se descargó el archivo para Excel.' });
+  };
+
+  const exportarHtml = () => {
+    if (bloqueada) return;
+    const filas = detalle.map((d) => '<tr><td>' + d.nombre + '</td><td class="n">' + d.cant + '</td><td class="n">' + sol(d.pu) + '</td><td class="n">' + sol(d.total) + '</td></tr>').join('');
+    const doc = '<!doctype html><html lang="es"><head><meta charset="utf-8"><title>' + numero + '</title><style>'
+      + 'body{font-family:Arial,sans-serif;color:#161616;max-width:760px;margin:32px auto;padding:0 24px}h1{margin:0;font-size:24px}'
+      + '.top{display:flex;justify-content:space-between;border-bottom:3px solid #D01F29;padding-bottom:12px;margin-bottom:20px}'
+      + 'table{width:100%;border-collapse:collapse;margin:16px 0}th,td{padding:8px;border-bottom:1px solid #E3E3E3;text-align:left;font-size:14px}th{background:#F5F5F5}'
+      + '.n{text-align:right}.tot td{border:none;padding:4px 8px}.grande td{font-size:18px;font-weight:bold;border-top:2px solid #D01F29}'
+      + '.nota{margin-top:28px;font-size:12px;color:#5F6368}</style></head><body>'
+      + '<div class="top"><div><h1>Cotización ' + numero + '</h1><div>Corporación Mederi Pharma S.A.C.</div></div><div style="text-align:right"><div>' + fecha + '</div><div>Válida hasta ' + venceTxt + '</div></div></div>'
+      + '<p><b>Cliente:</b> ' + cliente + '<br><b>Condición de pago:</b> ' + pago + '<br><b>Atendido por:</b> Rodrigo, vendedor B2B</p>'
+      + '<table><thead><tr><th>Producto</th><th class="n">Cantidad</th><th class="n">Precio unitario</th><th class="n">Total</th></tr></thead><tbody>' + filas + '</tbody></table>'
+      + '<table class="tot"><tr><td class="n">Subtotal</td><td class="n" style="width:140px">' + sol(subtotal) + '</td></tr>'
+      + '<tr><td class="n">Descuento (' + s.desc + ' %)</td><td class="n">− ' + sol(descuento) + '</td></tr>'
+      + '<tr><td class="n">Valor de venta</td><td class="n">' + sol(neto) + '</td></tr>'
+      + '<tr><td class="n">IGV (' + cfg.igv + ' %)</td><td class="n">' + sol(impuesto) + '</td></tr>'
+      + '<tr class="grande"><td class="n">Total</td><td class="n">' + sol(total) + '</td></tr></table>'
+      + '<p class="nota">Precios en soles. Documento de ejemplo generado por el prototipo VetChain con datos ficticios; no tiene validez comercial. Para guardar como PDF, usa Imprimir.</p>'
+      + '</body></html>';
+    descargar(base + '.html', doc, 'text/html;charset=utf-8');
+    this.setState({ descargado: 'Se descargó la cotización. Ábrela y usa Imprimir para guardarla como PDF.' });
+  };
+
+  const abrirWa = (txt) => { try { window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank', 'noopener'); } catch (e) {} };
+  const waTexto = () => {
+    if (bloqueada) return;
+    const msg = '*Cotización ' + numero + '* – Corporación Mederi Pharma\nCliente: ' + cliente + '\n\n'
+      + detalle.map((d) => '• ' + d.nombre + ' x' + d.cant + ' = ' + sol(d.total)).join('\n')
+      + '\n\nSubtotal: ' + sol(subtotal) + (s.desc > 0 ? '\nDescuento ' + s.desc + ' %: − ' + sol(descuento) : '')
+      + '\nIGV (' + cfg.igv + ' %): ' + sol(impuesto) + '\n*Total: ' + sol(total) + '*\nPago: ' + pago + '\nVálida hasta ' + venceTxt + '\n(Datos de ejemplo)';
+    abrirWa(msg);
+    this.setState({ descargado: 'Se abrió WhatsApp con el resumen. Elige el contacto y envía.' });
+  };
+  const waPdf = () => {
+    if (bloqueada) return;
+    exportarHtml();
+    abrirWa('Hola, te comparto la cotización ' + numero + ' de Corporación Mederi Pharma (total ' + sol(total) + '). Adjunto el PDF a continuación.');
+    this.setState({ descargado: 'Se descargó la cotización y se abrió WhatsApp. Guárdala como PDF con Imprimir y adjúntala en el chat; WhatsApp no permite adjuntar archivos desde un enlace.' });
+  };
+
+  return { promosOpen: !!this.state.promosOpen, promosAria: this.state.promosOpen ? 'true' : 'false', promosTxt: this.state.promosOpen ? 'Ocultar' : 'Ver promociones', promosAlternar: () => this.setState({ promosOpen: !this.state.promosOpen }), promosN: promos.length,
+    waTexto, waPdf, waEnviar: () => ((s.waFmt || 'texto') === 'pdf' ? waPdf() : waTexto()), waOpts, resultados, hayBusqueda, sinResultados, cliSel: cliente, cBuscar: (e) => this.setState({ cq: e.target.value }), cqVal: s.cq || '', waBg: bloqueada ? '#EEEEEE' : '#1E8E4E', waFg: bloqueada ? '#8E8E8E' : '#FFFFFF', waBd: bloqueada ? '#E3E3E3' : '#1E8E4E', waBg2: bloqueada ? '#8E8E8E' : '#1E6B3A',
+    ventaCli: sol(CL[cli][1]), promos, promoPts: promoPct, promoMargen: Math.max(1, nivel.margen - cfg.promo),
+    numero, fecha, tabs, catalogo, lineas, vacia,
+    nivel: { nombre: nivel.nombre, margen: nivel.margen, desc: nivel.desc, pago },
+    desc: s.desc, igv: cfg.igv, validez: cfg.validez,
+    subtotal: sol(subtotal), descuento: sol(descuento), neto: sol(neto), impuesto: sol(impuesto), total: sol(total),
+    margenReal: (vacia || sinCosto) ? 'No disponible: faltan los costos de compra' : pct1(margenReal),
+    estadoTxt, estadoBg, estadoFg,
+    bloqueada: bloqueada ? 'true' : 'false',
+    btnBg: bloqueada ? '#EEEEEE' : '#D01F29', btnFg: bloqueada ? '#8E8E8E' : '#FFFFFF', btnBd: bloqueada ? '#E3E3E3' : '#D01F29',
+    csvFg: bloqueada ? '#8E8E8E' : '#161616', btnCursor: bloqueada ? 'not-allowed' : 'pointer',
+    descVal: s.descTxt !== undefined ? s.descTxt : (s.desc ? String(s.desc).replace('.', ',') : ''),
+    descEscribir: (e) => { let t = String(e.target.value).replace('.', ',').replace(/[^0-9,]/g, ''); const p = t.split(','); t = p[0].slice(0, 2) + (p.length > 1 ? ',' + p.slice(1).join('').slice(0, 1) : ''); let n = parseFloat(t.replace(',', '.')); if (isNaN(n)) n = 0; if (n > 30) { n = 30; t = '30'; } this.setState({ desc: n, descTxt: t, descargado: '' }); },
+    descMenos: () => this.setState({ desc: Math.max(0, s.desc - 1), descargado: '' }),
+    descMas: () => this.setState({ desc: Math.min(20, s.desc + 1), descargado: '' }),
+    exportarCsv, exportarHtml,
+    descargado: !!s.descargado, descargadoTxt: s.descargado
+  };
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Indicadores clave</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F3F3F2}
+button{font:inherit;cursor:pointer}
+a{color:#B3141F}a:hover{color:#8E0F18}
+</style>
+</helmet>
+<div style="min-height: 100vh; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: stretch; background: #F3F3F2; color: #1B1B1B; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 15px; line-height: 1.45">
+
+<nav aria-label="Menú principal" style="flex: 1 1 232px; box-sizing: border-box; background: #FFFFFF; border-right: 1px solid #E3E3E3; padding: 28px 16px 24px; display: flex; flex-direction: column; justify-content: space-between; gap: 32px">
+<div style="display: flex; flex-direction: column; gap: 22px">
+<div style="padding: 0 12px; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 20px; font-weight: 700; letter-spacing: -0.01em">VetChain</span>
+<span style="font-size: 13px; color: #5F5F5F">Mederi Pharma · piloto</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="padding: 0 12px 4px; font-size: 12px; font-weight: 500; color: #6B6B6B">Inicio</span>
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #3A3A3A; font-weight: 500; text-decoration: none">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1"></rect><rect x="13.5" y="3.5" width="7" height="7" rx="1"></rect><rect x="3.5" y="13.5" width="7" height="7" rx="1"></rect><rect x="13.5" y="13.5" width="7" height="7" rx="1"></rect></svg>
+Panel gerencial
+</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="padding: 0 12px 4px; font-size: 12px; font-weight: 500; color: #6B6B6B">Trabajo comercial</span>
+<a href="Clientes.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #3A3A3A; font-weight: 500; text-decoration: none">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"></path><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8"></path><path d="M18 14.8c1.8.7 3 2.4 3.5 5.2"></path></svg>
+Clientes
+</a>
+<a href="Cotizaciones.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #3A3A3A; font-weight: 500; text-decoration: none">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"></path><path d="M14 3v5h5"></path><path d="M8.5 13h7M8.5 17h5"></path></svg>
+Cotizaciones
+</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="padding: 0 12px 4px; font-size: 12px; font-weight: 500; color: #6B6B6B">Gestión del negocio</span>
+<a href="Planificacion.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #3A3A3A; font-weight: 500; text-decoration: none">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5z"></path><path d="M3.5 7.5 12 12l8.5-4.5M12 12v9"></path></svg>
+Planificación de importación
+</a>
+<button type="button" onClick="{{toggleNav}}" aria-expanded="{{navOpen}}" aria-controls="sub-reportes" style="display: flex; align-items: center; gap: 12px; width: 100%; min-height: 44px; padding: 0 12px; border: none; border-radius: 8px; background: transparent; color: #B3141F; font-size: 15px; font-weight: 600; text-align: left">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D3202E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"></path><path d="M7 16v-5M12 16V6M17 16v-8"></path></svg>
+<span style="flex: 1 1 auto">Reportes</span>
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate({{navRotate}}); transition: transform 150ms"><path d="m6 9 6 6 6-6"></path></svg>
+</button>
+<sc-if value="{{navOpen}}" hint-placeholder-val="{{ true }}">
+<div id="sub-reportes" style="display: flex; flex-direction: column; gap: 2px; margin: 2px 0 6px 21px; padding-left: 10px; border-left: 1px solid #E3E3E3">
+<sc-for list="{{navReports}}" as="n" hint-placeholder-count="8">
+<a href="{{n.href}}" aria-current="{{n.current}}" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 8px; background: {{n.bg}}; color: {{n.fg}}; font-size: 14px; font-weight: {{n.weight}}; text-decoration: none">{{n.label}}</a>
+</sc-for>
+</div>
+</sc-if>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="padding: 0 12px 4px; font-size: 12px; font-weight: 500; color: #6B6B6B">Administración</span>
+<a href="Configuracion.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #3A3A3A; font-weight: 500; text-decoration: none">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"></path><circle cx="15" cy="6" r="2"></circle><circle cx="9" cy="12" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg>
+Ajustes
+</a>
+</div>
+</div>
+<div style="display: flex; align-items: center; gap: 12px; padding: 16px 12px 0; border-top: 1px solid #E3E3E3">
+<span style="width: 40px; height: 40px; flex: none; border-radius: 50%; background: #D3202E; color: #FFFFFF; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center">GC</span>
+<div style="display: flex; flex-direction: column; min-width: 0">
+<span style="font-size: 14px; font-weight: 600">Gerencia comercial</span>
+<a href="Perfil.dc.html" style="font-size: 12.5px; color: #5F5F5F; text-decoration: none">Ver mi perfil</a>
+</div>
+</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 28px clamp(16px, 4vw, 48px) 56px">
+<div style="max-width: 1060px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
+
+<a href="Main-nsyj.dc.html" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; font-size: 14px; font-weight: 600; text-decoration: none">
+<svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg>
+Reportes
+</a>
+
+<header style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 6px; min-width: 0; flex: 1 1 420px">
+<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+<h1 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.015em">Indicadores clave (KPIs)</h1>
+<span style="padding: 3px 10px; border-radius: 6px; background: #FDF0D5; color: #8A5300; font-size: 12.5px; font-weight: 600">Parcial</span>
+</div>
+<p style="margin: 0; color: #5F5F5F; font-size: 14px">12 indicadores para medir el negocio cada mes · datos hasta enero de 2026 · las metas son una propuesta para validar con Mederi</p>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
+<button type="button" onClick="{{pdf}}" style="display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border: none; border-radius: 8px; background: #D3202E; color: #FFFFFF; font-size: 14px; font-weight: 600">
+<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10.5l5 5 5-5"></path><path d="M5 20h14"></path></svg>
+Descargar PDF
+</button>
+<button type="button" onClick="{{mail}}" style="display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border: 1px solid #CFCFCF; border-radius: 8px; background: #FFFFFF; color: #1B1B1B; font-size: 14px; font-weight: 500">
+<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m4 7 8 6 8-6"></path></svg>
+Correo
+</button>
+<button type="button" onClick="{{wa}}" style="display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border: 1px solid #CFCFCF; border-radius: 8px; background: #FFFFFF; color: #1B1B1B; font-size: 14px; font-weight: 500">
+<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"></path></svg>
+WhatsApp
+</button>
+</div>
+</header>
+
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 4px 4px 18px; border-radius: 10px; background: #1B1B1B; color: #FFFFFF; font-size: 14px">
+<span>{{toast}}</span>
+<button type="button" aria-label="Cerrar aviso" onClick="{{closeToast}}" style="width: 44px; height: 44px; flex: none; border: none; border-radius: 8px; background: transparent; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+</button>
+</div>
+</sc-if>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch">
+<section aria-labelledby="res-titulo" style="flex: 999 1 480px; min-width: 0; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: center; gap: 10px">
+<span style="width: 30px; height: 30px; border-radius: 8px; background: #FCECEC; display: inline-flex; align-items: center; justify-content: center">
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D3202E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"></path></svg>
+</span>
+<h2 id="res-titulo" style="margin: 0; font-size: 18px; font-weight: 600">Resumen del mes</h2>
+</div>
+<ol style="margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 8px; font-size: 15px; line-height: 1.55">
+<li>De 12 indicadores, 1 está en meta, 3 en atención, 4 en estado crítico y 4 todavía no tienen dato.</li>
+<li>Lo más urgente: los clientes activos bajaron 10,5 % y un solo vendedor lleva el 57,1 % de la venta.</li>
+<li>4 indicadores empiezan a medirse con VetChain: margen (al cargar costos), alertas atendidas, cotizaciones que terminan en pedido y clientes reactivados.</li>
+</ol>
+</section>
+
+<section aria-labelledby="estado-titulo" style="flex: 1 1 320px; min-width: 0; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px">
+<h2 id="estado-titulo" style="margin: 0; font-size: 17px; font-weight: 600">Estado de los 12 indicadores</h2>
+<div role="img" aria-label="1 en meta, 3 en atención, 4 críticos, 4 sin dato" style="display: flex; gap: 2px; height: 16px">
+<div style="flex: 1 1 0; background: #0CA30C; border-radius: 4px 0 0 4px"></div>
+<div style="flex: 3 1 0; background: #FAB219"></div>
+<div style="flex: 4 1 0; background: #D03B3B"></div>
+<div style="flex: 4 1 0; background: #C9C9C9; border-radius: 0 4px 4px 0"></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px; font-size: 14px">
+<span style="display: inline-flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F6B3A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>En meta<strong style="margin-left: auto">1</strong></span>
+<span style="display: inline-flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A5300" stroke-width="2.4" stroke-linecap="round"><path d="M12 6v8M12 18v.01"></path></svg>Atención<strong style="margin-left: auto">3</strong></span>
+<span style="display: inline-flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A3161F" stroke-width="2.4" stroke-linecap="round"><path d="M7 7l10 10M17 7 7 17"></path></svg>Crítico<strong style="margin-left: auto">4</strong></span>
+<span style="display: inline-flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5F5F5F" stroke-width="2.4" stroke-linecap="round"><path d="M7 12h10"></path></svg>Sin dato<strong style="margin-left: auto">4</strong></span>
+</div>
+<span style="font-size: 12.5px; color: #5F5F5F">En cada tarjeta, la barra es el valor actual y la línea negra, la meta.</span>
+</section>
+</div>
+
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="4">
+<section style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap">
+<h2 style="margin: 0; font-size: 18px; font-weight: 600">{{g.title}}</h2>
+<span style="font-size: 14px; color: #5F5F5F">{{g.q}}</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px">
+<sc-for list="{{g.kpis}}" as="k" hint-placeholder-count="3">
+<article style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px">
+<h3 style="margin: 0; font-size: 15px; font-weight: 600; line-height: 1.35">{{k.name}}</h3>
+<sc-if value="{{k.isGood}}" hint-placeholder-val="{{ false }}">
+<span style="flex: none; display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 6px; background: #E5F3EA; color: #1F6B3A; font-size: 12px; font-weight: 600"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>En meta</span>
+</sc-if>
+<sc-if value="{{k.isWarn}}" hint-placeholder-val="{{ false }}">
+<span style="flex: none; display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 6px; background: #FDF0D5; color: #8A5300; font-size: 12px; font-weight: 600"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 6v8M12 18v.01"></path></svg>Atención</span>
+</sc-if>
+<sc-if value="{{k.isCrit}}" hint-placeholder-val="{{ true }}">
+<span style="flex: none; display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 6px; background: #FCE8E9; color: #A3161F; font-size: 12px; font-weight: 600"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 7l10 10M17 7 7 17"></path></svg>Crítico</span>
+</sc-if>
+<sc-if value="{{k.isNone}}" hint-placeholder-val="{{ false }}">
+<span style="flex: none; display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 6px; background: #EFEFEF; color: #4A4A4A; font-size: 12px; font-weight: 600"><svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 12h10"></path></svg>Sin dato</span>
+</sc-if>
+</div>
+<span style="font-size: 26px; font-weight: 600; letter-spacing: -0.01em">{{k.value}}</span>
+<sc-if value="{{k.hasBar}}" hint-placeholder-val="{{ true }}">
+<div style="position: relative; height: 8px; margin: 4px 0; border-radius: 4px; background: #EDEDED">
+<div style="height: 8px; width: {{k.fillW}}; border-radius: 4px; background: {{k.fillC}}"></div>
+<div style="position: absolute; left: {{k.metaL}}; top: -4px; width: 2px; height: 16px; background: #1B1B1B"></div>
+</div>
+</sc-if>
+<span style="font-size: 13px; font-weight: 600; color: #3A3A3A">{{k.goal}}</span>
+<p style="margin: 0; font-size: 13.5px; color: #5F5F5F; line-height: 1.5; flex: 1 1 auto">{{k.how}}</p>
+<span style="align-self: flex-start; padding: 2px 8px; border-radius: 5px; border: 1px solid #DADADA; font-size: 11.5px; font-weight: 600; color: #4A4A4A">{{k.src}}</span>
+</article>
+</sc-for>
+</div>
+</section>
+</sc-for>
+
+<p style="margin: 0; font-size: 13px; color: #5F5F5F; line-height: 1.5">Las metas son una propuesta del equipo VetChain para revisar con Mederi. Se editan en Ajustes y cada cambio queda registrado con usuario y fecha.</p>
+
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":2000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { toast: '' };
+  }
+
+  renderVals() {
+    const colors = { good: '#0CA30C', warn: '#FAB219', crit: '#D03B3B', none: '#C9C9C9' };
+    const k = (name, value, status, goal, how, src, fill, meta) => ({
+      name: name, value: value, goal: goal, how: how, src: src,
+      isGood: status === 'good', isWarn: status === 'warn', isCrit: status === 'crit', isNone: status === 'none',
+      hasBar: fill !== null,
+      fillW: (fill === null ? 0 : fill) + '%',
+      fillC: colors[status],
+      metaL: (meta === null ? 0 : meta) + '%'
+    });
+    return {
+      groups: [
+        {
+          title: 'Crecimiento',
+          q: '¿Vendemos más y a más clientes?',
+          kpis: [
+            k('Crecimiento de la venta', '+0,05 %', 'crit', 'Meta ≥ +8 % · crítico bajo +2 %', 'Venta de 12 meses frente a los 12 anteriores. Por debajo de la inflación es una caída real.', 'Dato real', 0.5, 80),
+            k('Clientes activos', '331', 'crit', 'Meta ≥ 370 · crítico si cae más de 5 %', 'Clientes con al menos un pedido en 12 meses. El año anterior eran 370.', 'Dato real', 82.8, 92.5),
+            k('Ticket promedio', 'S/ 1 314,54', 'good', 'Meta ≥ S/ 1 300 · crítico bajo S/ 1 100', 'Venta dividida entre los 1 748 pedidos del año.', 'Dato real', 82.2, 81.3)
+          ]
+        },
+        {
+          title: 'Precio y rentabilidad',
+          q: '¿Cuánto ganamos por cada sol vendido?',
+          kpis: [
+            k('Margen bruto', 'Sin dato', 'none', 'Meta ≥ 22 % · crítico bajo 15 %', '(Venta − costo) ÷ venta. Falta el costo de compra de cada producto.', 'Falta archivo de costos', null, null),
+            k('Descuento real bajo lista', '15,9 %', 'warn', 'Meta ≤ 12 % · crítico sobre 20 %', '1 − precio pagado ÷ precio de lista, en los 5 productos principales. En factura figura 0 %.', 'Dato real', 63.6, 48),
+            k('Merma sobre la venta', '0,9 %', 'warn', 'Meta ≤ 0,5 % · crítico sobre 1,5 %', 'Producto dado de baja por vencimiento o daño, dividido entre la venta. S/ 21 300 en 12 meses.', 'Ejemplo', 45, 25)
+          ]
+        },
+        {
+          title: 'Riesgo',
+          q: '¿Qué tan expuestos estamos si algo falla?',
+          kpis: [
+            k('Venta en los 10 mayores clientes', '56,3 %', 'warn', 'Meta ≤ 50 % · crítico sobre 65 %', 'Si uno de ellos se va, la venta cae de golpe. El mayor solo pesa 13,8 %.', 'Dato real', 56.3, 50),
+            k('Venta de un solo vendedor', '57,1 %', 'crit', 'Meta ≤ 40 % · crítico sobre 50 %', 'Miguel Ángel García Medina vendió S/ 1 311 698 a 79 clientes.', 'Dato real', 57.1, 40),
+            k('Cartera vencida', '23,5 %', 'crit', 'Meta ≤ 10 % · crítico sobre 20 %', 'Deuda vencida dividida entre el total por cobrar. Saldrá de cobros.csv.', 'Ejemplo', 58.8, 25)
+          ]
+        },
+        {
+          title: 'Gestión con VetChain',
+          q: 'Se miden desde que el equipo registra resultados',
+          kpis: [
+            k('Alertas atendidas en 48 horas', 'Sin dato', 'none', 'Meta ≥ 90 %', 'Alertas con resultado registrado dentro de las 48 horas siguientes.', 'Nuevo con VetChain', null, null),
+            k('Cotizaciones que terminan en pedido', 'Sin dato', 'none', 'Meta ≥ 40 %', 'Pedidos dividido entre cotizaciones enviadas en el mes.', 'Nuevo con VetChain', null, null),
+            k('Clientes dormidos reactivados', 'Sin dato', 'none', 'Meta 25 por trimestre', 'Clientes sin compras en 12 meses que vuelven a comprar. Hay 500 recuperables.', 'Nuevo con VetChain', null, null)
+          ]
+        }
+      ],
+      pdf: () => this.setState({ toast: 'Se genera el PDF del tablero de KPIs. Simulado en el prototipo.' }),
+      mail: () => this.setState({ toast: 'Se abre el envío por correo con el PDF adjunto. Simulado en el prototipo.' }),
+      wa: () => this.setState({ toast: 'Se abre WhatsApp con el resumen y el PDF adjunto. Simulado en el prototipo.' }),
+      navOpen: !this.state.navClosed,
+      navRotate: this.state.navClosed ? '0deg' : '180deg',
+      toggleNav: () => this.setState({ navClosed: !this.state.navClosed }),
+      navReports: [['Main-nsyj.dc.html', 'Todos los reportes'], ['Ficha-icvr.dc.html', 'Ficha de cliente'], ['KPIs-svux.dc.html', 'Indicadores (KPIs)'], ['Ventas-ubd8.dc.html', 'Ventas y rentabilidad'], ['Clientes-9xcu.dc.html', 'Retención de clientes'], ['Stock-uwfm.dc.html', 'Stock y merma'], ['Cobranza-6f07.dc.html', 'Cartera y cobranza'], ['Vendedores-45z4.dc.html', 'Vendedores']].map((n) => {
+        const on = n[0] === 'KPIs-svux.dc.html';
+        return { href: n[0], label: n[1], current: on ? 'page' : 'false', bg: on ? '#FCECEC' : 'transparent', fg: on ? '#B3141F' : '#3A3A3A', weight: on ? 600 : 500 };
+      }),
+      hasToast: !!this.state.toast,
+      toast: this.state.toast,
+      closeToast: () => this.setState({ toast: '' })
+    };
+  }
+}
+</script>
+</body>
+</html>

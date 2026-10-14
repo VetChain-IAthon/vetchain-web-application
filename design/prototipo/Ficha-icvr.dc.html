@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Ficha de cliente para reunión</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F3F3F2}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+a{color:#B3141F}a:hover{color:#8E0F18}
+</style>
+</helmet>
+<div style="min-height: 100vh; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: stretch; background: #F3F3F2; color: #1B1B1B; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 15px; line-height: 1.45">
+
+<nav aria-label="Menú principal" style="flex: 1 1 232px; box-sizing: border-box; background: #FFFFFF; border-right: 1px solid #E3E3E3; padding: 28px 16px 24px; display: flex; flex-direction: column; justify-content: space-between; gap: 32px">
+<div style="display: flex; flex-direction: column; gap: 22px">
+<div style="padding: 0 12px; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 20px; font-weight: 700; letter-spacing: -0.01em">VetChain</span>
+<span style="font-size: 13px; color: #5F5F5F">Mederi Pharma · piloto</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="padding: 0 12px 4px; font-size: 12px; font-weight: 500; color: #6B6B6B">Inicio</span>
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #3A3A3A; font-weight: 500; text-decoration: none">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1"></rect><rect x="13.5" y="3.5" width="7" height="7" rx="1"></rect><rect x="3.5" y="13.5" width="7" height="7" rx="1"></rect><rect x="13.5" y="13.5" width="7" height="7" rx="1"></rect></svg>
+Panel gerencial
+</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="padding: 0 12px 4px; font-size: 12px; font-weight: 500; color: #6B6B6B">Trabajo comercial</span>
+<a href="Clientes.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #3A3A3A; font-weight: 500; text-decoration: none">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"></path><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8"></path><path d="M18 14.8c1.8.7 3 2.4 3.5 5.2"></path></svg>
+Clientes
+</a>
+<a href="Cotizaciones.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #3A3A3A; font-weight: 500; text-decoration: none">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"></path><path d="M14 3v5h5"></path><path d="M8.5 13h7M8.5 17h5"></path></svg>
+Cotizaciones
+</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="padding: 0 12px 4px; font-size: 12px; font-weight: 500; color: #6B6B6B">Gestión del negocio</span>
+<a href="Planificacion.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #3A3A3A; font-weight: 500; text-decoration: none">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5z"></path><path d="M3.5 7.5 12 12l8.5-4.5M12 12v9"></path></svg>
+Planificación de importación
+</a>
+<button type="button" onClick="{{toggleNav}}" aria-expanded="{{navOpen}}" aria-controls="sub-reportes" style="display: flex; align-items: center; gap: 12px; width: 100%; min-height: 44px; padding: 0 12px; border: none; border-radius: 8px; background: transparent; color: #B3141F; font-size: 15px; font-weight: 600; text-align: left">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D3202E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"></path><path d="M7 16v-5M12 16V6M17 16v-8"></path></svg>
+<span style="flex: 1 1 auto">Reportes</span>
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate({{navRotate}}); transition: transform 150ms"><path d="m6 9 6 6 6-6"></path></svg>
+</button>
+<sc-if value="{{navOpen}}" hint-placeholder-val="{{ true }}">
+<div id="sub-reportes" style="display: flex; flex-direction: column; gap: 2px; margin: 2px 0 6px 21px; padding-left: 10px; border-left: 1px solid #E3E3E3">
+<sc-for list="{{navReports}}" as="n" hint-placeholder-count="8">
+<a href="{{n.href}}" aria-current="{{n.current}}" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 8px; background: {{n.bg}}; color: {{n.fg}}; font-size: 14px; font-weight: {{n.weight}}; text-decoration: none">{{n.label}}</a>
+</sc-for>
+</div>
+</sc-if>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="padding: 0 12px 4px; font-size: 12px; font-weight: 500; color: #6B6B6B">Administración</span>
+<a href="Configuracion.dc.html" style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 12px; border-radius: 8px; color: #3A3A3A; font-weight: 500; text-decoration: none">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"></path><circle cx="15" cy="6" r="2"></circle><circle cx="9" cy="12" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg>
+Ajustes
+</a>
+</div>
+</div>
+<div style="display: flex; align-items: center; gap: 12px; padding: 16px 12px 0; border-top: 1px solid #E3E3E3">
+<span style="width: 40px; height: 40px; flex: none; border-radius: 50%; background: #D3202E; color: #FFFFFF; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center">GC</span>
+<div style="display: flex; flex-direction: column; min-width: 0">
+<span style="font-size: 14px; font-weight: 600">Gerencia comercial</span>
+<a href="Perfil.dc.html" style="font-size: 12.5px; color: #5F5F5F; text-decoration: none">Ver mi perfil</a>
+</div>
+</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 28px clamp(16px, 4vw, 48px) 56px">
+<div style="max-width: 1060px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
+
+<a href="Main-nsyj.dc.html" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; font-size: 14px; font-weight: 600; text-decoration: none">
+<svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg>
+Reportes
+</a>
+
+<header style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 6px; min-width: 0; flex: 1 1 420px">
+<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+<h1 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.015em">Ficha de cliente para reunión</h1>
+<span style="display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 6px; background: #FCECEC; color: #A3161F; font-size: 12.5px; font-weight: 600">
+<svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"></path></svg>
+Con IA
+</span>
+</div>
+<p style="margin: 0; color: #5F5F5F; font-size: 14px">Cuánto compró, a qué precio, cuánto se ganó, qué proyectamos y qué ofrecerle según stock y merma.</p>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
+<button type="button" onClick="{{openPdf}}" style="display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border: none; border-radius: 8px; background: #D3202E; color: #FFFFFF; font-size: 14px; font-weight: 600">
+<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10.5l5 5 5-5"></path><path d="M5 20h14"></path></svg>
+Descargar PDF
+</button>
+<button type="button" onClick="{{openMail}}" style="display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border: 1px solid #CFCFCF; border-radius: 8px; background: #FFFFFF; color: #1B1B1B; font-size: 14px; font-weight: 500">
+<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m4 7 8 6 8-6"></path></svg>
+Correo
+</button>
+<button type="button" onClick="{{openWa}}" style="display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border: 1px solid #CFCFCF; border-radius: 8px; background: #FFFFFF; color: #1B1B1B; font-size: 14px; font-weight: 500">
+<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"></path></svg>
+WhatsApp
+</button>
+</div>
+</header>
+
+<section aria-label="Filtros de la ficha" style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end">
+<label style="flex: 3 1 300px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3A3A3A">
+Empresa
+<span style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 12px; border: 1px solid #CFCFCF; border-radius: 8px; background: #FFFFFF">
+<svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#6B6B6B" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg>
+<input type="text" defaultValue="Corporacion Farmaceutica Veterinaria S.A.C." style="flex: 1 1 auto; min-width: 0; border: none; outline: none; background: transparent; font-size: 14.5px; font-weight: 500; color: #1B1B1B">
+</span>
+</label>
+<label style="flex: 1 1 150px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3A3A3A">
+Ventas desde
+<input type="date" defaultValue="2025-02-01" style="height: 44px; box-sizing: border-box; padding: 0 10px; border: 1px solid #CFCFCF; border-radius: 8px; background: #FFFFFF; font-size: 14px; color: #1B1B1B">
+</label>
+<label style="flex: 1 1 150px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3A3A3A">
+Hasta
+<input type="date" defaultValue="2026-01-20" style="height: 44px; box-sizing: border-box; padding: 0 10px; border: 1px solid #CFCFCF; border-radius: 8px; background: #FFFFFF; font-size: 14px; color: #1B1B1B">
+</label>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span id="proy-label" style="font-size: 13px; font-weight: 600; color: #3A3A3A">Proyectar</span>
+<div role="group" aria-labelledby="proy-label" style="display: inline-flex; padding: 3px; gap: 3px; border: 1px solid #CFCFCF; border-radius: 10px; background: #FFFFFF">
+<sc-for list="{{horizons}}" as="o" hint-placeholder-count="3">
+<button type="button" onClick="{{o.pick}}" aria-pressed="{{o.on}}" style="height: 38px; padding: 0 14px; border: none; border-radius: 7px; background: {{o.bg}}; color: {{o.fg}}; font-size: 14px; font-weight: 600">{{o.label}}</button>
+</sc-for>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span id="ver-label" style="font-size: 13px; font-weight: 600; color: #3A3A3A">Versión</span>
+<div role="group" aria-labelledby="ver-label" style="display: inline-flex; padding: 3px; gap: 3px; border: 1px solid #CFCFCF; border-radius: 10px; background: #FFFFFF">
+<sc-for list="{{versions}}" as="o" hint-placeholder-count="2">
+<button type="button" onClick="{{o.pick}}" aria-pressed="{{o.on}}" style="height: 38px; padding: 0 14px; border: none; border-radius: 7px; background: {{o.bg}}; color: {{o.fg}}; font-size: 14px; font-weight: 600">{{o.label}}</button>
+</sc-for>
+</div>
+</div>
+<p style="margin: 0; flex: 1 1 260px; font-size: 13px; color: #5F5F5F">{{versionNote}}</p>
+</div>
+</section>
+
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 4px 4px 18px; border-radius: 10px; background: #1B1B1B; color: #FFFFFF; font-size: 14px">
+<span>{{toast}}</span>
+<button type="button" aria-label="Cerrar aviso" onClick="{{closeToast}}" style="width: 44px; height: 44px; flex: none; border: none; border-radius: 8px; background: transparent; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+</button>
+</div>
+</sc-if>
+
+<sc-if value="{{isSending}}" hint-placeholder-val="{{ false }}">
+<section aria-label="Enviar ficha" style="background: #FFFFFF; border: 2px solid #D3202E; border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px">
+<h2 style="margin: 0; font-size: 18px; font-weight: 600">{{sendTitle}}</h2>
+<button type="button" aria-label="Cerrar" onClick="{{closeSend}}" style="width: 44px; height: 44px; border: none; border-radius: 8px; background: transparent; color: #1B1B1B; display: inline-flex; align-items: center; justify-content: center">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+</button>
+</div>
+<div style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; background: #E5F3EA; color: #174F2B; font-size: 13.5px">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6z"></path><path d="m9 12 2 2 4-4"></path></svg>
+<span>Sale la versión para el cliente: compras, precios y propuesta. La ganancia, los márgenes, el stock y el guion no salen de Mederi.</span>
+</div>
+<sc-if value="{{isPdf}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<p style="margin: 0; font-size: 14.5px">PDF de 2 páginas: resumen de compras con gráficos, precios por producto y la propuesta con su vigencia de 7 días.</p>
+<div style="display: flex; gap: 10px; flex-wrap: wrap">
+<a href="FichaPDF-1.dc.html" style="display: inline-flex; align-items: center; height: 44px; padding: 0 18px; border-radius: 8px; background: #D3202E; color: #FFFFFF; font-size: 14px; font-weight: 600; text-decoration: none">Ver el PDF</a>
+<button type="button" onClick="{{printPdf}}" style="height: 44px; padding: 0 16px; border: 1px solid #CFCFCF; border-radius: 8px; background: #FFFFFF; color: #1B1B1B; font-size: 14px; font-weight: 500">Imprimir o guardar como PDF</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{isMail}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3A3A3A">
+Para
+<input type="email" placeholder="compras@cliente.pe" style="height: 44px; box-sizing: border-box; padding: 0 12px; border: 1px solid #CFCFCF; border-radius: 8px; font-size: 14.5px">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3A3A3A">
+Asunto
+<input type="text" defaultValue="Resumen de compras y propuesta · Mederi Pharma" style="height: 44px; box-sizing: border-box; padding: 0 12px; border: 1px solid #CFCFCF; border-radius: 8px; font-size: 14.5px">
+</label>
+</div>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3A3A3A">
+Mensaje
+<textarea rows="3" defaultValue="Estimados, les compartimos el resumen de sus compras de febrero de 2025 a enero de 2026 y una propuesta para su próximo pedido, válida por 7 días. Quedamos atentos. Miguel Ángel García Medina, Mederi Pharma." style="box-sizing: border-box; padding: 10px 12px; border: 1px solid #CFCFCF; border-radius: 8px; font-size: 14.5px; line-height: 1.5; resize: vertical"></textarea>
+</label>
+</div>
+</sc-if>
+<sc-if value="{{isWa}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3A3A3A; max-width: 320px">
+Número de WhatsApp
+<input type="tel" placeholder="+51 9XX XXX XXX" style="height: 44px; box-sizing: border-box; padding: 0 12px; border: 1px solid #CFCFCF; border-radius: 8px; font-size: 14.5px">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3A3A3A">
+Mensaje
+<textarea rows="3" defaultValue="Hola, le comparto el resumen de sus compras y una propuesta de S/ 27 958,20 + IGV para su próximo pedido, válida por 7 días. ¿La revisamos? Miguel Ángel, Mederi Pharma." style="box-sizing: border-box; padding: 10px 12px; border: 1px solid #CFCFCF; border-radius: 8px; font-size: 14.5px; line-height: 1.5; resize: vertical"></textarea>
+</label>
+</div>
+</sc-if>
+<sc-if value="{{isChannel}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
+<span style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 8px; background: #F3F3F2; font-size: 13px; color: #3A3A3A">
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"></path><path d="M14 3v5h5"></path></svg>
+Ficha_Corporacion-Farmaceutica-Veterinaria_feb2025-ene2026.pdf
+</span>
+<div style="display: flex; gap: 10px">
+<button type="button" onClick="{{closeSend}}" style="height: 44px; padding: 0 16px; border: 1px solid #CFCFCF; border-radius: 8px; background: #FFFFFF; color: #1B1B1B; font-size: 14px; font-weight: 500">Cancelar</button>
+<button type="button" onClick="{{doSend}}" style="height: 44px; padding: 0 20px; border: none; border-radius: 8px; background: #D3202E; color: #FFFFFF; font-size: 14px; font-weight: 600">Enviar</button>
+</div>
+</div>
+</sc-if>
+</section>
+</sc-if>
+
+<section aria-label="Cliente" style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 12px; padding: 22px 24px; display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-start">
+<div style="display: flex; flex-direction: column; gap: 10px; min-width: 0; flex: 1 1 480px">
+<h2 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.01em">Corporacion Farmaceutica Veterinaria S.A.C.</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<span style="padding: 4px 10px; border-radius: 6px; background: #E5F3EA; color: #1F6B3A; font-size: 13px; font-weight: 600">Nivel A</span>
+<span style="padding: 4px 10px; border-radius: 6px; background: #F3F3F2; color: #3A3A3A; font-size: 13px; font-weight: 500">Crédito a 45 días</span>
+<sc-if value="{{isInternal}}" hint-placeholder-val="{{ true }}">
+<span style="padding: 4px 10px; border-radius: 6px; background: #F3F3F2; color: #3A3A3A; font-size: 13px; font-weight: 500">Cliente n.° 1 de 331</span>
+<span style="padding: 4px 10px; border-radius: 6px; background: #FCE8E9; color: #A3161F; font-size: 13px; font-weight: 600">18 días de atraso</span>
+</sc-if>
+</div>
+<span style="font-size: 13.5px; color: #5F5F5F">Vendedor: Miguel Ángel García Medina · atendió el 82 % de sus compras</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px; text-align: right">
+<span style="font-size: 12.5px; color: #5F5F5F">Período analizado</span>
+<span style="font-size: 14.5px; font-weight: 600">1 feb 2025 – 20 ene 2026</span>
+<span style="font-size: 12.5px; color: #5F5F5F">Montos sin IGV</span>
+</div>
+</section>
+
+<section aria-labelledby="resumen-titulo" style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: center; gap: 10px">
+<span style="width: 30px; height: 30px; border-radius: 8px; background: #FCECEC; display: inline-flex; align-items: center; justify-content: center">
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D3202E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"></path></svg>
+</span>
+<h2 id="resumen-titulo" style="margin: 0; font-size: 18px; font-weight: 600">{{summaryTitle}}</h2>
+</div>
+<ol style="margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 8px; font-size: 15px; line-height: 1.55">
+<sc-for list="{{summary}}" as="s" hint-placeholder-count="4">
+<li>{{s.text}}</li>
+</sc-for>
+</ol>
+</section>
+
+<section aria-label="Indicadores del cliente" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px">
+<sc-for list="{{tiles}}" as="t" hint-placeholder-count="6">
+<div style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 12px; padding: 16px 18px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 12.5px; color: #5F5F5F; font-weight: 500">{{t.label}}</span>
+<span style="font-size: 21px; font-weight: 600; letter-spacing: -0.01em">{{t.value}}</span>
+<span style="font-size: 12.5px; color: {{t.subColor}}; font-weight: 500">{{t.sub}}</span>
+</div>
+</sc-for>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch">
+<section aria-labelledby="graf-titulo" style="flex: 999 1 560px; min-width: 0; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 3px">
+<h2 id="graf-titulo" style="margin: 0; font-size: 17px; font-weight: 600">Compras por mes y proyección</h2>
+<span style="font-size: 13px; color: #5F5F5F">En miles de soles. Proyección desde el corte de datos.</span>
+</div>
+<div style="display: flex; gap: 14px; font-size: 13px; color: #3A3A3A">
+<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 3px; background: #D3202E"></span>Compra real</span>
+<span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 3px; background: #F2AEB4"></span>Proyección IA</span>
+</div>
+</div>
+<div role="img" aria-label="{{chartAria}}" style="display: flex; flex-direction: column; gap: 6px">
+<div style="position: relative; height: 210px; display: flex; align-items: flex-end; gap: 5px; border-bottom: 1px solid #BDBDBD; background: linear-gradient(#EFEFEF, #EFEFEF) 0 30px / 100% 1px no-repeat, linear-gradient(#EFEFEF, #EFEFEF) 0 90px / 100% 1px no-repeat, linear-gradient(#EFEFEF, #EFEFEF) 0 150px / 100% 1px no-repeat">
+<sc-for list="{{bars}}" as="b" hint-placeholder-count="18">
+<div title="{{b.tip}}" style="flex: 1 1 0; min-width: 0; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px">
+<span style="font-size: 11px; color: #3A3A3A; white-space: nowrap; font-variant-numeric: tabular-nums">{{b.val}}</span>
+<div style="width: 100%; max-width: 34px; height: {{b.h}}; background: {{b.fill}}; border-radius: 4px 4px 0 0"></div>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; gap: 5px">
+<sc-for list="{{bars}}" as="b" hint-placeholder-count="18">
+<span style="flex: 1 1 0; min-width: 0; text-align: center; font-size: 11px; color: #5F5F5F; white-space: nowrap; overflow: hidden">{{b.label}}</span>
+</sc-for>
+</div>
+</div>
+<sc-if value="{{isInternal}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; padding: 14px 16px; border-radius: 10px; background: #F7F7F6">
+<div style="display: flex; flex-direction: column; gap: 2px; flex: 1 1 200px">
+<span style="font-size: 12.5px; color: #5F5F5F; font-weight: 500">Proyección {{proj.label}} · {{proj.period}}</span>
+<span style="font-size: 22px; font-weight: 600">{{proj.value}}</span>
+<span style="font-size: 12.5px; color: #5F5F5F">Rango probable {{proj.range}}</span>
+</div>
+<p style="margin: 0; flex: 2 1 320px; font-size: 13.5px; color: #3A3A3A; line-height: 1.5">Supuesto: mantiene sus 15 pedidos al año de S/ 21 132 en promedio; se resta 10 % por el atraso actual. Si acepta la propuesta de esta ficha, el próximo mes sube a S/ 27 958.</p>
+</div>
+</sc-if>
+</section>
+
+<section aria-labelledby="cat-titulo" style="flex: 1 1 300px; min-width: 0; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 3px">
+<h2 id="cat-titulo" style="margin: 0; font-size: 17px; font-weight: 600">Qué compra</h2>
+<span style="font-size: 13px; color: #5F5F5F">Por categoría de producto, 12 meses</span>
+</div>
+<div role="img" aria-label="Compras por categoría: Nutrición y suplementos 39 %, Dermatología 24,5 %, Respiratorio 11,4 %, Antibióticos 7,9 %, Otros 17,1 %" style="align-self: center; position: relative; width: 176px; height: 176px; border-radius: 50%; background: conic-gradient(#FFFFFF 0 0.2%, #D3202E 0.2% 38.8%, #FFFFFF 38.8% 39.2%, #2F6DB5 39.2% 63.3%, #FFFFFF 63.3% 63.7%, #E39A00 63.7% 74.7%, #FFFFFF 74.7% 75.1%, #169C86 75.1% 82.6%, #FFFFFF 82.6% 83%, #B5B5B5 83% 99.8%, #FFFFFF 99.8% 100%)">
+<div style="position: absolute; inset: 32px; border-radius: 50%; background: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center">
+<span style="font-size: 16px; font-weight: 600">S/ 316 975</span>
+<span style="font-size: 11.5px; color: #5F5F5F">12 meses</span>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{cats}}" as="c" hint-placeholder-count="5">
+<div style="display: flex; align-items: center; gap: 10px; font-size: 13.5px">
+<span style="width: 12px; height: 12px; flex: none; border-radius: 3px; background: {{c.color}}"></span>
+<span style="flex: 1 1 auto; min-width: 0">{{c.name}}</span>
+<span style="font-weight: 600; font-variant-numeric: tabular-nums">{{c.pct}}</span>
+</div>
+</sc-for>
+</div>
+</section>
+</div>
+
+<sc-if value="{{isInternal}}" hint-placeholder-val="{{ true }}">
+<section aria-labelledby="ritmo-titulo" style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 3px">
+<h2 id="ritmo-titulo" style="margin: 0; font-size: 17px; font-weight: 600">Ritmo de compra</h2>
+<span style="font-size: 13px; color: #5F5F5F">Cada punto es un pedido. Suele comprar cada 27 días; la línea punteada marca cuándo se esperaba el siguiente (2 ene).</span>
+</div>
+<div role="img" aria-label="15 pedidos entre febrero y el 6 de diciembre de 2025; 45 días sin comprar al corte del 20 de enero de 2026" style="position: relative; height: 84px">
+<div style="position: absolute; left: 0; right: 0; top: 46px; height: 2px; background: #DADADA"></div>
+<div style="position: absolute; left: 78.6%; width: 11.5%; top: 45px; height: 4px; border-radius: 2px; background: #D3202E"></div>
+<span style="position: absolute; left: 78.6%; top: 16px; font-size: 12.5px; font-weight: 600; color: #A3161F; white-space: nowrap">45 días sin comprar</span>
+<div style="position: absolute; left: 85.5%; top: 34px; height: 26px; border-left: 2px dashed #6B6B6B"></div>
+<div style="position: absolute; left: 90.1%; top: 32px; height: 30px; width: 2px; background: #1B1B1B"></div>
+<span style="position: absolute; left: 90.1%; top: 64px; transform: translateX(-50%); font-size: 12px; color: #1B1B1B; font-weight: 600; white-space: nowrap">Corte 20 ene</span>
+<sc-for list="{{orders}}" as="o" hint-placeholder-count="15">
+<span title="{{o.tip}}" style="position: absolute; left: {{o.left}}; top: 40px; width: 14px; height: 14px; margin-left: -7px; box-sizing: border-box; border-radius: 50%; border: 2px solid #FFFFFF; background: #D3202E"></span>
+</sc-for>
+</div>
+<div style="position: relative; height: 18px">
+<sc-for list="{{ticks}}" as="t" hint-placeholder-count="13">
+<span style="position: absolute; left: {{t.left}}; font-size: 11.5px; color: #5F5F5F; white-space: nowrap">{{t.label}}</span>
+</sc-for>
+</div>
+</section>
+</sc-if>
+
+<section aria-labelledby="prod-titulo" style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 3px">
+<h2 id="prod-titulo" style="margin: 0; font-size: 17px; font-weight: 600">Qué compró y a qué precio</h2>
+<span style="font-size: 13px; color: #5F5F5F">Descuento en factura del período: S/ 0,00. El descuento real está en el precio.</span>
+</div>
+<span style="padding: 3px 9px; border-radius: 6px; background: #EFEFEF; color: #4A4A4A; font-size: 12px; font-weight: 600">Detalle de ejemplo</span>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 760px; border-collapse: collapse; font-size: 14px">
+<thead>
+<tr style="text-align: left; color: #5F5F5F; font-size: 12.5px">
+<th style="padding: 8px 10px 8px 0; font-weight: 600; border-bottom: 1px solid #DADADA">Producto</th>
+<th style="padding: 8px 10px; font-weight: 600; border-bottom: 1px solid #DADADA; text-align: right">Unidades</th>
+<th style="padding: 8px 10px; font-weight: 600; border-bottom: 1px solid #DADADA; text-align: right">Precio pagado</th>
+<th style="padding: 8px 10px; font-weight: 600; border-bottom: 1px solid #DADADA; text-align: right">Precio de lista</th>
+<th style="padding: 8px 10px; font-weight: 600; border-bottom: 1px solid #DADADA; text-align: right">{{discountHeader}}</th>
+<th style="padding: 8px 10px; font-weight: 600; border-bottom: 1px solid #DADADA; text-align: right">Venta</th>
+<th style="padding: 8px 0 8px 10px; font-weight: 600; border-bottom: 1px solid #DADADA; text-align: right">Última compra</th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{products}}" as="p" hint-placeholder-count="7">
+<tr style="font-variant-numeric: tabular-nums">
+<td style="padding: 11px 10px 11px 0; border-bottom: 1px solid #EDEDED; font-weight: 600">{{p.name}}</td>
+<td style="padding: 11px 10px; border-bottom: 1px solid #EDEDED; text-align: right">{{p.units}}</td>
+<td style="padding: 11px 10px; border-bottom: 1px solid #EDEDED; text-align: right">{{p.paid}}</td>
+<td style="padding: 11px 10px; border-bottom: 1px solid #EDEDED; text-align: right; color: #5F5F5F">{{p.list}}</td>
+<td style="padding: 11px 10px; border-bottom: 1px solid #EDEDED; text-align: right">{{p.disc}}</td>
+<td style="padding: 11px 10px; border-bottom: 1px solid #EDEDED; text-align: right; font-weight: 600">{{p.sale}}</td>
+<td style="padding: 11px 0 11px 10px; border-bottom: 1px solid #EDEDED; text-align: right; color: #5F5F5F">{{p.last}}</td>
+</tr>
+</sc-for>
+<tr style="font-variant-numeric: tabular-nums">
+<td style="padding: 12px 10px 4px 0; font-weight: 700">Total</td>
+<td style="padding: 12px 10px 4px"></td>
+<td style="padding: 12px 10px 4px"></td>
+<td style="padding: 12px 10px 4px"></td>
+<td style="padding: 12px 10px 4px; text-align: right; font-weight: 700">17,7 %</td>
+<td style="padding: 12px 10px 4px; text-align: right; font-weight: 700">S/ 316 974,87</td>
+<td style="padding: 12px 0 4px 10px"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<span style="font-size: 12.5px; color: #5F5F5F">Precio de lista = último precio de venta registrado. El 17,7 % se calcula sobre los 6 productos con precio de lista.</span>
+</section>
+
+<section aria-labelledby="ofertas-titulo" style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 3px">
+<h2 id="ofertas-titulo" style="margin: 0; font-size: 17px; font-weight: 600">{{offersTitle}}</h2>
+<span style="font-size: 13px; color: #5F5F5F">{{offersSub}}</span>
+</div>
+<span style="padding: 3px 9px; border-radius: 6px; background: #EFEFEF; color: #4A4A4A; font-size: 12px; font-weight: 600">Stock y márgenes de ejemplo</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px">
+<sc-for list="{{offers}}" as="o" hint-placeholder-count="4">
+<article style="border: 1px solid #E3E3E3; border-radius: 12px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px">
+<sc-if value="{{o.showChips}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{o.chips}}" as="c" hint-placeholder-count="1">
+<span style="padding: 3px 9px; border-radius: 6px; background: {{c.bg}}; color: {{c.fg}}; font-size: 12px; font-weight: 600">{{c.text}}</span>
+</sc-for>
+</div>
+</sc-if>
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px">
+<h3 style="margin: 0; font-size: 15px; font-weight: 600; line-height: 1.35">{{o.title}}</h3>
+<span style="font-size: 17px; font-weight: 600; white-space: nowrap">{{o.total}}</span>
+</div>
+<span style="font-size: 13.5px; color: #3A3A3A">{{o.detail}}</span>
+<p style="margin: 0; font-size: 13.5px; color: #5F5F5F; line-height: 1.5">{{o.note}}</p>
+<sc-if value="{{o.showMargin}}" hint-placeholder-val="{{ true }}">
+<span style="font-size: 12.5px; color: #1F6B3A; font-weight: 600">{{o.margin}}</span>
+</sc-if>
+</article>
+</sc-for>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding-top: 14px; border-top: 1px solid #EDEDED">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 15px; font-weight: 600">Total de la propuesta: S/ 27 958,20 sin IGV · S/ 32 990,68 con IGV</span>
+<span style="font-size: 13px; color: #5F5F5F">{{offersFoot}}</span>
+</div>
+<button type="button" onClick="{{toQuote}}" style="height: 44px; padding: 0 18px; border: none; border-radius: 8px; background: #D3202E; color: #FFFFFF; font-size: 14px; font-weight: 600">Llevar a cotización</button>
+</div>
+</section>
+
+<sc-if value="{{isInternal}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch">
+<section aria-labelledby="guion-titulo" style="flex: 999 1 520px; min-width: 0; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="guion-titulo" style="margin: 0; font-size: 17px; font-weight: 600">Guion para la reunión</h2>
+<ol style="margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 8px; font-size: 14.5px; line-height: 1.55">
+<li>Abre con su historial: 15 pedidos y S/ 316 975 en 12 meses. Es el cliente n.° 1 de Mederi.</li>
+<li>Pregunta por el atraso: no compra desde el 6 de diciembre. ¿Bajó su demanda o está comprando a otro proveedor?</li>
+<li>Propón su reposición habitual y el antibiótico bucal con precio especial.</li>
+<li>Presenta PROPANTELINA: no la compra y 4 clientes parecidos sí.</li>
+<li>No ofrezcas más descuento: ya paga 17,7 % bajo lista y el margen mínimo es 12 %.</li>
+</ol>
+</section>
+<section aria-labelledby="credito-titulo" style="flex: 1 1 280px; min-width: 0; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 10px">
+<h2 id="credito-titulo" style="margin: 0; font-size: 17px; font-weight: 600">Crédito y cobranza</h2>
+<span style="padding: 3px 9px; border-radius: 6px; background: #EFEFEF; color: #4A4A4A; font-size: 12px; font-weight: 600">Ejemplo</span>
+</div>
+<span style="align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; background: #E5F3EA; color: #1F6B3A; font-size: 13px; font-weight: 600">
+<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+Paga a tiempo
+</span>
+<div style="display: flex; flex-direction: column; font-size: 14px">
+<div style="display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px solid #EDEDED"><span style="color: #5F5F5F">Días promedio de pago</span><span style="font-weight: 600">41 de 45</span></div>
+<div style="display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px solid #EDEDED"><span style="color: #5F5F5F">Deuda vencida</span><span style="font-weight: 600">S/ 0,00</span></div>
+<div style="display: flex; justify-content: space-between; gap: 10px; padding: 8px 0"><span style="color: #5F5F5F">Recomendación</span><span style="font-weight: 600">Mantener 45 días</span></div>
+</div>
+</section>
+</div>
+</sc-if>
+
+<p style="margin: 0; font-size: 12.5px; color: #5F5F5F; line-height: 1.5">Fuentes: pedidos, detalle, productos y cobros de Mederi. Reales: totales, pedidos, ritmo de compra y vendedor. De ejemplo en el prototipo: detalle mensual y por producto, categorías, stock, lotes, márgenes y cobranza.</p>
+
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":3400}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { horizon: 'semestre', version: 'interna', send: '', toast: '' };
+  }
+
+  renderVals() {
+    const h = this.state.horizon;
+    const internal = this.state.version === 'interna';
+    const send = this.state.send;
+    const fmt = (n, d) => {
+      const parts = n.toFixed(d).split('.');
+      const i = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+      return parts[1] ? i + ',' + parts[1] : i;
+    };
+
+    const projections = {
+      mes: { n: 1, label: 'próximo mes', period: 'febrero 2026', value: 'S/ 23 800', range: 'S/ 17 800 – 29 700' },
+      semestre: { n: 6, label: 'próximo semestre', period: 'feb – jul 2026', value: 'S/ 142 600', range: 'S/ 121 200 – 164 000' },
+      anio: { n: 12, label: 'próximo año', period: 'feb 2026 – ene 2027', value: 'S/ 285 300', range: 'S/ 242 500 – 328 100' }
+    };
+    const proj = projections[h];
+
+    const hist = [['Feb 25', 41800], ['Mar', 19600], ['Abr', 22900], ['May', 17400], ['Jun', 20300], ['Jul', 44100], ['Ago', 21700], ['Sep', 18900], ['Oct', 43600], ['Nov', 22300], ['Dic', 44374.87], ['Ene 26', 0]];
+    const projMonths = ['Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic', 'Ene 27'];
+    const scale = 180 / 45000;
+    const showVals = proj.n < 12;
+    const bars = hist.map((x) => ({
+      label: x[0],
+      val: showVals ? (x[1] === 0 ? '0' : fmt(x[1] / 1000, 1)) : '',
+      h: Math.max(2, Math.round(x[1] * scale)) + 'px',
+      fill: x[1] === 0 ? '#BDBDBD' : '#D3202E',
+      tip: x[0] + ': S/ ' + fmt(x[1], 0)
+    })).concat(projMonths.slice(0, proj.n).map((m) => ({
+      label: m,
+      val: '',
+      h: Math.round(23773 * scale) + 'px',
+      fill: '#F2AEB4',
+      tip: m + ' (proyección): S/ 23 773'
+    })));
+
+    const orderDates = ['6 feb', '27 feb', '27 mar', '24 abr', '22 may', '19 jun', '10 jul', '31 jul', '28 ago', '25 sep', '16 oct', '30 oct', '20 nov', '2 dic', '6 dic'];
+    const orderPos = [1.3, 6.6, 13.8, 20.9, 28.1, 35.2, 40.6, 45.9, 53.1, 60.2, 65.6, 69.1, 74.5, 77.6, 78.6];
+    const tickLab = ['Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic', 'Ene', 'Feb'];
+    const tickPos = [0, 7.1, 15.1, 22.7, 30.6, 38.3, 46.2, 54.1, 61.7, 69.6, 77.3, 85.2, 93.1];
+
+    const products = [
+      ['NUTRAPRO K9 CANINE X 30 SOBRES', 620, 128.80, 161.02, 79856.00, '6 dic 2025'],
+      ['TRITOHEXIDIN SHAMPOO X 250 ML', 2250, 29.10, 34.75, 65475.00, '6 dic 2025'],
+      ['SOSTEN CG ORAL X 80 COMP', 330, 132.90, 160.17, 43857.00, '20 nov 2025'],
+      ['NEUMOFLOGIN X 16 COMP', 900, 40.20, 48.31, 36180.00, '2 dic 2025'],
+      ['ANTIBIOTICO BUCAL TRITON X 20 COMP', 480, 52.40, 62.71, 25152.00, '16 oct 2025'],
+      ['TRITOHEXIDIN PLUS X 50 ML', 360, 33.70, 40.68, 12132.00, '6 dic 2025']
+    ].map((p) => ({
+      name: p[0],
+      units: fmt(p[1], 0),
+      paid: 'S/ ' + fmt(p[2], 2),
+      list: 'S/ ' + fmt(p[3], 2),
+      disc: fmt((1 - p[2] / p[3]) * 100, 1) + ' %',
+      sale: 'S/ ' + fmt(p[4], 2),
+      last: p[5]
+    })).concat([{ name: 'Otros productos', units: '—', paid: '—', list: '—', disc: '—', sale: 'S/ 54 322,87', last: '—' }]);
+
+    const chip = (text, kind) => {
+      const k = { recompra: ['#E8EEF7', '#24528A'], vence: ['#FCE8E9', '#A3161F'], sobre: ['#FDF0D5', '#8A5300'], falta: ['#EAF4F1', '#11695B'] }[kind];
+      return { text: text, bg: k[0], fg: k[1] };
+    };
+    const offers = [
+      {
+        title: 'Reposición de su pedido habitual',
+        total: 'S/ 12 866,60',
+        detail: 'NUTRAPRO K9 ×41 · TRITOHEXIDIN SHAMPOO ×150 · NEUMOFLOGIN ×60 · TRITOHEXIDIN PLUS ×24',
+        noteIn: 'Lleva 45 días sin pedir. Son los 4 productos que pide siempre, a su precio actual. Stock suficiente.',
+        noteOut: 'Sus 4 productos de siempre, a su precio actual.',
+        chips: [chip('Recompra', 'recompra')],
+        margin: 'Margen 16 % · nivel A'
+      },
+      {
+        title: 'ANTIBIOTICO BUCAL TRITON X 20 COMP',
+        total: 'S/ 6 099,60',
+        detail: '120 unidades a S/ 50,83 (−3 %)',
+        noteIn: 'Lote de 180 u que vence en 30 días. Colocar 120 aquí evita la mayor parte de esa merma.',
+        noteOut: 'Precio especial por vencimiento próximo del lote (noviembre 2026).',
+        chips: [chip('Lote por vencer', 'vence')],
+        margin: 'Margen 13 % · sobre el mínimo de 12 %'
+      },
+      {
+        title: 'SOSTEN CG ORAL X 80 COMP',
+        total: 'S/ 5 156,00',
+        detail: '40 unidades a S/ 128,90 (−3 % por volumen)',
+        noteIn: 'Hay sobrestock: 140 días de cobertura. Suele llevar 22; con 40 baja el inventario.',
+        noteOut: 'Precio por volumen llevando 40 unidades.',
+        chips: [chip('Sobrestock', 'sobre')],
+        margin: 'Margen 13 % · sobre el mínimo de 12 %'
+      },
+      {
+        title: 'PROPANTELINA X 80 COMP',
+        total: 'S/ 3 836,00',
+        detail: '40 unidades a S/ 95,90',
+        noteIn: 'No lo compra y 4 clientes parecidos sí. Su lote vence en 52 días.',
+        noteOut: 'Producto nuevo para usted, con precio de introducción. Lote con vencimiento en diciembre 2026.',
+        chips: [chip('Le falta', 'falta'), chip('Lote por vencer', 'vence')],
+        margin: 'Margen 12,5 % · justo sobre el mínimo'
+      }
+    ].map((o) => ({
+      title: o.title,
+      total: o.total,
+      detail: o.detail,
+      note: internal ? o.noteIn : o.noteOut,
+      chips: o.chips,
+      showChips: internal,
+      showMargin: internal,
+      margin: o.margin
+    }));
+
+    const tilesIn = [
+      { label: 'Venta del período', value: 'S/ 316 975', sub: '13,8 % de la venta de Mederi', red: false },
+      { label: 'Ganancia estimada', value: 'S/ 50 716', sub: 'Margen 16 % del nivel A, hasta cargar costos', red: false },
+      { label: 'Pedidos', value: '15', sub: 'Pedido promedio S/ 21 132', red: false },
+      { label: 'Ritmo de compra', value: 'Cada 27 días', sub: 'Última compra hace 45 días', red: true },
+      { label: 'Descuentos', value: '0 % en factura', sub: 'Pagó 17,7 % bajo el precio de lista', red: false },
+      { label: 'Proyección ' + proj.label, value: proj.value, sub: 'Rango ' + proj.range, red: false }
+    ];
+    const tilesOut = [
+      { label: 'Compras del período', value: 'S/ 316 975', sub: 'Sin IGV', red: false },
+      { label: 'Pedidos', value: '15', sub: 'Pedido promedio S/ 21 132', red: false },
+      { label: 'Ahorro frente a lista', value: '17,7 %', sub: 'Precio pagado vs. precio de lista', red: false },
+      { label: 'Propuesta', value: 'S/ 27 958', sub: '4 ofertas · válida 7 días', red: false }
+    ];
+
+    const summaryIn = [
+      'Es el cliente n.° 1: le vendimos S/ 316 974,87 en 12 meses, en 15 pedidos. Es el 13,8 % de la venta de Mederi.',
+      'Lleva 45 días sin comprar y suele hacerlo cada 27: va 18 días atrasado. Su pedido típico es de S/ 21 131,66.',
+      'No tuvo descuentos en factura, pero pagó en promedio 17,7 % menos que el precio de lista. No hace falta bajar más el precio.',
+      'Lleva 4 propuestas por S/ 27 958,20: su reposición habitual, dos productos de lotes por vencer y SOSTEN CG por volumen.'
+    ];
+    const summaryOut = [
+      'Entre el 1 de febrero de 2025 y el 20 de enero de 2026 compró S/ 316 974,87 sin IGV en 15 pedidos.',
+      'Sus productos principales fueron NUTRAPRO K9 CANINE X 30 SOBRES (25 %) y TRITOHEXIDIN SHAMPOO X 250 ML (21 %).',
+      'Pagó en promedio 17,7 % menos que el precio de lista.',
+      'Le preparamos 4 propuestas por S/ 27 958,20 sin IGV, válidas por 7 días.'
+    ];
+
+    const seg = (on) => ({ bg: on ? '#FCECEC' : '#FFFFFF', fg: on ? '#A3161F' : '#3A3A3A' });
+    const hzs = [['mes', 'Próximo mes'], ['semestre', 'Próximo semestre'], ['anio', 'Próximo año']];
+    const vers = [['interna', 'Interna'], ['cliente', 'Para el cliente']];
+
+    const sendTitles = { pdf: 'Descargar PDF', correo: 'Enviar por correo', whatsapp: 'Enviar por WhatsApp' };
+    const sentMsg = {
+      correo: 'Correo enviado con el PDF para el cliente. Simulado en el prototipo.',
+      whatsapp: 'WhatsApp enviado con el PDF adjunto. Simulado en el prototipo.'
+    };
+
+    return {
+      isInternal: internal,
+      versionNote: internal
+        ? 'Interna: para Gerencia y el vendedor. Incluye ganancia, márgenes, stock y guion.'
+        : 'Para el cliente: es lo que sale en el PDF, el correo y el WhatsApp.',
+      horizons: hzs.map((x) => Object.assign({ label: x[1], on: h === x[0], pick: () => this.setState({ horizon: x[0] }) }, seg(h === x[0]))),
+      versions: vers.map((x) => Object.assign({ label: x[1], on: this.state.version === x[0], pick: () => this.setState({ version: x[0] }) }, seg(this.state.version === x[0]))),
+      proj: proj,
+      bars: bars,
+      chartAria: 'Compras mensuales de febrero 2025 a enero 2026 y proyección de ' + proj.n + ' meses a S/ 23 773 por mes',
+      orders: orderPos.map((p, i) => ({ left: p + '%', tip: 'Pedido del ' + orderDates[i] })),
+      ticks: tickPos.map((p, i) => ({ left: p + '%', label: tickLab[i] })),
+      cats: [
+        { name: 'Nutrición y suplementos', pct: '39,0 %', color: '#D3202E' },
+        { name: 'Dermatología', pct: '24,5 %', color: '#2F6DB5' },
+        { name: 'Respiratorio', pct: '11,4 %', color: '#E39A00' },
+        { name: 'Antibióticos', pct: '7,9 %', color: '#169C86' },
+        { name: 'Otros', pct: '17,1 %', color: '#B5B5B5' }
+      ],
+      products: products,
+      discountHeader: internal ? 'Bajo lista' : 'Su ahorro',
+      offers: offers,
+      offersTitle: internal ? 'Qué ofrecerle' : 'Nuestra propuesta',
+      offersSub: internal
+        ? 'La IA cruza lo que compra con el stock, los lotes por vencer y lo que compran clientes parecidos.'
+        : 'Precios sin IGV, válidos por 7 días.',
+      offersFoot: internal
+        ? 'Ninguna oferta baja del margen mínimo de 12 %. Coloca 160 u de 2 lotes por vencer.'
+        : 'Condición de pago: crédito a 45 días.',
+      tiles: (internal ? tilesIn : tilesOut).map((t) => ({ label: t.label, value: t.value, sub: t.sub, subColor: t.red ? '#A3161F' : '#5F5F5F' })),
+      summaryTitle: internal ? 'Resumen para la reunión' : 'Resumen de sus compras',
+      summary: (internal ? summaryIn : summaryOut).map((t) => ({ text: t })),
+      isSending: !!send,
+      isPdf: send === 'pdf',
+      isMail: send === 'correo',
+      isWa: send === 'whatsapp',
+      isChannel: send === 'correo' || send === 'whatsapp',
+      sendTitle: sendTitles[send] || '',
+      openPdf: () => this.setState({ send: 'pdf', toast: '' }),
+      openMail: () => this.setState({ send: 'correo', toast: '' }),
+      openWa: () => this.setState({ send: 'whatsapp', toast: '' }),
+      closeSend: () => this.setState({ send: '' }),
+      doSend: () => this.setState({ toast: sentMsg[send] || '', send: '' }),
+      printPdf: () => this.setState({ toast: 'Se abre la vista de impresión del navegador para guardar el PDF. Simulado en el prototipo.', send: '' }),
+      toQuote: () => this.setState({ toast: 'Se abre Cotizaciones con las 4 propuestas cargadas: S/ 27 958,20 sin IGV. Simulado en el prototipo.' }),
+      navOpen: !this.state.navClosed,
+      navRotate: this.state.navClosed ? '0deg' : '180deg',
+      toggleNav: () => this.setState({ navClosed: !this.state.navClosed }),
+      navReports: [['Main-nsyj.dc.html', 'Todos los reportes'], ['Ficha-icvr.dc.html', 'Ficha de cliente'], ['KPIs-svux.dc.html', 'Indicadores (KPIs)'], ['Ventas-ubd8.dc.html', 'Ventas y rentabilidad'], ['Clientes-9xcu.dc.html', 'Retención de clientes'], ['Stock-uwfm.dc.html', 'Stock y merma'], ['Cobranza-6f07.dc.html', 'Cartera y cobranza'], ['Vendedores-45z4.dc.html', 'Vendedores']].map((n) => {
+        const on = n[0] === 'Ficha-icvr.dc.html';
+        return { href: n[0], label: n[1], current: on ? 'page' : 'false', bg: on ? '#FCECEC' : 'transparent', fg: on ? '#B3141F' : '#3A3A3A', weight: on ? 600 : 500 };
+      }),
+      hasToast: !!this.state.toast,
+      toast: this.state.toast,
+      closeToast: () => this.setState({ toast: '' })
+    };
+  }
+}
+</script>
+</body>
+</html>
