@@ -16,10 +16,12 @@ export const NAV: NavGroup[] = [
   { title: "Gestión del negocio", items: [
     { label: "Planificación de importación", href: "/planificacion", roles: ["manager"], icon: "package" },
     { label: "Reportes", href: "/reportes", roles: ["manager"], icon: "bar-chart-3", children: [
-      { label: "Indicadores clave", href: "/reportes/kpis" },
-      { label: "Pedidos y productos", href: "/reportes/ventas" },
-      { label: "Clientes", href: "/reportes/clientes" },
-      { label: "Stock", href: "/reportes/stock" },
+      { label: "Todos los reportes", href: "/reportes" },
+      { label: "Ficha de cliente", href: "/reportes/ficha" },
+      { label: "Indicadores (KPIs)", href: "/reportes/kpis" },
+      { label: "Ventas y rentabilidad", href: "/reportes/ventas" },
+      { label: "Retención de clientes", href: "/reportes/clientes" },
+      { label: "Stock y merma", href: "/reportes/stock" },
       { label: "Cartera y cobranza", href: "/reportes/cobranza" },
       { label: "Vendedores", href: "/reportes/vendedores" },
     ] },
