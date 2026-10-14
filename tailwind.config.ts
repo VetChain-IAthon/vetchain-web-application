@@ -18,6 +18,8 @@ const config: Config = {
         neutral: { bg: "#EDEDED", fg: "#3A3A3A" },
         info: { bg: "#E8EEF9", fg: "#1F3F7A" },
         dormant: "#E39A00",
+        status: { ok: "#2E8B4E", warn: "#E8A33D", bad: "#C8323A" },
+        chart: { 1: "#D01F29", 2: "#2A78D6", 3: "#EDA100", 4: "#1BAF7A", other: "#B5B5B5", "level-a": "#8E1119", "level-b": "#D01F29", "level-c": "#E8959A" },
       },
       borderRadius: { xs: "4px", sm: "6px", DEFAULT: "8px", lg: "12px" },
       fontFamily: { sans: ['"IBM Plex Sans"', "system-ui", "sans-serif"] },

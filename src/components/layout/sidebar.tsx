@@ -40,9 +40,10 @@ export function Sidebar({ role, userName, initials }: { role: Role; userName: st
                       <span>{i.label}</span>
                     </Link>
                     {on && i.children && (
-                      <div className="ml-[38px] mt-0.5 flex flex-col gap-0.5">
+                      <div className="ml-[22px] mt-1 flex flex-col gap-0.5 border-l border-line pl-3">
                         {i.children.map((c) => (
-                          <Link key={c.href} href={c.href} className={cn("rounded-sm px-2 py-1 text-[13px] no-underline", pathname === c.href ? "font-semibold text-brand" : "text-ink-muted hover:text-ink")}>{c.label}</Link>
+                          <Link key={c.href} href={c.href} aria-current={pathname === c.href ? "page" : undefined}
+                            className={cn("rounded px-3 py-2 text-sm no-underline", pathname === c.href ? "bg-brand-soft font-semibold text-brand" : "font-medium text-ink-2 hover:bg-canvas hover:text-ink")}>{c.label}</Link>
                         ))}
                       </div>
                     )}
