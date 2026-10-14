@@ -106,6 +106,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/customers/dormant": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Dormant Customers
+         * @description Clientes sin pedidos en los últimos 12 meses (incluye a los que nunca pidieron), por monto histórico.
+         */
+        get: operations["list_dormant_customers_api_v1_customers_dormant_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/customers/{ruc}": {
         parameters: {
             query?: never;
@@ -1065,6 +1085,83 @@ export interface components {
              */
             data_origin: "real";
         };
+        /** DormantCustomerOut */
+        DormantCustomerOut: {
+            /** Ruc */
+            ruc: string;
+            /** Name */
+            name: string;
+            /**
+             * Customer Type
+             * @description company | person | other
+             */
+            customer_type: string | null;
+            /** Region */
+            region: string | null;
+            /**
+             * Order Count
+             * @description Pedidos en todo el historial
+             */
+            order_count: number;
+            /**
+             * Lifetime Amount
+             * @description Monto histórico de pedidos, sin IGV, solo veterinarios
+             */
+            lifetime_amount: number;
+            /**
+             * Last Order Date
+             * @description null si no tiene pedidos en los archivos
+             */
+            last_order_date: string | null;
+        };
+        /** DormantCustomerPageOut */
+        DormantCustomerPageOut: {
+            /** Items */
+            items: components["schemas"]["DormantCustomerOut"][];
+            /** Total */
+            total: number;
+            /** Page */
+            page: number;
+            /** Per Page */
+            per_page: number;
+            /**
+             * Customer Count
+             * @description Clientes de la cartera visible
+             */
+            customer_count: number;
+            /**
+             * Dormant Count
+             * @description Sin pedidos en los 12 meses, antes de buscar o filtrar
+             */
+            dormant_count: number;
+            /**
+             * Ordered Before Count
+             * @description Dormidos que sí tuvieron pedidos antes
+             */
+            ordered_before_count: number;
+            /** @description Dormidos que coinciden con la búsqueda, por tipo */
+            type_counts: components["schemas"]["DormantTypeCountsOut"];
+            /**
+             * Data As Of
+             * @description Fecha del último pedido cargado: la ventana de 12 meses termina aquí
+             */
+            data_as_of: string | null;
+            /**
+             * Data Origin
+             * @default real
+             * @constant
+             */
+            data_origin: "real";
+        };
+        /** DormantTypeCountsOut */
+        DormantTypeCountsOut: {
+            /** All */
+            all: number;
+            /** Company */
+            company: number;
+            /** Person */
+            person: number;
+        };
         /** FunnelReportOut */
         FunnelReportOut: {
             period: components["schemas"]["PeriodOut"];
@@ -1945,6 +2042,43 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CustomerPageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_dormant_customers_api_v1_customers_dormant_get: {
+        parameters: {
+            query?: {
+                /** @description Nombre, departamento o inicio del RUC */
+                search?: string | null;
+                customer_type?: ("company" | "person") | null;
+                /** @description Solo gerencia; al vendedor se le fuerza el suyo */
+                salesperson_code?: string | null;
+                page?: number;
+                per_page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DormantCustomerPageOut"];
                 };
             };
             /** @description Validation Error */

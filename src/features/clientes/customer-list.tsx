@@ -16,6 +16,7 @@ import { formatDate, formatInt, formatMonthYear, formatPen, formatPercent, twelv
 import { CUSTOMER_TYPE } from "@/lib/labels";
 import { useQuery } from "@/lib/use-query";
 import { cn } from "@/lib/utils";
+import { DormantCustomers } from "./dormant-customers";
 
 const PER_PAGE = 20;
 const LEVELS = [["", "Todos"], ["A", "Nivel A"], ["B", "Nivel B"], ["C", "Nivel C"]] as const;
@@ -137,6 +138,8 @@ export function CustomerList() {
           </div>
         )}
       </section>
+
+      <DormantCustomers />
     </>
   );
 }

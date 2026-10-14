@@ -17,6 +17,7 @@ Fuente: frecuencia de uso en `design/prototipo/*.dc.html`. Implementados en `tai
 | `warn` | #FDF1DC / #8A5300 | Estimado, atención |
 | `danger` | #FBE8E9 / #A8161F; contador #A63224 | Riesgo, simulado, contador de la campana |
 | `neutral` | #EDEDED / #3A3A3A | Datos sintéticos |
+| `info` | #E8EEF9 / #1F3F7A | Etiqueta «Empresa» en Clientes dormidos |
 
 **Decisión por confirmar:** colores de las insignias de origen (real = verde, sintético = gris, estimado = ámbar, simulado = rosa).
 El prototipo no tiene una convención única; esta es una propuesta consistente con los tokens existentes.

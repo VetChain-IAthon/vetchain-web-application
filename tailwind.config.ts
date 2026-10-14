@@ -16,6 +16,7 @@ const config: Config = {
         warn: { bg: "#FDF1DC", fg: "#8A5300" },
         danger: { bg: "#FBE8E9", fg: "#A8161F", badge: "#A63224" },
         neutral: { bg: "#EDEDED", fg: "#3A3A3A" },
+        info: { bg: "#E8EEF9", fg: "#1F3F7A" },
       },
       borderRadius: { xs: "4px", sm: "6px", DEFAULT: "8px", lg: "12px" },
       fontFamily: { sans: ['"IBM Plex Sans"', "system-ui", "sans-serif"] },
