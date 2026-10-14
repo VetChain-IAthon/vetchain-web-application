@@ -40,7 +40,15 @@ export function briefSummaryText(brief: Brief, version: Version = "internal"): s
 }
 
 /** PDF de la ficha (versión interna) con las cifras reales y lo que sigue pendiente. */
-export function downloadBriefPdf(brief: Brief, projectionLabel: string, version: Version = "internal") {
+export type PdfFile = { fileName: string; blob: Blob };
+
+function finish(doc: jsPDF, fileName: string, output: "save" | "blob"): PdfFile | undefined {
+  if (output === "save") { doc.save(fileName); return undefined; }
+  return { fileName, blob: doc.output("blob") };
+}
+
+/** PDF de la ficha. `output: "blob"` lo devuelve para adjuntarlo a un correo en vez de descargarlo. */
+export function downloadBriefPdf(brief: Brief, projectionLabel: string, version: Version = "internal", output: "save" | "blob" = "save"): PdfFile | undefined {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
   const left = 16, right = 194;
   let y = 18;
@@ -53,7 +61,7 @@ export function downloadBriefPdf(brief: Brief, projectionLabel: string, version:
   };
   const gap = (mm = 3) => { y += mm; };
 
-  if (version === "customer") return customerPdf(doc, brief, line, gap, () => y, (v) => { y = v; });
+  if (version === "customer") return finish(doc, customerPdf(doc, brief, line, gap, () => y, (v) => { y = v; }), output);
   line("Mederi Pharma · Ficha de cliente para reunión", 9, false, [95, 99, 104]);
   line(brief.name, 16, true); line(`RUC ${brief.ruc} · versión interna`, 9, false, [95, 99, 104]);
   line(`Período: ${formatDate(brief.date_from)} – ${formatDate(brief.date_to)} · montos sin IGV · datos hasta ${formatDate(brief.data_as_of)}`, 9, false, [95, 99, 104]);
@@ -93,13 +101,13 @@ export function downloadBriefPdf(brief: Brief, projectionLabel: string, version:
   line("Precio de referencia: último precio pagado por cualquier cliente (estimado). Un pedido no es una venta facturada. " +
     "Pendientes: resumen, ofertas y guion (IA), proyección (modelo), ganancia (costos) y cobranza (cobros sin enlazar).", 8, false, [95, 99, 104]);
 
-  doc.save(`vetchain-ficha-${brief.ruc}-${brief.date_to}.pdf`);
+  return finish(doc, `vetchain-ficha-${brief.ruc}-${brief.date_to}.pdf`, output);
 }
 
 type Line = (text: string, size?: number, bold?: boolean, color?: [number, number, number]) => void;
 
 /** PDF para el cliente: resumen de compras y qué compró a qué precio. Sin datos internos. */
-function customerPdf(doc: jsPDF, brief: Brief, line: Line, gap: (mm?: number) => void, getY: () => number, setY: (y: number) => void) {
+function customerPdf(doc: jsPDF, brief: Brief, line: Line, gap: (mm?: number) => void, getY: () => number, setY: (y: number) => void): string {
   const muted: [number, number, number] = [95, 99, 104];
   line("Mederi Pharma · Resumen de sus compras", 9, false, muted);
   line(brief.name, 16, true);
@@ -131,5 +139,5 @@ function customerPdf(doc: jsPDF, brief: Brief, line: Line, gap: (mm?: number) =>
   setY(y + 8);
   if (brief.products.length > 20) line(`Incluye ${brief.products.length - 20} productos más en el total.`, 8, false, muted);
   line("Precio de referencia: último precio de venta registrado del producto. Montos sin IGV.", 8, false, muted);
-  doc.save(`mederi-resumen-compras-${brief.ruc}-${brief.date_to}.pdf`);
+  return `mederi-resumen-compras-${brief.ruc}-${brief.date_to}.pdf`;
 }

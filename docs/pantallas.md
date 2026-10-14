@@ -29,7 +29,7 @@ Roles: M = manager (gerencia), S = salesperson (vendedor). P1 = sin esto no arra
 - **Hoy:** El backend fuerza el filtro del vendedor.
 - **Alertas del día:** Las alertas calculadas se distinguen de las demostraciones simuladas.
 - **Cotizaciones:** Solo se emiten; no se editan. Si approval_required, pedir approval_confirmed + approval_note. Sin costos, margen null con aviso no_cost_data. Precio de referencia = último precio pagado (estimated).
-- **Planificación de importación:** Solo la demanda mensual es real; stock, proveedor, vencimientos y costos son simulated. No presentar cantidades como confiables.
+- **Planificación de importación:** Los cuatro laboratorios ficticios y todas las cifras son simulados. Las revisiones se guardan, pero no crean pedidos ni ejecutan importaciones. No se usa IA en esta fase.
 - **Reportes:** Las preguntas en lenguaje natural siguen pendientes.
 - **Ficha de cliente para reunión:** El PDF lo genera la web. Resumen, ofertas y guion esperan Gemini; proyección, el modelo; ganancia, costos; cobranza, cobros enlazados.
 - **Indicadores clave:** Sin metas configuradas, no se muestra estado de cumplimiento.

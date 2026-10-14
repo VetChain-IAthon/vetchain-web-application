@@ -1,5 +1,5 @@
-import { ScreenStub } from "@/components/layout/screen-stub";
+import { ImportPlanningPage } from "@/features/planificacion/import-planning";
 
 export default function Page() {
-  return <ScreenStub screenKey="planificacion" />;
+  return <ImportPlanningPage />;
 }
