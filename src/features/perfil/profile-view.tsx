@@ -81,7 +81,7 @@ export function ProfileView() {
   const roleLabel = ROLE_LABEL[user.role];
 
   return (
-    <section className="flex max-w-[960px] flex-col gap-5">
+    <section className="flex w-full flex-col gap-5">
       <div className="flex items-center gap-6 rounded-[10px] border border-t-4 border-line border-t-brand bg-surface px-8 py-7">
         <span className="flex size-[88px] flex-none items-center justify-center rounded-full bg-brand text-[30px] font-semibold text-white shadow-[0_0_0_6px_theme(colors.brand.soft)]">
           {initialsOf(user.name)}
@@ -94,7 +94,7 @@ export function ProfileView() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 items-start gap-5">
+      <div className="grid grid-cols-2 gap-5">
         <SectionCard title="Datos personales"
           action={!editing && <Button variant="ghost" size="sm" className="text-brand hover:text-brand-hover" onClick={() => setEditing(true)}>Editar teléfono y correo</Button>}>
           <Row icon={User} label="Nombres y apellidos" value={user.name} last={editing} />

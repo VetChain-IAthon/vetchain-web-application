@@ -18,10 +18,10 @@ export function SettingsView() {
     <>
       <div className="flex flex-col gap-4">
         <PageHeader title={s.title} subtitle="Estos valores se usan al armar cada cotización" />
-        <div role="tablist" aria-label="Ajustes" className="flex gap-1 self-start rounded border border-line bg-surface p-1">
+        <div role="tablist" aria-label="Ajustes" className="flex self-start border-b border-line">
           {tabs.map(([key, label]) => (
             <button key={key} type="button" role="tab" aria-selected={tab === key} onClick={() => setTab(key)}
-              className={cn("rounded-sm px-4 py-2 text-sm font-semibold", tab === key ? "bg-brand-soft text-brand" : "text-ink-2 hover:bg-canvas")}>
+              className={cn("border-b-2 px-4 py-2.5 text-sm font-semibold", tab === key ? "border-brand text-brand" : "border-transparent text-ink-2 hover:text-brand")}>
               {label}
             </button>
           ))}

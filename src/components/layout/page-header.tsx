@@ -1,5 +1,6 @@
 import { OriginBadge } from "@/components/data/origin-badge";
 import type { DataOrigin } from "@/lib/types";
+import { NotificationsButton } from "./notifications-button";
 
 export function PageHeader({ title, subtitle, origin, actions }: { title: string; subtitle?: string; origin?: DataOrigin; actions?: React.ReactNode }) {
   return (
@@ -11,7 +12,7 @@ export function PageHeader({ title, subtitle, origin, actions }: { title: string
         </div>
         {subtitle && <p className="mt-1 text-sm text-ink-muted">{subtitle}</p>}
       </div>
-      {actions && <div className="flex items-center gap-3">{actions}</div>}
+      <div className="flex items-center gap-3">{actions}<NotificationsButton /></div>
     </header>
   );
 }

@@ -16,10 +16,12 @@ import { formatDate, formatInt, formatMonthYear, formatPen, formatPercent, twelv
 import { CUSTOMER_TYPE } from "@/lib/labels";
 import { useQuery } from "@/lib/use-query";
 import { cn } from "@/lib/utils";
+import { DormantCustomers } from "./dormant-customers";
 
 const PER_PAGE = 20;
 const LEVELS = [["", "Todos"], ["A", "Nivel A"], ["B", "Nivel B"], ["C", "Nivel C"]] as const;
 type LevelFilter = (typeof LEVELS)[number][0];
+type View = "volume" | "dormant";
 
 export function CustomerList() {
   const { user } = useAuth();
@@ -28,6 +30,8 @@ export function CustomerList() {
   const [search, setSearch] = useState("");
   const [level, setLevel] = useState<LevelFilter>("");
   const [page, setPage] = useState(1);
+  const [view, setView] = useState<View>("volume");
+  const views: [View, string][] = [["volume", "Clientes por volumen"], ["dormant", "Clientes dormidos"]];
 
   // Se busca medio segundo después de dejar de escribir, para no pedir una página por cada letra.
   useEffect(() => {
@@ -49,6 +53,16 @@ export function CustomerList() {
       <PageHeader title={isManager ? "Clientes" : "Mis clientes"} origin="real"
         subtitle={asOf ? `Datos reales hasta el ${formatDate(asOf)} · montos sin IGV` : "Montos sin IGV"} />
 
+      <div role="tablist" aria-label="Vista de clientes" className="flex self-start border-b border-line">
+        {views.map(([key, label]) => (
+          <button key={key} type="button" role="tab" aria-selected={view === key} onClick={() => setView(key)}
+            className={cn("border-b-2 px-4 py-2.5 text-sm font-semibold", view === key ? "border-brand text-brand" : "border-transparent text-ink-2 hover:text-brand")}>
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {view === "dormant" ? <DormantCustomers /> : <>
       {data && !data.levels_configured && (
         <Notice tone="warn">
           Los niveles A, B y C aparecerán cuando gerencia defina los umbrales de volumen.{" "}
@@ -137,6 +151,7 @@ export function CustomerList() {
           </div>
         )}
       </section>
+      </>}
     </>
   );
 }

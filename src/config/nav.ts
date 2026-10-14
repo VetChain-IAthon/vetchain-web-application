@@ -10,7 +10,6 @@ export const NAV: NavGroup[] = [
     { label: "Hoy", href: "/hoy", roles: ["salesperson"], icon: "layout-dashboard" },
   ] },
   { title: "Trabajo comercial", items: [
-    { label: "Alertas del día", href: "/alertas", roles: ["manager", "salesperson"], icon: "bell" },
     { label: "Clientes", href: "/clientes", roles: ["manager", "salesperson"], icon: "users" },
     { label: "Cotizaciones", href: "/cotizaciones", roles: ["manager", "salesperson"], icon: "file-text" },
   ] },
