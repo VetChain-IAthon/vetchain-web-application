@@ -32,7 +32,10 @@ const auth: Middleware = {
 };
 
 /** Cliente tipado desde design/openapi.json. Regenerar tipos con `npm run gen:api`. */
-export const api = createClient<paths>({ baseUrl: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000" });
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL ?? (process.env.NODE_ENV === "development" ? "http://localhost:8000" : undefined);
+if (!apiBaseUrl) throw new Error("Configura NEXT_PUBLIC_API_URL con la URL del backend antes de compilar.");
+
+export const api = createClient<paths>({ baseUrl: apiBaseUrl });
 api.use(auth);
 
 /** Forma de error única del backend: {"error": {"code","message","details"}}. */
