@@ -112,6 +112,7 @@ export function DataImports() {
   const uploader = useRef<HTMLDivElement>(null);
 
   const items = sources.data?.items ?? [];
+  const byNumber = [...items].sort((a, b) => a.number - b.number);
   const total = items.reduce((s, i) => s + i.rows_in_db, 0);
   const source = items.find((i) => i.source === selected);
 
@@ -188,9 +189,11 @@ export function DataImports() {
         <div><h2 className="text-lg font-semibold">Cargar archivo CSV</h2>
           <p className="text-sm text-ink-muted">Tres pasos. Nada cambia hasta que confirmes.</p></div>
         <Step n={1} title="¿Qué archivo vas a cargar?" done={!!source}>
-          <p className="-mt-2 mb-3 text-[13px] text-ink-muted">En el orden en que conviene cargarlos: un pedido necesita que antes existan su cliente y su vendedor.</p>
+          <p className="-mt-2 mb-3 text-[13px] text-ink-muted">
+            Orden de carga: 7 Vendedores → 1 Clientes → 4 Productos → 2 Pedidos → 3 Detalle → 5 Kardex → 6 Cobros.
+            Un pedido necesita que antes existan su cliente y su vendedor.</p>
           <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
-            {items.map((s) => <button key={s.source} type="button" onClick={() => pick(s.source)} aria-pressed={s.source === selected}
+            {byNumber.map((s) => <button key={s.source} type="button" onClick={() => pick(s.source)} aria-pressed={s.source === selected}
               className={cn("flex flex-col items-start gap-0.5 rounded border px-4 py-3 text-left transition-colors",
                 s.source === selected ? "border-brand bg-brand-soft" : "border-line bg-surface hover:border-line-strong hover:bg-canvas")}>
               <span className={cn("text-sm font-semibold", s.source === selected && "text-brand")}>{s.number}. {s.description}</span>
