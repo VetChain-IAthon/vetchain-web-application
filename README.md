@@ -8,9 +8,10 @@ Este repositorio contiene el frontend. La API FastAPI y sus migraciones están e
 
 - Inicio de sesión y navegación según el rol de gerencia o vendedor.
 - Clientes, cotizaciones, ajustes y reportes de pedidos, clientes, stock, cobranza y vendedores.
+- Planificación de importación con cuatro laboratorios ficticios, cifras de ejemplo y revisión persistida; no crea pedidos reales ni utiliza IA.
 - Ficha de cliente para reunión, PDF generado en el navegador y envío por correo con asunto, mensaje, destinatarios y adjunto.
 - Cada usuario puede conectar su Gmail desde **Mi perfil** para enviar desde su cuenta; el correo compartido se define en **Ajustes › Correo**. Google OAuth debe activarse en el backend para que la conexión personal funcione.
-- **Hoy**, **Alertas** y **Planificación de importación** siguen como pantallas provisionales. Las cifras sin respaldo suficiente se muestran con avisos; un pedido no se trata como venta facturada.
+- **Hoy** y **Alertas** siguen como pantallas provisionales. Las cifras sin respaldo suficiente se muestran con avisos; un pedido no se trata como venta facturada.
 
 Tecnologías: **Next.js 15**, **React 19**, **TypeScript**, **Tailwind CSS**, **Recharts** y cliente HTTP tipado desde OpenAPI. Consulta [CLAUDE.md](CLAUDE.md) para las reglas visuales y de datos.
 
