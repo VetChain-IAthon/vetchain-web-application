@@ -18,6 +18,10 @@ Fuente: frecuencia de uso en `design/prototipo/*.dc.html`. Implementados en `tai
 | `danger` | #FBE8E9 / #A8161F; contador #A63224 | Riesgo, simulado, contador de la campana |
 | `neutral` | #EDEDED / #3A3A3A | Datos sintéticos |
 | `dormant` | #E39A00 | Clientes dormidos en el gráfico del maestro (reporte de Clientes) |
+| `chart-1` … `chart-4` | #D01F29 · #2A78D6 · #EDA100 · #1BAF7A | Series categóricas en ese orden fijo (dona de «Qué compra»). Validadas con el validador de paletas: CVD ΔE ≥ 9,1 y visión normal ≥ 22,9 entre vecinas. Amarillo y verde quedan bajo 3:1 de contraste: siempre con leyenda y porcentaje visibles |
+| `status-ok` · `status-warn` · `status-bad` | #2E8B4E · #E8A33D · #C8323A | Barras de estado de los KPIs (en meta, atención, crítico). Siempre van con ícono y texto, nunca solo el color |
+| `chart-level-a` · `chart-level-b` · `chart-level-c` | #8E1119 · #D01F29 · #E8959A | Niveles de cliente A, B y C (ordinales): una sola tinta de oscuro a claro, con leyenda y porcentaje visibles |
+| `chart-other` | #B5B5B5 | «Otros» en gráficos categóricos (neutro, no compite con las series) |
 | `info` | #E8EEF9 / #1F3F7A | Etiqueta «Empresa» en Clientes dormidos |
 
 **Decisión por confirmar:** colores de las insignias de origen (real = verde, sintético = gris, estimado = ámbar, simulado = rosa).

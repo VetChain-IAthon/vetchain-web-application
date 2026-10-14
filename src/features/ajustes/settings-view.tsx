@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { PageHeader } from "@/components/layout/page-header";
-import { Notice } from "@/components/data/notice";
 import { screen } from "@/config/screens";
 import { cn } from "@/lib/utils";
 import { BusinessRules } from "./business-rules";
+import { DataImports } from "./data-imports";
 
 type Tab = "rules" | "imports";
 
@@ -17,7 +17,7 @@ export function SettingsView() {
   return (
     <>
       <div className="flex flex-col gap-4">
-        <PageHeader title={s.title} subtitle="Estos valores se usan al armar cada cotización" />
+        <PageHeader title={s.title} subtitle={tab === "rules" ? "Estos valores se usan al armar cada cotización" : "Archivos CSV de Mederi: revisar y cargar"} />
         <div role="tablist" aria-label="Ajustes" className="flex self-start border-b border-line">
           {tabs.map(([key, label]) => (
             <button key={key} type="button" role="tab" aria-selected={tab === key} onClick={() => setTab(key)}
@@ -27,12 +27,7 @@ export function SettingsView() {
           ))}
         </div>
       </div>
-      {tab === "rules" ? <BusinessRules /> : (
-        <Notice tone="warn">
-          La carga de los CSV de Defontana todavía no está disponible: el servicio de datos aún no ofrece esta función.
-          Mientras tanto, los datos se cargan desde el servidor.
-        </Notice>
-      )}
+      {tab === "rules" ? <BusinessRules /> : <DataImports />}
     </>
   );
 }

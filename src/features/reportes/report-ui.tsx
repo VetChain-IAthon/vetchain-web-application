@@ -71,7 +71,7 @@ export function compare(current: number | null | undefined, previous: number | n
   const pct = ((current - previous) / previous) * 100;
   const sign = pct > 0 ? "+" : "";
   const tone = Math.abs(pct) < 1 ? "muted" as const : pct > 0 ? "good" as const : "bad" as const;
-  return { detail: `${sign}${formatPercent(pct)} frente a ${what}`, tone };
+  return { detail: `${sign}${formatPercent(pct)} frente ${what.startsWith("el ") ? `al ${what.slice(3)}` : `a ${what}`}`, tone };
 }
 
 /** El mismo rango un año antes («AAAA-MM-DD»). */

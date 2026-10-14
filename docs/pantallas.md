@@ -10,10 +10,11 @@ Roles: M = manager (gerencia), S = salesperson (vendedor). P1 = sin esto no arra
 | Hoy | `/hoy` | S | Vendedor.dc.html | `GET /alerts`<br>`GET /alerts/summary` | estimated | P2 |
 | Alertas del día | `/alertas` | M, S | Alertas.dc.html | `GET /alerts`<br>`GET /alerts/summary`<br>`GET /alerts/{alert_id}`<br>`GET /alerts/{alert_id}/explanation`<br>`POST /customers/{ruc}/contacts`<br>`GET /customers/{ruc}/whatsapp-link` | estimated | P2 |
 | Clientes | `/clientes` | M, S | Clientes.dc.html (gerencia) y VendedorClientes.dc.html (vendedor) | `GET /customers`<br>`GET /settings/customer-levels` | real | P2 |
-| Ficha de cliente | `/clientes/[ruc]` | M, S | Ficha-icvr.dc.html (versión para reunión) y Clientes.dc.html (detalle) | `GET /customers/{ruc}`<br>`GET /customers/{ruc}/orders`<br>`GET /customers/{ruc}/products`<br>`GET /customers/{ruc}/commercial-terms`<br>`GET /customers/{ruc}/contacts`<br>`POST /customers/{ruc}/contacts`<br>`GET /customers/{ruc}/whatsapp-link`<br>`GET /customers/{ruc}/brief` | real | P2 |
+| Ficha de cliente | `/clientes/[ruc]` | M, S | Ficha-icvr.dc.html (versión para reunión) y Clientes.dc.html (detalle) | `GET /customers/{ruc}`<br>`GET /customers/{ruc}/orders`<br>`GET /customers/{ruc}/products`<br>`GET /customers/{ruc}/commercial-terms`<br>`GET /customers/{ruc}/contacts`<br>`POST /customers/{ruc}/contacts`<br>`GET /customers/{ruc}/whatsapp-link` | real | P2 |
 | Cotizaciones | `/cotizaciones` | M, S | Cotizaciones.dc.html (gerencia) y VendedorCotizaciones.dc.html (vendedor) | `GET /products`<br>`GET /products/{code}`<br>`POST /quotation-previews`<br>`GET /quotations`<br>`POST /quotations`<br>`GET /quotations/{quotation_id}` | estimated | P2 |
 | Planificación de importación | `/planificacion` | M | Planificacion.dc.html | `GET /import-suggestions`<br>`PATCH /import-suggestions/{suggestion_id}` | simulated | P3 |
 | Reportes | `/reportes` | M | Main-nsyj.dc.html | `GET /reports` | real | P3 |
+| Ficha de cliente para reunión | `/reportes/ficha` | M | Ficha-icvr.dc.html | `GET /customers/{ruc}/brief`<br>`GET /customers` | real | P3 |
 | Indicadores clave | `/reportes/kpis` | M | KPIs-svux.dc.html | `GET /reports/kpis` | real | P3 |
 | Pedidos y productos | `/reportes/ventas` | M | Ventas-ubd8.dc.html | `GET /reports/sales` | real | P3 |
 | Clientes: retención y reactivación | `/reportes/clientes` | M | Clientes-9xcu.dc.html | `GET /reports/customers` | real | P3 |
@@ -27,10 +28,10 @@ Roles: M = manager (gerencia), S = salesperson (vendedor). P1 = sin esto no arra
 - **Panel gerencial:** Muestra montos de pedidos veterinarios sin IGV ni líneas bonificadas. No son ventas facturadas. Alertas y embudo permanecen sin cifras.
 - **Hoy:** El backend fuerza el filtro del vendedor.
 - **Alertas del día:** Las alertas calculadas se distinguen de las demostraciones simuladas.
-- **Ficha de cliente:** El PDF de la ficha lo genera la web; no hay endpoint de PDF.
 - **Cotizaciones:** Solo se emiten; no se editan. Si approval_required, pedir approval_confirmed + approval_note. Sin costos, margen null con aviso no_cost_data. Precio de referencia = último precio pagado (estimated).
 - **Planificación de importación:** Solo la demanda mensual es real; stock, proveedor, vencimientos y costos son simulated. No presentar cantidades como confiables.
 - **Reportes:** Las preguntas en lenguaje natural siguen pendientes.
+- **Ficha de cliente para reunión:** El PDF lo genera la web. Resumen, ofertas y guion esperan Gemini; proyección, el modelo; ganancia, costos; cobranza, cobros enlazados.
 - **Indicadores clave:** Sin metas configuradas, no se muestra estado de cumplimiento.
 - **Pedidos y productos:** Rentabilidad sin cifra mientras no haya costos validados.
 - **Stock:** Saldo de kardex sujeto a confirmación. No hay datos de lotes ni vencimientos.
