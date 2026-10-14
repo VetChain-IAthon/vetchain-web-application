@@ -115,6 +115,9 @@ export function DataImports() {
   const byNumber = [...items].sort((a, b) => a.number - b.number);
   const total = items.reduce((s, i) => s + i.rows_in_db, 0);
   const source = items.find((i) => i.source === selected);
+  // Archivo con el nombre de otro de los 7 (mederi-1-clientes.csv elegido como Vendedores): se avisa antes de revisar.
+  const detected = file ? items.find((i) => file.name.toLowerCase().endsWith(i.file_name)) : undefined;
+  const mismatch = detected && source && detected.source !== source.source ? detected : undefined;
 
   const pick = (key: string) => { setSelected(key); setReview(null); setDone(null); setError(null); };
   const pickAndScroll = (key: string) => { pick(key); uploader.current?.scrollIntoView({ behavior: "smooth", block: "start" }); };
@@ -219,6 +222,10 @@ export function DataImports() {
               <span className="flex size-11 flex-none items-center justify-center rounded bg-ok-bg text-ok-fg"><FileText size={22} aria-hidden /></span>
               <div className="min-w-0 flex-1"><p className="truncate font-semibold">{file.name}</p><p className="text-[13px] text-ink-muted">{formatSize(file.size)}{source && ` · se cargará como ${source.description.toLowerCase()}`}</p></div>
               <Button variant="ghost" size="sm" onClick={() => { reset(); setReview(null); }} disabled={busy}><X size={14} aria-hidden />Quitar</Button>
+            </div>}
+            {mismatch && source && <div role="alert" className="flex flex-wrap items-center justify-between gap-3 rounded border border-warn-fg/20 bg-warn-bg px-4 py-3 text-sm text-warn-fg">
+              <span><strong>{file?.name}</strong> parece ser de <strong>{mismatch.description.toLowerCase()}</strong>, pero elegiste {source.description.toLowerCase()}.</span>
+              <Button size="sm" onClick={() => pick(mismatch.source)}>Cargar como {mismatch.number}. {mismatch.description}</Button>
             </div>}
 
             {source && <div className="rounded bg-canvas p-4">
