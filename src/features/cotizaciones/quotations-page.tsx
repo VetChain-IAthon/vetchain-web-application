@@ -14,7 +14,7 @@ import type { components } from "@/lib/api/schema";
 import { useAuth } from "@/lib/auth";
 import { formatDate, formatPen, formatPercent } from "@/lib/format";
 import { useQuery } from "@/lib/use-query";
-import { downloadQuotationCsv, downloadQuotationPrintable, quotationWhatsAppText } from "./quotation-exports";
+import { downloadQuotationCsv, downloadQuotationPdf, sendQuotationByWhatsApp } from "./quotation-exports";
 
 type Customer = components["schemas"]["CustomerListItemOut"];
 type CommercialTerms = components["schemas"]["CommercialTermsOut"];
@@ -25,7 +25,18 @@ type Quotation = components["schemas"]["QuotationOut"];
 type Line = { product: Product; quantity: string };
 
 const CARD = "rounded-lg border border-line bg-surface p-6";
-const FIELD = "mb-1 block text-xs font-semibold text-ink-muted";
+
+/** Cotización en curso que se conserva al cambiar de pantalla (por usuario, en este navegador). */
+type Draft = { customer: Customer | null; customerText: string; lines: Line[]; discount: string; preview: Preview | null;
+  issued: Quotation | null; approvalConfirmed: boolean; approvalNote: string };
+const draftKey = (userId: number) => `vetchain:quotation-draft:${userId}`;
+function readDraft(userId: number): Draft | null {
+  try { const raw = localStorage.getItem(draftKey(userId)); return raw ? JSON.parse(raw) as Draft : null; } catch { return null; }
+}
+function writeDraft(userId: number, draft: Draft | null) {
+  try { if (draft) localStorage.setItem(draftKey(userId), JSON.stringify(draft)); else localStorage.removeItem(draftKey(userId)); } catch { /* sin almacenamiento: el borrador solo vive en esta pantalla */ }
+}
+const FIELD = "mb-1.5 block text-[13px] font-semibold text-ink-muted";
 const PRODUCTS_PER_PAGE = 8;
 
 /** Trae el catálogo completo (115 códigos) en páginas de 100 para cruzarlo con lo que compra el cliente. */
@@ -70,6 +81,23 @@ export function QuotationsPage() {
   const [listPage, setListPage] = useState(1);
   const [detail, setDetail] = useState<Quotation | null>(null);
   const [detailError, setDetailError] = useState<string | null>(null);
+  const [restored, setRestored] = useState(false);
+
+  // Se recupera después de montar (no en el estado inicial) para que el HTML del servidor y el del navegador coincidan.
+  useEffect(() => {
+    if (!user || restored) return;
+    const draft = readDraft(user.id);
+    if (draft) {
+      setCustomer(draft.customer); setCustomerText(draft.customerText); setLines(draft.lines); setDiscount(draft.discount);
+      setPreview(draft.preview); setIssued(draft.issued); setApprovalConfirmed(draft.approvalConfirmed); setApprovalNote(draft.approvalNote);
+    }
+    setRestored(true);
+  }, [user, restored]);
+  useEffect(() => {
+    if (!user || !restored) return;
+    const empty = !customer && !customerText && !lines.length && !discount;
+    writeDraft(user.id, empty ? null : { customer, customerText, lines, discount, preview, issued, approvalConfirmed, approvalNote });
+  }, [user, restored, customer, customerText, lines, discount, preview, issued, approvalConfirmed, approvalNote]);
 
   useEffect(() => {
     const timer = setTimeout(() => setCustomerSearch(customerText.trim()), 350);
@@ -131,6 +159,9 @@ export function QuotationsPage() {
     [listPage], "No se pudo cargar las cotizaciones.",
   );
 
+  const startOver = () => {
+    setCustomer(null); setCustomerText(""); setLines([]); setDiscount(""); setProductText(""); setProductPage(1); invalidatePreview();
+  };
   const invalidatePreview = () => { setPreview(null); setPreviewOpen(false); setIssued(null); setPreviewError(null); setActionStatus(null); setApprovalConfirmed(false); setApprovalNote(""); };
   const chooseCustomer = (item: Customer) => { setCustomer(item); setCustomerText(item.name); setProductPage(1); invalidatePreview(); };
   const addProduct = (product: Product) => {
@@ -225,25 +256,25 @@ export function QuotationsPage() {
 
   function exportData() {
     if (!quoteForActions || !customer) return null;
-    return { quote: quoteForActions, customerName: customer.name, productNames };
+    return { quote: quoteForActions, customerName: customer.name, customerRuc: customer.ruc, productNames };
   }
 
-  function shareByWhatsApp() {
+  async function shareByWhatsApp() {
     const data = exportData();
     if (!data) return;
-    if (shareFormat === "pdf") downloadQuotationPrintable(data);
-    const message = shareFormat === "pdf"
-      ? `Te comparto ${issued ? `la cotización #${issued.id}` : "la vista previa de la cotización"} de Mederi Pharma por ${formatPen(data.quote.total_with_tax)}.`
-      : quotationWhatsAppText(data);
-    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
-    setActionStatus(shareFormat === "pdf"
-      ? "Se descargó la versión imprimible. Ábrela, guárdala como PDF con Imprimir y adjúntala en WhatsApp antes de enviar."
-      : "Se abrió WhatsApp con el texto. Elige el contacto y envía el mensaje.");
+    const result = await sendQuotationByWhatsApp(data, shareFormat);
+    setActionStatus({
+      text: "Se abrió WhatsApp con el cliente, los productos y los totales. Elige el contacto y envía el mensaje.",
+      shared: "Se compartió la cotización con el PDF adjunto.",
+      cancelled: "Cerraste el menú de compartir sin enviar. Vuelve a pulsar «Enviar por WhatsApp» cuando quieras.",
+      downloaded: "Este navegador no permite adjuntar archivos desde la web: se descargó el PDF y se abrió WhatsApp con el mensaje. Arrastra el PDF al chat y envía.",
+    }[result]);
   }
 
   return <>
     <PageHeader title={manager ? "Cotizaciones" : "Mis cotizaciones"} origin="estimated"
-      subtitle="Nueva cotización · los precios se basan en el último importe pagado, sin IGV" />
+      subtitle="Nueva cotización · los precios se basan en el último importe pagado, sin IGV"
+      actions={customer || lines.length ? <Button type="button" variant="outline" onClick={startOver}>Empezar otra cotización</Button> : undefined} />
 
     <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,3fr)_minmax(320px,1fr)]">
       <div className="flex flex-col gap-4">
@@ -264,33 +295,33 @@ export function QuotationsPage() {
                 <span>{item.name}</span><span className="text-ink-muted">{item.ruc}</span>
               </button>) : <p className="p-3 text-sm text-ink-muted">No se encontraron clientes.</p>}
           </div>}
-          <p className="mb-2 mt-4 text-[13px] text-ink-muted">Mayores clientes por monto de pedidos de 12 meses:</p>
+          <p className="mb-2 mt-4 text-sm text-ink-muted">Mayores clientes por monto de pedidos de 12 meses:</p>
           {topCustomers.error ? <Notice>{topCustomers.error.message}</Notice> :
             topCustomers.data && <div role="group" aria-label="Clientes principales" className="flex flex-wrap gap-2">
               {topCustomers.data.items.map((item) => <button key={item.ruc} type="button"
                 aria-pressed={customer?.ruc === item.ruc} onClick={() => chooseCustomer(item)}
                 className={customer?.ruc === item.ruc
-                  ? "min-h-10 rounded-sm border border-brand bg-brand px-3 py-2 text-left text-xs font-semibold text-white"
-                  : "min-h-10 rounded-sm border border-line-strong bg-surface px-3 py-2 text-left text-xs font-semibold text-ink hover:bg-canvas"}>
+                  ? "min-h-11 rounded-sm border border-brand bg-brand px-4 py-2 text-left text-sm font-semibold text-white"
+                  : "min-h-11 rounded-sm border border-line-strong bg-surface px-4 py-2 text-left text-sm font-semibold text-ink hover:bg-canvas"}>
                 {item.name}
               </button>)}
             </div>}
-          {customer && <div className="mt-4 space-y-3 text-sm">
+          {customer && <div className="mt-4 space-y-3 text-base">
             {termsError && <Notice>{termsError} Revisa las reglas de nivel en Ajustes.</Notice>}
             <div className="grid gap-3 sm:grid-cols-[2fr_1fr]">
-              <div className="rounded bg-canvas p-3"><span className={FIELD}>Cliente seleccionado</span><strong>{customer.name}</strong><div className="text-xs text-ink-muted">RUC {customer.ruc}</div></div>
-              <div className="rounded bg-canvas p-3"><span className={FIELD}>Nivel de volumen</span><strong>{commercialTerms ? `Nivel ${commercialTerms.level}` : termsLoading ? "Calculando…" : "Sin configurar"}</strong></div>
+              <div className="rounded bg-canvas p-4"><span className={FIELD}>Cliente seleccionado</span><strong className="text-lg">{customer.name}</strong><div className="mt-0.5 text-sm text-ink-muted">RUC {customer.ruc}</div></div>
+              <div className="rounded bg-canvas p-4"><span className={FIELD}>Nivel de volumen</span><strong className="text-lg">{commercialTerms ? `Nivel ${commercialTerms.level}` : termsLoading ? "Calculando…" : "Sin configurar"}</strong></div>
             </div>
             <div className="grid gap-3 sm:grid-cols-3">
-              <div className="rounded bg-canvas p-3"><span className={FIELD}>Pedidos de 12 meses</span><strong>{formatPen(customer.amount_12m)}</strong> <OriginBadge origin="real" /></div>
-              <label className="rounded bg-canvas p-3"><span className={FIELD}>Descuento a este cliente (%)</span><Input type="number" min="0" max="100" step="0.01" value={discount}
+              <div className="rounded bg-canvas p-4"><span className={FIELD}>Pedidos de 12 meses</span><strong className="text-lg">{formatPen(customer.amount_12m)}</strong> <OriginBadge origin="real" /></div>
+              <label className="rounded bg-canvas p-4"><span className={FIELD}>Descuento a este cliente (%)</span><Input className="h-11 text-base" type="number" min="0" max="100" step="0.01" value={discount}
                 onChange={(event) => { setDiscount(event.target.value); invalidatePreview(); }} placeholder="Ingresa el descuento" />
-                <span className="mt-1 block text-xs text-ink-muted">Máximo sin aprobación: {commercialTerms ? formatPercent(commercialTerms.max_discount_pct) : termsLoading ? "Cargando…" : "Sin configurar"}</span>
+                <span className="mt-1.5 block text-[13px] text-ink-muted">Máximo sin aprobación: {commercialTerms ? formatPercent(commercialTerms.max_discount_pct) : termsLoading ? "Cargando…" : "Sin configurar"}</span>
               </label>
-              <div className="rounded bg-canvas p-3"><span className={FIELD}>Condición de pago</span><strong>{commercialTerms ? `${commercialTerms.credit_days} días` : "Por calcular"}</strong></div>
+              <div className="rounded bg-canvas p-4"><span className={FIELD}>Condición de pago</span><strong className="text-lg">{commercialTerms ? `${commercialTerms.credit_days} días` : "Por calcular"}</strong></div>
             </div>
             {discountOverMaximum && <Notice tone="warn">Este descuento supera el máximo de Ajustes. La cotización requerirá aprobación de gerencia.</Notice>}
-            <p className="text-xs text-ink-muted">El nivel y la condición de pago se calculan con las reglas de Ajustes. El monto de pedidos es real y no incluye IGV.</p>
+            <p className="text-[13px] text-ink-muted">El nivel y la condición de pago se calculan con las reglas de Ajustes. El monto de pedidos es real y no incluye IGV.</p>
           </div>}
         </section>
 
@@ -360,7 +391,7 @@ export function QuotationsPage() {
         </div>
         {!quoteForActions && estimatedSubtotal != null && <p className="text-xs text-ink-muted">Importes provisionales con precios de referencia. La vista previa del servidor confirma el total.</p>}
         <p className="rounded bg-canvas p-4 text-sm font-medium text-ink-2">{actionMessage}</p>
-        <Button type="button" variant="outline" disabled={!canPreview || busy} onClick={calculatePreview}>
+        <Button type="button" variant="outline" className="h-12 flex-none text-[15px]" disabled={!canPreview || busy} onClick={calculatePreview}>
           {busy ? "Calculando…" : "Ver vista previa"}
         </Button>
         {previewError && <Notice>{previewError}</Notice>}
@@ -374,15 +405,15 @@ export function QuotationsPage() {
             <label><span className={FIELD}>Nota de aprobación</span><Input value={approvalNote} maxLength={1000}
               onChange={(event) => setApprovalNote(event.target.value)} placeholder="Quién aprobó y por qué" /></label>
           </>}
-          <Button type="button" disabled={busy || (preview.approval_required && (!manager || !approvalConfirmed || !approvalNote.trim()))}
+          <Button type="button" className="h-12 flex-none text-[15px]" disabled={busy || (preview.approval_required && (!manager || !approvalConfirmed || !approvalNote.trim()))}
             onClick={issue}>Emitir cotización</Button>
           <p className="text-xs text-ink-muted">La emisión recalcula los importes. Vigencia: {preview.quotation_validity_days} días.</p>
         </>}
         {issued && <Notice tone="warn">Cotización #{issued.id} emitida. Válida hasta el {formatDate(issued.valid_until)}.</Notice>}
         <div className="flex flex-col gap-2 border-t border-line pt-4">
           <Button type="button" variant="outline" disabled={!actionsReady}
-            onClick={() => { const data = exportData(); if (data) { downloadQuotationPrintable(data); setActionStatus("Se descargó la cotización imprimible. Ábrela en el navegador y usa Imprimir para guardarla como PDF."); } }}>
-            Descargar cotización (imprimible)
+            onClick={() => { const data = exportData(); if (data) { downloadQuotationPdf(data); setActionStatus("Se descargó la cotización en PDF."); } }}>
+            Descargar cotización (PDF)
           </Button>
           <Button type="button" variant="outline" disabled={!actionsReady}
             onClick={() => { const data = exportData(); if (data) { downloadQuotationCsv(data); setActionStatus("Se descargó el archivo CSV para Excel."); } }}>
@@ -402,7 +433,7 @@ export function QuotationsPage() {
           </Button>
         </div>
         {actionStatus && <p role="status" className="rounded border border-green-200 bg-green-50 px-4 py-3 text-xs text-green-900">{actionStatus}</p>}
-        <p className="text-xs leading-relaxed text-ink-muted">El archivo imprimible se guarda como HTML; ábrelo y usa Imprimir para obtener un PDF. {preview ? `Vigencia: ${preview.quotation_validity_days} días.` : issued ? `Válida hasta el ${formatDate(issued.valid_until)}.` : ""}</p>
+        <p className="text-xs leading-relaxed text-ink-muted">{shareFormat === "pdf" ? "En PDF se abre el menú de compartir del sistema: elige WhatsApp y el PDF va adjunto con el mensaje. " : "En texto, el mensaje lleva el cliente, los productos y los totales. "}{preview ? `Vigencia: ${preview.quotation_validity_days} días.` : issued ? `Válida hasta el ${formatDate(issued.valid_until)}.` : ""}</p>
       </aside>
     </div>
 

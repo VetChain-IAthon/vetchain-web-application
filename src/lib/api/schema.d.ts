@@ -106,6 +106,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/customers/at-risk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List At Risk Customers
+         * @description Clientes que compran menos seguido de lo habitual, por dinero en juego. Factores provisionales (1,5× su ritmo).
+         */
+        get: operations["list_at_risk_customers_api_v1_customers_at_risk_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/customers/at-risk/follow-up": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get At Risk Follow Up
+         * @description Por vendedor: clientes en riesgo y soles en juego según el resultado del último contacto (o sin contactar).
+         */
+        get: operations["get_at_risk_follow_up_api_v1_customers_at_risk_follow_up_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/customers/dormant": {
         parameters: {
             query?: never;
@@ -792,6 +832,85 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AtRiskCustomerOut */
+        AtRiskCustomerOut: {
+            /** Ruc */
+            ruc: string;
+            /** Name */
+            name: string;
+            /**
+             * Last Order Date
+             * Format: date
+             */
+            last_order_date: string;
+            /**
+             * Days Since Last Order
+             * @description Días entre el último pedido y la fecha de corte de los datos
+             */
+            days_since_last_order: number;
+            /**
+             * Purchase Rhythm Days
+             * @description Días promedio entre pedidos en 12 meses; null con menos de dos
+             */
+            purchase_rhythm_days: number | null;
+            /**
+             * Money At Stake
+             * @description Pedido promedio de 12 meses, sin IGV
+             */
+            money_at_stake: number;
+        };
+        /** AtRiskCustomerPageOut */
+        AtRiskCustomerPageOut: {
+            /** Items */
+            items: components["schemas"]["AtRiskCustomerOut"][];
+            /** Total */
+            total: number;
+            /** Page */
+            page: number;
+            /** Per Page */
+            per_page: number;
+            /** Data As Of */
+            data_as_of: string | null;
+            /**
+             * At Risk Factor
+             * @description Veces el ritmo de compra a partir de las cuales el cliente está en riesgo
+             */
+            at_risk_factor: number;
+            /**
+             * Default Rhythm Days
+             * @description Ritmo usado cuando el cliente tiene menos de dos pedidos
+             */
+            default_rhythm_days: number;
+            /**
+             * Warning
+             * @default risk_factors_provisional
+             * @constant
+             */
+            warning: "risk_factors_provisional";
+            /**
+             * Data Origin
+             * @default estimated
+             * @constant
+             */
+            data_origin: "estimated";
+        };
+        /** AtRiskFollowUpOut */
+        AtRiskFollowUpOut: {
+            /** Items */
+            items: components["schemas"]["SalespersonFollowUpOut"][];
+            /**
+             * Warning
+             * @default portfolio_provisional
+             * @constant
+             */
+            warning: "portfolio_provisional";
+            /**
+             * Data Origin
+             * @default estimated
+             * @constant
+             */
+            data_origin: "estimated";
+        };
         /** CategoryAmountOut */
         CategoryAmountOut: {
             /** Code */
@@ -870,6 +989,11 @@ export interface components {
             amount: number;
             /** Share Pct */
             share_pct: number | null;
+            /**
+             * Order Count
+             * @description Pedidos del período
+             */
+            order_count: number;
             /**
              * Data Origin
              * @default real
@@ -1161,6 +1285,21 @@ export interface components {
             company: number;
             /** Person */
             person: number;
+        };
+        /** FollowUpBucketOut */
+        FollowUpBucketOut: {
+            /**
+             * Outcome
+             * @description Resultado del último contacto; null = sin contactar
+             */
+            outcome: string | null;
+            /** Customer Count */
+            customer_count: number;
+            /**
+             * Money At Stake
+             * @description Suma del pedido promedio de cada cliente, sin IGV
+             */
+            money_at_stake: number;
         };
         /** FunnelReportOut */
         FunnelReportOut: {
@@ -1682,6 +1821,19 @@ export interface components {
              */
             data_origin: "real";
         };
+        /** SalespersonFollowUpOut */
+        SalespersonFollowUpOut: {
+            /** Salesperson Code */
+            salesperson_code: string;
+            /** Salesperson Name */
+            salesperson_name: string;
+            /** Customer Count */
+            customer_count: number;
+            /** Money At Stake */
+            money_at_stake: number;
+            /** Buckets */
+            buckets: components["schemas"]["FollowUpBucketOut"][];
+        };
         /** SessionCreateIn */
         SessionCreateIn: {
             /** Email */
@@ -2042,6 +2194,72 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CustomerPageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_at_risk_customers_api_v1_customers_at_risk_get: {
+        parameters: {
+            query?: {
+                /** @description Solo gerencia; al vendedor se le fuerza el suyo */
+                salesperson_code?: string | null;
+                page?: number;
+                per_page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AtRiskCustomerPageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_at_risk_follow_up_api_v1_customers_at_risk_follow_up_get: {
+        parameters: {
+            query?: {
+                /** @description Solo gerencia; al vendedor se le fuerza el suyo */
+                salesperson_code?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AtRiskFollowUpOut"];
                 };
             };
             /** @description Validation Error */
