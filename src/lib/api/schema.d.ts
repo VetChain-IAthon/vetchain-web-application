@@ -166,6 +166,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/customers/discarded": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Discarded Customers
+         * @description Clientes dormidos descartados (cerraron, cambiaron de datos o ya no son viables), del más reciente al más antiguo.
+         */
+        get: operations["list_discarded_customers_api_v1_customers_discarded_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/customers/{ruc}": {
         parameters: {
             query?: never;
@@ -288,6 +308,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/customers/{ruc}/discard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Discard Customer
+         * @description Descarta un cliente dormido: sale de la lista de dormidos y pasa a la de descartados. Se puede restaurar.
+         */
+        post: operations["discard_customer_api_v1_customers__ruc__discard_post"];
+        /**
+         * Restore Customer
+         * @description Restaura un cliente descartado: vuelve a la lista de dormidos. El descarte queda en el historial.
+         */
+        delete: operations["restore_customer_api_v1_customers__ruc__discard_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/customers/{ruc}/whatsapp-link": {
         parameters: {
             query?: never;
@@ -382,8 +426,11 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Pregunta en lenguaje natural; la respuesta lista sus fuentes (pendiente) */
-        post: operations["pending_post_insights_questions_api_v1_insights_questions_post"];
+        /**
+         * Ask Insight Question
+         * @description Pregunta en lenguaje natural. Gemini solo elige una consulta permitida; las cifras salen de la base.
+         */
+        post: operations["ask_insight_question_api_v1_insights_questions_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1405,6 +1452,34 @@ export interface components {
              */
             data_origin: "real";
         };
+        /** CustomerDiscardIn */
+        CustomerDiscardIn: {
+            /**
+             * Reason
+             * @description business_closed: cerró o dejó de operar · data_changed: cambió de RUC o razón social · not_viable: ya no es viable · other: exige nota
+             * @enum {string}
+             */
+            reason: "business_closed" | "data_changed" | "not_viable" | "other";
+            /** Note */
+            note?: string | null;
+        };
+        /** CustomerDiscardOut */
+        CustomerDiscardOut: {
+            /** Ruc */
+            ruc: string;
+            /**
+             * Reason
+             * @enum {string}
+             */
+            reason: "business_closed" | "data_changed" | "not_viable" | "other";
+            /** Note */
+            note: string | null;
+            /**
+             * Discarded On
+             * Format: date
+             */
+            discarded_on: string;
+        };
         /** CustomerLevelIn */
         CustomerLevelIn: {
             /** Max Discount Pct */
@@ -1652,6 +1727,96 @@ export interface components {
              */
             decision: "pending" | "approved" | "rejected";
         };
+        /** DiscardReasonCountsOut */
+        DiscardReasonCountsOut: {
+            /** All */
+            all: number;
+            /** Business Closed */
+            business_closed: number;
+            /** Data Changed */
+            data_changed: number;
+            /** Not Viable */
+            not_viable: number;
+            /** Other */
+            other: number;
+        };
+        /** DiscardedCustomerOut */
+        DiscardedCustomerOut: {
+            /** Ruc */
+            ruc: string;
+            /** Name */
+            name: string;
+            /**
+             * Customer Type
+             * @description company | person | other
+             */
+            customer_type: string | null;
+            /** Region */
+            region: string | null;
+            /**
+             * Order Count
+             * @description Pedidos en todo el historial
+             */
+            order_count: number;
+            /**
+             * Lifetime Amount
+             * @description Monto histórico de pedidos, sin IGV, solo veterinarios
+             */
+            lifetime_amount: number;
+            /**
+             * Last Order Date
+             * @description null si no tiene pedidos en los archivos
+             */
+            last_order_date: string | null;
+            /**
+             * Reason
+             * @enum {string}
+             */
+            reason: "business_closed" | "data_changed" | "not_viable" | "other";
+            /** Note */
+            note: string | null;
+            /**
+             * Discarded On
+             * Format: date
+             */
+            discarded_on: string;
+            /**
+             * Discarded By Name
+             * @description null si el usuario ya no existe
+             */
+            discarded_by_name: string | null;
+            /**
+             * Ordered After Discard
+             * @description Volvió a pedir después del descarte: conviene revisarlo
+             */
+            ordered_after_discard: boolean;
+        };
+        /** DiscardedCustomerPageOut */
+        DiscardedCustomerPageOut: {
+            /** Items */
+            items: components["schemas"]["DiscardedCustomerOut"][];
+            /** Total */
+            total: number;
+            /** Page */
+            page: number;
+            /** Per Page */
+            per_page: number;
+            /**
+             * Discarded Count
+             * @description Descartados vigentes de la cartera visible, antes de buscar o filtrar
+             */
+            discarded_count: number;
+            /** @description Descartados que coinciden con la búsqueda, por motivo */
+            reason_counts: components["schemas"]["DiscardReasonCountsOut"];
+            /** Data As Of */
+            data_as_of: string | null;
+            /**
+             * Data Origin
+             * @default real
+             * @constant
+             */
+            data_origin: "real";
+        };
         /** DormantCustomerOut */
         DormantCustomerOut: {
             /** Ruc */
@@ -1708,6 +1873,11 @@ export interface components {
             ordered_before_count: number;
             /** @description Dormidos que coinciden con la búsqueda, por tipo */
             type_counts: components["schemas"]["DormantTypeCountsOut"];
+            /**
+             * Discarded Count
+             * @description Descartados vigentes de la cartera visible; no están en esta lista
+             */
+            discarded_count: number;
             /**
              * Data As Of
              * @description Fecha del último pedido cargado: la ventana de 12 meses termina aquí
@@ -1868,6 +2038,20 @@ export interface components {
              * @description Filas válidas que actualizan un registro existente
              */
             updated_rows: number;
+        };
+        /** InsightAnswerOut */
+        InsightAnswerOut: {
+            /** Text */
+            text: string;
+            /** Sources */
+            sources: string[];
+            /** Data Origin */
+            data_origin: string;
+        };
+        /** InsightQuestionIn */
+        InsightQuestionIn: {
+            /** Question */
+            question: string;
         };
         /** KpiOut */
         KpiOut: {
@@ -3093,6 +3277,43 @@ export interface operations {
             };
         };
     };
+    list_discarded_customers_api_v1_customers_discarded_get: {
+        parameters: {
+            query?: {
+                /** @description Nombre, departamento o inicio del RUC */
+                search?: string | null;
+                reason?: ("business_closed" | "data_changed" | "not_viable" | "other") | null;
+                /** @description Solo gerencia; al vendedor se le fuerza el suyo */
+                salesperson_code?: string | null;
+                page?: number;
+                per_page?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiscardedCustomerPageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_customer_api_v1_customers__ruc__get: {
         parameters: {
             query?: never;
@@ -3326,6 +3547,70 @@ export interface operations {
             };
         };
     };
+    discard_customer_api_v1_customers__ruc__discard_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ruc: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CustomerDiscardIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomerDiscardOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    restore_customer_api_v1_customers__ruc__discard_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ruc: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     build_whatsapp_link_api_v1_customers__ruc__whatsapp_link_get: {
         parameters: {
             query?: {
@@ -3440,22 +3725,35 @@ export interface operations {
             };
         };
     };
-    pending_post_insights_questions_api_v1_insights_questions_post: {
+    ask_insight_question_api_v1_insights_questions_post: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InsightQuestionIn"];
+            };
+        };
         responses: {
-            /** @description Endpoint del contrato aún no construido */
-            501: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["InsightAnswerOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
