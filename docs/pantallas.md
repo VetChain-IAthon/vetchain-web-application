@@ -5,11 +5,11 @@ Roles: M = manager (gerencia), S = salesperson (vendedor). P1 = sin esto no arra
 
 | Pantalla | Ruta | Rol | Prototipo (design/prototipo/) | Endpoints | Origen por defecto | Prioridad |
 |---|---|---|---|---|---|---|
-| Iniciar sesión | `/login` | M, S | Login.dc.html (no está en la copia local; está en el canvas de Claude Design) | `POST /sessions`<br>`GET /me` | real | P1 |
+| Iniciar sesión | `/login` | M, S | Login.dc.html | `POST /sessions`<br>`GET /me` | real | P1 |
 | Panel gerencial | `/panel` | M | Main.dc.html | `GET /dashboard/summary`<br>`GET /reports/salespeople`<br>`GET /alerts/summary`<br>`GET /reports/funnel` | real | P2 |
-| Hoy | `/hoy` | S | Vendedor.dc.html (solo en el canvas) | `GET /alerts`<br>`GET /alerts/summary` | estimated | P2 |
+| Hoy | `/hoy` | S | Vendedor.dc.html | `GET /alerts`<br>`GET /alerts/summary` | estimated | P2 |
 | Alertas del día | `/alertas` | M, S | Alertas.dc.html | `GET /alerts`<br>`GET /alerts/summary`<br>`GET /alerts/{alert_id}`<br>`GET /alerts/{alert_id}/explanation`<br>`POST /customers/{ruc}/contacts`<br>`GET /customers/{ruc}/whatsapp-link` | estimated | P2 |
-| Clientes | `/clientes` | M, S | Clientes.dc.html | `GET /customers`<br>`GET /settings/customer-levels` | real | P2 |
+| Clientes | `/clientes` | M, S | Clientes.dc.html (gerencia) y VendedorClientes.dc.html (vendedor) | `GET /customers`<br>`GET /settings/customer-levels` | real | P2 |
 | Ficha de cliente | `/clientes/[ruc]` | M, S | Ficha-icvr.dc.html (versión para reunión) y Clientes.dc.html (detalle) | `GET /customers/{ruc}`<br>`GET /customers/{ruc}/orders`<br>`GET /customers/{ruc}/products`<br>`GET /customers/{ruc}/commercial-terms`<br>`GET /customers/{ruc}/contacts`<br>`POST /customers/{ruc}/contacts`<br>`GET /customers/{ruc}/whatsapp-link`<br>`GET /customers/{ruc}/brief` | real | P2 |
 | Cotizaciones | `/cotizaciones` | M, S | Cotizaciones.dc.html (gerencia) y VendedorCotizaciones.dc.html (vendedor) | `GET /products`<br>`GET /products/{code}`<br>`POST /quotation-previews`<br>`GET /quotations`<br>`POST /quotations`<br>`GET /quotations/{quotation_id}` | estimated | P2 |
 | Planificación de importación | `/planificacion` | M | Planificacion.dc.html | `GET /import-suggestions`<br>`PATCH /import-suggestions/{suggestion_id}` | simulated | P3 |

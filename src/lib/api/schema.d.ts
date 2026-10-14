@@ -4,6 +4,88 @@
  */
 
 export interface paths {
+    "/api/v1/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create Session
+         * @description Inicia sesión y devuelve el token (JWT) para `Authorization: Bearer`.
+         */
+        post: operations["create_session_api_v1_sessions_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Me
+         * @description Usuario actual y su rol (la web arma el menú con esto).
+         */
+        get: operations["get_me_api_v1_me_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update Me
+         * @description Cambia el correo o el teléfono propios.
+         */
+        patch: operations["update_me_api_v1_me_patch"];
+        trace?: never;
+    };
+    "/api/v1/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Users */
+        get: operations["list_users_api_v1_users_get"];
+        put?: never;
+        /** Create User */
+        post: operations["create_user_api_v1_users_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/users/{user_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update User
+         * @description Cambia el rol (y el código de vendedor) o activa / desactiva la cuenta.
+         */
+        patch: operations["update_user_api_v1_users__user_id__patch"];
+        trace?: never;
+    };
     "/api/v1/alerts": {
         parameters: {
             query?: never;
@@ -11,8 +93,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Daily alerts, most money at stake first */
-        get: operations["list_alerts_api_v1_alerts_get"];
+        /** Alertas del día, ordenadas por dinero en juego (pendiente) */
+        get: operations["pending_get_alerts_api_v1_alerts_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -28,8 +110,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Alert totals */
-        get: operations["alerts_summary_api_v1_alerts_summary_get"];
+        /** Totales: alertas, contactados hoy, monto de 12 meses en juego (pendiente) */
+        get: operations["pending_get_alerts_summary_api_v1_alerts_summary_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -45,8 +127,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** One alert */
-        get: operations["read_alert_api_v1_alerts__alert_id__get"];
+        /** Una alerta: producto habitual, producto cruzado, motivos y probabilidad (pendiente) */
+        get: operations["pending_get_alerts_alert_id_api_v1_alerts__alert_id__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -62,8 +144,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** AI text explaining the alert */
-        get: operations["read_alert_explanation_api_v1_alerts__alert_id__explanation_get"];
+        /** Texto de IA que explica la alerta (solo cifras agregadas) (pendiente) */
+        get: operations["pending_get_alerts_alert_id_explanation_api_v1_alerts__alert_id__explanation_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -79,8 +161,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List customers */
-        get: operations["list_customers_api_v1_customers_get"];
+        /** Lista de clientes con filtros de nivel, estado, búsqueda y vendedor (pendiente) */
+        get: operations["pending_get_customers_api_v1_customers_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -96,62 +178,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Customer card */
-        get: operations["read_customer_api_v1_customers__ruc__get"];
+        /** Ficha del cliente con nivel y resumen de 12 meses (pendiente) */
+        get: operations["pending_get_customers_ruc_api_v1_customers__ruc__get"];
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/customers/{ruc}/brief": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Data for the customer meeting brief */
-        get: operations["read_customer_brief_api_v1_customers__ruc__brief_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/customers/{ruc}/commercial-terms": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Level, margin, max discount, credit days */
-        get: operations["read_commercial_terms_api_v1_customers__ruc__commercial_terms_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/customers/{ruc}/contacts": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Contact log */
-        get: operations["list_contacts_api_v1_customers__ruc__contacts_get"];
-        put?: never;
-        /** Register a contact and its outcome */
-        post: operations["create_contact_api_v1_customers__ruc__contacts_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -165,8 +195,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Order history */
-        get: operations["list_customer_orders_api_v1_customers__ruc__orders_get"];
+        /** Historial de pedidos (pendiente) */
+        get: operations["pending_get_customers_ruc_orders_api_v1_customers__ruc__orders_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -182,10 +212,45 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** What the customer buys and how often */
-        get: operations["list_customer_products_api_v1_customers__ruc__products_get"];
+        /** Qué compra el cliente y con qué frecuencia (pendiente) */
+        get: operations["pending_get_customers_ruc_products_api_v1_customers__ruc__products_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/customers/{ruc}/commercial-terms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Nivel, margen, descuento máximo y días de crédito (pendiente) */
+        get: operations["pending_get_customers_ruc_commercial_terms_api_v1_customers__ruc__commercial_terms_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/customers/{ruc}/contacts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Registro de contactos (pendiente) */
+        get: operations["pending_get_customers_ruc_contacts_api_v1_customers__ruc__contacts_get"];
+        put?: never;
+        /** Registrar un contacto y su resultado (pendiente) */
+        post: operations["pending_post_customers_ruc_contacts_api_v1_customers__ruc__contacts_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -199,8 +264,224 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** wa.me link with the suggested message */
-        get: operations["read_whatsapp_link_api_v1_customers__ruc__whatsapp_link_get"];
+        /** Enlace wa.me con el mensaje sugerido (pendiente) */
+        get: operations["pending_get_customers_ruc_whatsapp_link_api_v1_customers__ruc__whatsapp_link_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/customers/{ruc}/brief": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Ficha del cliente para reunión (from, to, projection) (pendiente) */
+        get: operations["pending_get_customers_ruc_brief_api_v1_customers__ruc__brief_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/insights/questions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Pregunta en lenguaje natural; la respuesta lista sus fuentes (pendiente) */
+        post: operations["pending_post_insights_questions_api_v1_insights_questions_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/settings/pricing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Pricing
+         * @description IGV, días de vigencia de la cotización, margen mínimo y rebaja de margen en promociones.
+         */
+        get: operations["get_pricing_api_v1_settings_pricing_get"];
+        /** Replace Pricing */
+        put: operations["replace_pricing_api_v1_settings_pricing_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/settings/customer-levels": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Customer Levels
+         * @description Niveles A, B y C con descuento máximo, margen y días de crédito.
+         */
+        get: operations["list_customer_levels_api_v1_settings_customer_levels_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/settings/customer-levels/{level}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Replace Customer Level */
+        put: operations["replace_customer_level_api_v1_settings_customer_levels__level__put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/settings/level-thresholds": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Level Thresholds
+         * @description Montos de pedidos en 12 meses (sin IGV) a partir de los cuales un cliente es B o A.
+         */
+        get: operations["get_level_thresholds_api_v1_settings_level_thresholds_get"];
+        /** Replace Level Thresholds */
+        put: operations["replace_level_thresholds_api_v1_settings_level_thresholds_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Buscar productos para cotizar (pendiente) */
+        get: operations["pending_get_products_api_v1_products_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{code}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Un producto con su precio de referencia (pendiente) */
+        get: operations["pending_get_products_code_api_v1_products__code__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/quotation-previews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Calcular totales, IGV y margen sin guardar (pendiente) */
+        post: operations["pending_post_quotation_previews_api_v1_quotation_previews_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/quotations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lista de cotizaciones con filtros (pendiente) */
+        get: operations["pending_get_quotations_api_v1_quotations_get"];
+        put?: never;
+        /** Emitir una cotización (valida descuento y margen) (pendiente) */
+        post: operations["pending_post_quotations_api_v1_quotations_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/quotations/{quotation_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Detalle de una cotización con sus líneas (pendiente) */
+        get: operations["pending_get_quotations_quotation_id_api_v1_quotations__quotation_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/prediction/model": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Versión, fecha de entrenamiento y calidad del modelo (pendiente) */
+        get: operations["pending_get_prediction_model_api_v1_prediction_model_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -216,8 +497,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Weekly summary and headline numbers */
-        get: operations["read_dashboard_summary_api_v1_dashboard_summary_get"];
+        /** Resumen semanal y cifras principales (pendiente) */
+        get: operations["pending_get_dashboard_summary_api_v1_dashboard_summary_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -226,51 +507,134 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/data-imports": {
+    "/api/v1/reports": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Past imports */
-        get: operations["list_data_imports_api_v1_data_imports_get"];
+        /** Catálogo de reportes con el origen de sus datos (pendiente) */
+        get: operations["pending_get_reports_api_v1_reports_get"];
         put?: never;
-        /** Upload a CSV (validated, not applied yet) */
-        post: operations["create_data_import_api_v1_data_imports_post"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/v1/data-imports/{import_id}": {
+    "/api/v1/reports/kpis": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Review: rows read, errors per line */
-        get: operations["read_data_import_api_v1_data_imports__import_id__get"];
+        /** Los KPIs con su estado (pendiente) */
+        get: operations["pending_get_reports_kpis_api_v1_reports_kpis_get"];
         put?: never;
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
-        /** Confirm or cancel an import */
-        patch: operations["update_data_import_api_v1_data_imports__import_id__patch"];
+        patch?: never;
         trace?: never;
     };
-    "/api/v1/data-sources": {
+    "/api/v1/reports/sales": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** The 7 files: content, records, period, status, origin */
-        get: operations["list_data_sources_api_v1_data_sources_get"];
+        /** Pedidos por mes, producto y categoría (pendiente) */
+        get: operations["pending_get_reports_sales_api_v1_reports_sales_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reports/customers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Concentración, maestro de clientes, en riesgo y dormidos (pendiente) */
+        get: operations["pending_get_reports_customers_api_v1_reports_customers_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reports/stock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Estado del stock (pendiente) */
+        get: operations["pending_get_reports_stock_api_v1_reports_stock_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reports/receivables": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Deuda por antigüedad y nivel (estimada) (pendiente) */
+        get: operations["pending_get_reports_receivables_api_v1_reports_receivables_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reports/salespeople": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Pedidos de 12 meses y seguimiento de alertas por vendedor (pendiente) */
+        get: operations["pending_get_reports_salespeople_api_v1_reports_salespeople_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reports/funnel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Embudo: alertas, contactos, cotizaciones, convertidas y monto recuperado (pendiente) */
+        get: operations["pending_get_reports_funnel_api_v1_reports_funnel_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -286,8 +650,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Suggested order per product */
-        get: operations["list_import_suggestions_api_v1_import_suggestions_get"];
+        /** Pedido sugerido por producto (pendiente) */
+        get: operations["pending_get_import_suggestions_api_v1_import_suggestions_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -309,54 +673,19 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        /** Approve, reject or reset a suggestion */
-        patch: operations["update_import_suggestion_api_v1_import_suggestions__suggestion_id__patch"];
+        /** Decisión: aprobar, rechazar o volver a pendiente (pendiente) */
+        patch: operations["pending_patch_import_suggestions_suggestion_id_api_v1_import_suggestions__suggestion_id__patch"];
         trace?: never;
     };
-    "/api/v1/insights/questions": {
+    "/api/v1/data-sources": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
-        put?: never;
-        /** Ask the data in plain language */
-        post: operations["create_insight_question_api_v1_insights_questions_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Current user */
-        get: operations["read_me_api_v1_me_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** Edit own phone and email */
-        patch: operations["update_me_api_v1_me_patch"];
-        trace?: never;
-    };
-    "/api/v1/prediction/model": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Model version, training date and quality */
-        get: operations["read_model_info_api_v1_prediction_model_get"];
+        /** Los 7 archivos: contenido, registros, período y estado (pendiente) */
+        get: operations["pending_get_data_sources_api_v1_data_sources_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -365,348 +694,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/products": {
+    "/api/v1/data-imports": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Search products to add to a quotation */
-        get: operations["list_products_api_v1_products_get"];
+        /** Cargas anteriores (pendiente) */
+        get: operations["pending_get_data_imports_api_v1_data_imports_get"];
+        put?: never;
+        /** Subir un CSV (multipart, campo source); se valida pero no se aplica (pendiente) */
+        post: operations["pending_post_data_imports_api_v1_data_imports_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/data-imports/{import_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Revisión: filas leídas y errores por línea (pendiente) */
+        get: operations["pending_get_data_imports_import_id_api_v1_data_imports__import_id__get"];
         put?: never;
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/products/{code}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** One product with its reference price */
-        get: operations["read_product_api_v1_products__code__get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/quotation-previews": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Calculate totals, margin, tax and warnings without saving */
-        post: operations["create_quotation_preview_api_v1_quotation_previews_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/quotations": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List quotations */
-        get: operations["list_quotations_api_v1_quotations_get"];
-        put?: never;
-        /** Issue a quotation */
-        post: operations["create_quotation_api_v1_quotations_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/quotations/{quotation_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Quotation detail with lines */
-        get: operations["read_quotation_api_v1_quotations__quotation_id__get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/reports": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Report catalog with data origin */
-        get: operations["list_reports_api_v1_reports_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/reports/customers": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Concentration, customer master, at risk, dormant */
-        get: operations["read_customers_report_api_v1_reports_customers_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/reports/funnel": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Alerts, contacts, quotations, converted; money recovered */
-        get: operations["read_funnel_report_api_v1_reports_funnel_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/reports/kpis": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** The 12 KPIs and their status */
-        get: operations["read_kpis_api_v1_reports_kpis_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/reports/receivables": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Overdue debt by age and level (estimated) */
-        get: operations["read_receivables_report_api_v1_reports_receivables_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/reports/sales": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Orders by month, product, category; price paid vs reference price */
-        get: operations["read_sales_report_api_v1_reports_sales_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/reports/salespeople": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Orders per salesperson and alert follow-up */
-        get: operations["read_salespeople_report_api_v1_reports_salespeople_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/reports/stock": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Stock balance; expiring lots and overstock are simulated */
-        get: operations["read_stock_report_api_v1_reports_stock_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/sessions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Log in */
-        post: operations["create_session_api_v1_sessions_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/settings/customer-levels": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Levels A, B, C */
-        get: operations["list_customer_levels_api_v1_settings_customer_levels_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/settings/customer-levels/{level}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /** Replace one level */
-        put: operations["replace_customer_level_api_v1_settings_customer_levels__level__put"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/settings/level-thresholds": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Order-volume thresholds for levels B and A */
-        get: operations["read_level_thresholds_api_v1_settings_level_thresholds_get"];
-        /** Replace the thresholds */
-        put: operations["replace_level_thresholds_api_v1_settings_level_thresholds_put"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/settings/pricing": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Tax, validity, minimum margin, promo margin cut */
-        get: operations["read_pricing_api_v1_settings_pricing_get"];
-        /** Replace pricing settings */
-        put: operations["replace_pricing_api_v1_settings_pricing_put"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/users": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List users */
-        get: operations["list_users_api_v1_users_get"];
-        put?: never;
-        /** Create a user */
-        post: operations["create_user_api_v1_users_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/users/{user_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** Change role or deactivate */
-        patch: operations["update_user_api_v1_users__user_id__patch"];
+        /** Confirmar (actualiza e inserta) o cancelar (pendiente) */
+        patch: operations["pending_patch_data_imports_import_id_api_v1_data_imports__import_id__patch"];
         trace?: never;
     };
     "/health": {
@@ -716,7 +737,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** API status */
+        /**
+         * Health
+         * @description La API está viva.
+         */
         get: operations["health_health_get"];
         put?: never;
         post?: never;
@@ -730,141 +754,111 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** Body_create_data_import_api_v1_data_imports_post */
-        Body_create_data_import_api_v1_data_imports_post: {
-            /** File */
-            file: string;
-            /**
-             * Origin
-             * @enum {string}
-             */
-            origin: "real" | "synthetic" | "simulated";
-            /**
-             * Source
-             * @enum {string}
-             */
-            source: "customers" | "salespeople" | "products" | "orders" | "order_lines" | "stock_balances" | "payments";
-        };
-        /** ContactCreate */
-        ContactCreate: {
-            /** Alert Id */
-            alert_id?: number | null;
-            /** Contacted On */
-            contacted_on?: string | null;
-            /** Notes */
-            notes?: string | null;
-            /** Outcome */
-            outcome: string;
-        };
-        /** CustomerLevelBody */
-        CustomerLevelBody: {
-            /** Credit Days */
-            credit_days: number;
-            /** Margin Pct */
-            margin_pct: number | string;
+        /** CustomerLevelIn */
+        CustomerLevelIn: {
             /** Max Discount Pct */
             max_discount_pct: number | string;
+            /** Margin Pct */
+            margin_pct: number | string;
+            /** Credit Days */
+            credit_days: number;
         };
-        /** DataImportUpdate */
-        DataImportUpdate: {
+        /** CustomerLevelOut */
+        CustomerLevelOut: {
+            /** Max Discount Pct */
+            max_discount_pct: number;
+            /** Margin Pct */
+            margin_pct: number;
+            /** Credit Days */
+            credit_days: number;
+            /** Level */
+            level: string;
+        };
+        /** CustomerLevelsOut */
+        CustomerLevelsOut: {
+            /** Items */
+            items: components["schemas"]["CustomerLevelOut"][];
             /**
-             * Status
-             * @enum {string}
+             * Missing Levels
+             * @description Niveles que gerencia aún no configuró
              */
-            status: "confirmed" | "cancelled";
+            missing_levels: string[];
         };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
-        /** ImportSuggestionUpdate */
-        ImportSuggestionUpdate: {
+        /** LevelThresholdsIn */
+        LevelThresholdsIn: {
             /**
-             * Decision
-             * @enum {string}
+             * Min Amount B
+             * @description Monto mínimo de pedidos en 12 meses (PEN, sin IGV) para ser B
              */
-            decision: "approved" | "rejected" | "pending";
+            min_amount_b: number | string;
+            /**
+             * Min Amount A
+             * @description Monto mínimo para ser A; debe ser mayor o igual que el de B
+             */
+            min_amount_a: number | string;
         };
-        /** InsightQuestionCreate */
-        InsightQuestionCreate: {
-            /** Question */
-            question: string;
+        /** LevelThresholdsOut */
+        LevelThresholdsOut: {
+            /**
+             * Min Amount B
+             * @description Monto mínimo de pedidos en 12 meses (PEN, sin IGV) para ser B
+             */
+            min_amount_b: number;
+            /**
+             * Min Amount A
+             * @description Monto mínimo para ser A; debe ser mayor o igual que el de B
+             */
+            min_amount_a: number;
         };
-        /** LevelThresholdsBody */
-        LevelThresholdsBody: {
-            /** Level A Min Amount 12M */
-            level_a_min_amount_12m: number | string;
-            /** Level B Min Amount 12M */
-            level_b_min_amount_12m: number | string;
-        };
-        /** MeUpdate */
-        MeUpdate: {
+        /** MeUpdateIn */
+        MeUpdateIn: {
             /** Email */
             email?: string | null;
             /** Phone */
             phone?: string | null;
         };
-        /** PricingSettingsBody */
-        PricingSettingsBody: {
+        /** PricingIn */
+        PricingIn: {
+            /** Igv Rate Pct */
+            igv_rate_pct: number | string;
+            /** Quotation Validity Days */
+            quotation_validity_days: number;
             /** Min Margin Pct */
             min_margin_pct: number | string;
-            /** Promo Margin Cut Pts */
-            promo_margin_cut_pts: number | string;
-            /** Tax Rate Pct */
-            tax_rate_pct: number | string;
-            /** Validity Days */
-            validity_days: number;
-        };
-        /** QuotationCreate */
-        QuotationCreate: {
             /**
-             * Approval Confirmed
-             * @default false
+             * Promo Margin Cut Pct
+             * @description Cuánto baja el margen mínimo en promociones
              */
-            approval_confirmed: boolean;
-            /** Approval Note */
-            approval_note?: string | null;
+            promo_margin_cut_pct: number | string;
+        };
+        /** PricingOut */
+        PricingOut: {
+            /** Igv Rate Pct */
+            igv_rate_pct: number;
+            /** Quotation Validity Days */
+            quotation_validity_days: number;
+            /** Min Margin Pct */
+            min_margin_pct: number;
             /**
-             * Discount Pct
-             * @default 0
+             * Promo Margin Cut Pct
+             * @description Cuánto baja el margen mínimo en promociones
              */
-            discount_pct: number | string;
-            /** Lines */
-            lines: components["schemas"]["QuotationLineIn"][];
-            /** Ruc */
-            ruc: string;
+            promo_margin_cut_pct: number;
         };
-        /** QuotationLineIn */
-        QuotationLineIn: {
-            /** Product Code */
-            product_code: string;
-            /** Quantity */
-            quantity: number | string;
-            /** Unit Price */
-            unit_price: number | string;
-        };
-        /** QuotationPreviewCreate */
-        QuotationPreviewCreate: {
-            /**
-             * Discount Pct
-             * @default 0
-             */
-            discount_pct: number | string;
-            /** Lines */
-            lines: components["schemas"]["QuotationLineIn"][];
-            /** Ruc */
-            ruc: string;
-        };
-        /** SessionCreate */
-        SessionCreate: {
+        /** SessionCreateIn */
+        SessionCreateIn: {
             /** Email */
             email: string;
             /** Password */
             password: string;
         };
-        /** TokenOut */
-        TokenOut: {
+        /** SessionOut */
+        SessionOut: {
             /** Access Token */
             access_token: string;
             /**
@@ -872,60 +866,81 @@ export interface components {
              * @default bearer
              */
             token_type: string;
+            user: components["schemas"]["UserOut"];
         };
-        /** UserCreate */
-        UserCreate: {
+        /** UserCreateIn */
+        UserCreateIn: {
             /** Email */
             email: string;
             /** Full Name */
-            full_name?: string | null;
-            /** Password */
-            password: string;
+            full_name: string;
             /**
              * Role
-             * @enum {string}
+             * @description manager | salesperson
              */
-            role: "manager" | "salesperson";
-            /** Salesperson Code */
+            role: string;
+            /** Password */
+            password: string;
+            /** Phone */
+            phone?: string | null;
+            /**
+             * Salesperson Code
+             * @description Obligatorio para salesperson
+             */
             salesperson_code?: string | null;
         };
         /** UserOut */
         UserOut: {
+            /** Id */
+            id: number;
             /** Email */
             email: string;
             /** Full Name */
-            full_name?: string | null;
-            /** Id */
-            id: number;
+            full_name: string;
             /** Phone */
-            phone?: string | null;
+            phone: string | null;
             /**
              * Role
-             * @enum {string}
+             * @description manager (gerencia) | salesperson (vendedor)
              */
-            role: "manager" | "salesperson";
+            role: string;
+            /** Salesperson Code */
+            salesperson_code: string | null;
+            /** Active */
+            active: boolean;
+        };
+        /** UserPageOut */
+        UserPageOut: {
+            /** Items */
+            items: components["schemas"]["UserOut"][];
+            /** Total */
+            total: number;
+            /** Page */
+            page: number;
+            /** Per Page */
+            per_page: number;
+        };
+        /** UserUpdateIn */
+        UserUpdateIn: {
+            /** Role */
+            role?: string | null;
             /** Salesperson Code */
             salesperson_code?: string | null;
-        };
-        /** UserUpdate */
-        UserUpdate: {
             /** Active */
             active?: boolean | null;
-            /** Role */
-            role?: ("manager" | "salesperson") | null;
         };
         /** ValidationError */
         ValidationError: {
-            /** Context */
-            ctx?: Record<string, never>;
-            /** Input */
-            input?: unknown;
             /** Location */
             loc: (string | number)[];
             /** Message */
             msg: string;
             /** Error Type */
             type: string;
+            /** Input */
+            input?: unknown;
+            /** Context */
+            ctx?: Record<string, never>;
         };
     };
     responses: never;
@@ -936,303 +951,16 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    list_alerts_api_v1_alerts_get: {
-        parameters: {
-            query?: {
-                date?: string | null;
-                salesperson_code?: string | null;
-                contacted?: boolean | null;
-                page?: number;
-                per_page?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    alerts_summary_api_v1_alerts_summary_get: {
+    create_session_api_v1_sessions_post: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    read_alert_api_v1_alerts__alert_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                alert_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    read_alert_explanation_api_v1_alerts__alert_id__explanation_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                alert_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_customers_api_v1_customers_get: {
-        parameters: {
-            query?: {
-                level?: ("A" | "B" | "C") | null;
-                status?: ("active" | "at_risk" | "dormant") | null;
-                search?: string | null;
-                salesperson_code?: string | null;
-                sort?: string | null;
-                page?: number;
-                per_page?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    read_customer_api_v1_customers__ruc__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                ruc: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    read_customer_brief_api_v1_customers__ruc__brief_get: {
-        parameters: {
-            query?: {
-                from?: string | null;
-                to?: string | null;
-                horizon?: "month" | "semester" | "year";
-            };
-            header?: never;
-            path: {
-                ruc: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    read_commercial_terms_api_v1_customers__ruc__commercial_terms_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                ruc: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_contacts_api_v1_customers__ruc__contacts_get: {
-        parameters: {
-            query?: {
-                page?: number;
-                per_page?: number;
-            };
-            header?: never;
-            path: {
-                ruc: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_contact_api_v1_customers__ruc__contacts_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                ruc: string;
-            };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ContactCreate"];
+                "application/json": components["schemas"]["SessionCreateIn"];
             };
         };
         responses: {
@@ -1242,7 +970,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["SessionOut"];
                 };
             };
             /** @description Validation Error */
@@ -1256,375 +984,7 @@ export interface operations {
             };
         };
     };
-    list_customer_orders_api_v1_customers__ruc__orders_get: {
-        parameters: {
-            query?: {
-                page?: number;
-                per_page?: number;
-            };
-            header?: never;
-            path: {
-                ruc: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_customer_products_api_v1_customers__ruc__products_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                ruc: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    read_whatsapp_link_api_v1_customers__ruc__whatsapp_link_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                ruc: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    read_dashboard_summary_api_v1_dashboard_summary_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    list_data_imports_api_v1_data_imports_get: {
-        parameters: {
-            query?: {
-                page?: number;
-                per_page?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_data_import_api_v1_data_imports_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "multipart/form-data": components["schemas"]["Body_create_data_import_api_v1_data_imports_post"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    read_data_import_api_v1_data_imports__import_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                import_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_data_import_api_v1_data_imports__import_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                import_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["DataImportUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_data_sources_api_v1_data_sources_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    list_import_suggestions_api_v1_import_suggestions_get: {
-        parameters: {
-            query?: {
-                supplier?: string | null;
-                page?: number;
-                per_page?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    update_import_suggestion_api_v1_import_suggestions__suggestion_id__patch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                suggestion_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ImportSuggestionUpdate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_insight_question_api_v1_insights_questions_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["InsightQuestionCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    read_me_api_v1_me_get: {
+    get_me_api_v1_me_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -1653,7 +1013,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["MeUpdate"];
+                "application/json": components["schemas"]["MeUpdateIn"];
             };
         };
         responses: {
@@ -1677,666 +1037,12 @@ export interface operations {
             };
         };
     };
-    read_model_info_api_v1_prediction_model_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    list_products_api_v1_products_get: {
-        parameters: {
-            query?: {
-                search?: string | null;
-                family?: string | null;
-                page?: number;
-                per_page?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    read_product_api_v1_products__code__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                code: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_quotation_preview_api_v1_quotation_previews_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["QuotationPreviewCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_quotations_api_v1_quotations_get: {
-        parameters: {
-            query?: {
-                status?: ("issued" | "converted" | "expired") | null;
-                ruc?: string | null;
-                from?: string | null;
-                to?: string | null;
-                page?: number;
-                per_page?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_quotation_api_v1_quotations_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["QuotationCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    read_quotation_api_v1_quotations__quotation_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                quotation_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_reports_api_v1_reports_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    read_customers_report_api_v1_reports_customers_get: {
-        parameters: {
-            query?: {
-                from?: string | null;
-                to?: string | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    read_funnel_report_api_v1_reports_funnel_get: {
-        parameters: {
-            query?: {
-                from?: string | null;
-                to?: string | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    read_kpis_api_v1_reports_kpis_get: {
-        parameters: {
-            query?: {
-                from?: string | null;
-                to?: string | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    read_receivables_report_api_v1_reports_receivables_get: {
-        parameters: {
-            query?: {
-                from?: string | null;
-                to?: string | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    read_sales_report_api_v1_reports_sales_get: {
-        parameters: {
-            query?: {
-                group_by?: "month" | "product" | "category";
-                from?: string | null;
-                to?: string | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    read_salespeople_report_api_v1_reports_salespeople_get: {
-        parameters: {
-            query?: {
-                from?: string | null;
-                to?: string | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    read_stock_report_api_v1_reports_stock_get: {
-        parameters: {
-            query?: {
-                from?: string | null;
-                to?: string | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    create_session_api_v1_sessions_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SessionCreate"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TokenOut"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_customer_levels_api_v1_settings_customer_levels_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    replace_customer_level_api_v1_settings_customer_levels__level__put: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                level: "A" | "B" | "C";
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CustomerLevelBody"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    read_level_thresholds_api_v1_settings_level_thresholds_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    replace_level_thresholds_api_v1_settings_level_thresholds_put: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["LevelThresholdsBody"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    read_pricing_api_v1_settings_pricing_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    replace_pricing_api_v1_settings_pricing_put: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PricingSettingsBody"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     list_users_api_v1_users_get: {
         parameters: {
-            query?: never;
+            query?: {
+                page?: number;
+                per_page?: number;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -2349,7 +1055,16 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": unknown;
+                    "application/json": components["schemas"]["UserPageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -2363,7 +1078,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UserCreate"];
+                "application/json": components["schemas"]["UserCreateIn"];
             };
         };
         responses: {
@@ -2398,7 +1113,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UserUpdate"];
+                "application/json": components["schemas"]["UserUpdateIn"];
             };
         };
         responses: {
@@ -2418,6 +1133,907 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    pending_get_alerts_api_v1_alerts_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_alerts_summary_api_v1_alerts_summary_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_alerts_alert_id_api_v1_alerts__alert_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_alerts_alert_id_explanation_api_v1_alerts__alert_id__explanation_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_customers_api_v1_customers_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_customers_ruc_api_v1_customers__ruc__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_customers_ruc_orders_api_v1_customers__ruc__orders_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_customers_ruc_products_api_v1_customers__ruc__products_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_customers_ruc_commercial_terms_api_v1_customers__ruc__commercial_terms_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_customers_ruc_contacts_api_v1_customers__ruc__contacts_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_post_customers_ruc_contacts_api_v1_customers__ruc__contacts_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_customers_ruc_whatsapp_link_api_v1_customers__ruc__whatsapp_link_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_customers_ruc_brief_api_v1_customers__ruc__brief_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_post_insights_questions_api_v1_insights_questions_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    get_pricing_api_v1_settings_pricing_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PricingOut"];
+                };
+            };
+        };
+    };
+    replace_pricing_api_v1_settings_pricing_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PricingIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PricingOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_customer_levels_api_v1_settings_customer_levels_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomerLevelsOut"];
+                };
+            };
+        };
+    };
+    replace_customer_level_api_v1_settings_customer_levels__level__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                level: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CustomerLevelIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomerLevelOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_level_thresholds_api_v1_settings_level_thresholds_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LevelThresholdsOut"];
+                };
+            };
+        };
+    };
+    replace_level_thresholds_api_v1_settings_level_thresholds_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LevelThresholdsIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LevelThresholdsOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    pending_get_products_api_v1_products_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_products_code_api_v1_products__code__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_post_quotation_previews_api_v1_quotation_previews_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_quotations_api_v1_quotations_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_post_quotations_api_v1_quotations_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_quotations_quotation_id_api_v1_quotations__quotation_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_prediction_model_api_v1_prediction_model_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_dashboard_summary_api_v1_dashboard_summary_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_reports_api_v1_reports_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_reports_kpis_api_v1_reports_kpis_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_reports_sales_api_v1_reports_sales_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_reports_customers_api_v1_reports_customers_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_reports_stock_api_v1_reports_stock_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_reports_receivables_api_v1_reports_receivables_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_reports_salespeople_api_v1_reports_salespeople_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_reports_funnel_api_v1_reports_funnel_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_import_suggestions_api_v1_import_suggestions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_patch_import_suggestions_suggestion_id_api_v1_import_suggestions__suggestion_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_data_sources_api_v1_data_sources_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_data_imports_api_v1_data_imports_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_post_data_imports_api_v1_data_imports_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_get_data_imports_import_id_api_v1_data_imports__import_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    pending_patch_data_imports_import_id_api_v1_data_imports__import_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Endpoint del contrato aún no construido */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
                 };
             };
         };

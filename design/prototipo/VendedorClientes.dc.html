@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Clientes</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#D01F29}a:hover{color:#A8161F}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: nowrap; min-width: 1200px; font-family: 'IBM Plex Sans', sans-serif; font-variant-numeric: tabular-nums; color: #161616; background: #F5F5F5">
+
+  <aside style="flex: 0 0 240px; box-sizing: border-box; background: #FFFFFF; border-right: 1px solid #E3E3E3; padding: 24px 16px; display: flex; flex-direction: column; gap: 28px; position: sticky; top: 0; align-self: flex-start; height: 100vh; overflow-y: auto">
+    <div style="padding: 0 8px; display: flex; flex-direction: column; gap: 2px">
+      <div style="font-size: 18px; font-weight: 600; letter-spacing: -0.01em">VetChain</div>
+      <div style="font-size: 13px; color: #5F6368">Mederi Pharma · piloto</div>
+    </div>
+    <nav aria-label="Secciones" style="display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{navItems}}" as="it" hint-placeholder-count="10">
+        <sc-if value="{{ it.esTitulo }}" hint-placeholder-val="{{ false }}">
+          <div style="padding: 14px 12px 6px; font-size: 12px; font-weight: 600; color: {{it.cTitulo}}">{{it.texto}}</div>
+        </sc-if>
+        <sc-if value="{{ it.esItem }}" hint-placeholder-val="{{ true }}">
+          <a href="{{it.href}}" aria-current="{{it.actual}}" style="display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; background: {{it.bg}}; color: {{it.fg}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="{{it.d}}"></path></svg><span>{{it.texto}}</span></a>
+        </sc-if>
+      </sc-for>
+    </nav>
+  
+    <div style="margin-top: auto; border-top: 1px solid #E3E3E3; padding-top: 16px; display: flex; flex-direction: column; gap: 12px">
+      <a href="VendedorPerfil.dc.html" aria-label="Ver mi perfil" style="display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 8px; text-decoration: none; color: #161616">
+        <span style="flex: none; width: 36px; height: 36px; border-radius: 50%; background: #D01F29; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600">{{rolIni}}</span>
+        <span style="display: flex; flex-direction: column; min-width: 0"><span style="font-size: 14px; font-weight: 600">{{rolNombre}}</span><span style="font-size: 12px; color: #5F6368">Ver mi perfil</span></span>
+      </a>
+    </div>
+  </aside>
+
+  <main style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 32px 48px 48px; display: flex; flex-direction: column; gap: 24px; width: 1012px; height: 1131px">
+
+    <header style="display: flex; justify-content: space-between; align-items: center; gap: 16px">
+      <div>
+        <sc-if value="{{ soloVend }}" hint-placeholder-val="{{ false }}"><a href="Vendedor.dc.html" style="display: inline-block; margin-bottom: 8px; font-size: 13px; font-weight: 600; text-decoration: none">Volver a Hoy</a></sc-if>
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+          <h1 style="margin: 0; font-size: 26px; font-weight: 600; letter-spacing: -0.02em">{{clientesTitulo}}</h1>
+          <span style="padding: 2px 8px; border-radius: 4px; background: #FDF1DC; color: #8A5300; font-size: 12px; font-weight: 600">Cartera provisional</span>
+        </div>
+        <p style="margin: 6px 0 0; font-size: 14px; color: #5F6368">Ventas de Miguel Ángel García Medina · datos reales hasta enero de 2026 · montos sin IGV</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px"><sc-if value="{{ bellVisible }}" hint-placeholder-val="{{ true }}">
+<div style="position: relative; font-family: 'IBM Plex Sans', sans-serif; font-variant-numeric: tabular-nums; line-height: 1.4">
+  <button type="button" onClick="{{ bellToggle }}" aria-label="{{ bellLabel }}" aria-expanded="{{ bellAria }}" aria-haspopup="true" title="Alertas del día" style="position: relative; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; border-radius: 6px; border: 1px solid {{ bellBd }}; background: {{ bellBg }}; color: {{ bellFg }}; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg><sc-if value="{{ bellShowCount }}" hint-placeholder-val="{{ true }}"><span style="position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; box-sizing: border-box; padding: 0 5px; border-radius: 999px; background: #A63224; color: #FFFFFF; border: 2px solid #F5F5F5; font-size: 11px; font-weight: 600; line-height: 14px; text-align: center">{{ bellCount }}</span></sc-if></button>
+  <sc-if value="{{ bellOpen }}" hint-placeholder-val="{{ false }}">
+    <div>
+      <button type="button" onClick="{{ bellClose }}" aria-label="Cerrar alertas" tabindex="-1" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 40; padding: 0; border: none; background: transparent; cursor: default"></button>
+      <div role="dialog" aria-label="Alertas del día" style="position: absolute; right: 0; top: 48px; z-index: 50; width: 400px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 8px; box-shadow: 0 8px 24px rgba(17,17,17,0.14); text-align: left; font-weight: 400">
+        <div style="padding: 16px 20px 12px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px">
+          <div>
+            <div style="font-size: 16px; font-weight: 600; color: #161616">Alertas del día</div>
+            <div style="margin-top: 2px; font-size: 13px; color: #5F6368">{{ bellTitulo }}</div>
+          </div>
+          <span style="flex: none; padding: 2px 8px; border-radius: 4px; background: #E5F3EA; color: #1E6B3A; font-size: 12px; font-weight: 600">Calculado</span>
+        </div>
+        <div style="border-top: 1px solid #EEEEEE; max-height: 340px; overflow-y: auto">
+          <sc-for list="{{ bellItems }}" as="b" hint-placeholder-count="5">
+            <a href="VendedorAlertas.dc.html" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid #EEEEEE; text-decoration: none; color: #161616; opacity: {{ b.op }}">
+              <span style="min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; font-weight: 600">{{ b.cliente }}</span><span style="font-size: 13px; color: #5F6368">{{ b.detalle }}</span></span>
+              <span style="flex: none; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; background: {{ b.chipBg }}; color: {{ b.chipFg }}">{{ b.chip }}</span>
+            </a>
+          </sc-for>
+        </div>
+        <div style="padding: 12px 20px 14px; display: flex; flex-direction: column; gap: 10px">
+          <div style="font-size: 12px; line-height: 1.5; color: #5F6368">Calculadas con el ritmo de compra de cada cliente. Datos hasta enero de 2026.</div>
+          <a href="VendedorAlertas.dc.html" style="display: block; padding: 9px 12px; border-radius: 8px; background: #D01F29; text-align: center; font-size: 14px; font-weight: 600; text-decoration: none; color: #FFFFFF">Ver todas las alertas</a>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</sc-if><sc-if value="{{ verGestion }}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{ abrirExp }}" aria-expanded="{{ expAria }}" style="min-height: 40px; padding: 8px 16px; border-radius: 6px; border: 1px solid #D01F29; background: #D01F29; color: #FFFFFF; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">{{ expTxt }}</button></sc-if></div>
+    </header>
+
+    <sc-if value="{{ expOpen }}" hint-placeholder-val="{{ false }}">
+    <section style="box-sizing: border-box; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 18px">
+      <div>
+        <h2 style="margin: 0; font-size: 18px; font-weight: 600">Exportar reporte del cliente</h2>
+        <p style="margin: 4px 0 0; font-size: 13px; color: #5F6368">Elige qué incluir. El archivo compara la proyección antes y después de la venta con el presupuesto estimado.</p>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px">
+        <sc-for list="{{opciones}}" as="o" hint-placeholder-count="4">
+          <button type="button" role="checkbox" aria-checked="{{o.ariaOn}}" onClick="{{o.alternar}}" style="flex: 1 1 220px; min-height: 44px; display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; border: 1px solid {{o.borde}}; background: {{o.bg}}; color: #161616; font-family: inherit; font-size: 14px; font-weight: 600; text-align: left; cursor: pointer">
+            <span style="flex: 0 0 20px; height: 20px; border-radius: 5px; border: 2px solid {{o.cajaBorde}}; background: {{o.caja}}; color: #FFFFFF; font-size: 13px; line-height: 16px; text-align: center">{{o.marca}}</span>
+            {{o.nombre}}
+          </button>
+        </sc-for>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+        <button type="button" onClick="{{exportar}}" style="min-height: 44px; padding: 10px 20px; border-radius: 8px; border: 1px solid #D01F29; background: #D01F29; color: #FFFFFF; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Descargar reporte (CSV para Excel)</button>
+        <span style="padding: 10px 14px; border-radius: 8px; border: 1px dashed #C4C4C4; color: #5F6368; font-size: 13px; font-weight: 600">PDF con gráficos · próxima versión</span>
+      </div>
+      <sc-if value="{{ exportado }}" hint-placeholder-val="{{ false }}">
+        <div role="status" style="border-radius: 10px; background: #E5F3EA; color: #1E6B3A; padding: 12px 16px; font-size: 14px; font-weight: 600">{{mensaje}}</div>
+      </sc-if>
+      <div style="border-radius: 10px; background: #F5F5F5; padding: 16px; display: flex; flex-direction: column; gap: 6px">
+        <div style="font-size: 13px; font-weight: 600">Vista previa del resumen</div>
+        <sc-for list="{{preview}}" as="p" hint-placeholder-count="4">
+          <div style="display: flex; justify-content: space-between; gap: 12px; font-size: 13px"><span style="color: #5F6368">{{p.k}}</span><span style="font-weight: 600">{{p.v}}</span></div>
+        </sc-for>
+      </div>
+      <p style="margin: 0; font-size: 12px; line-height: 1.5; color: #5F6368">La proyección con la venta supone que el cliente acepta la sugerencia completa. Es una estimación y la decisión final la toma una persona.</p>
+    </section>
+    </sc-if>
+
+    <section aria-label="Clientes por volumen de pedidos" style="box-sizing: border-box; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px">
+        <div>
+          <h2 style="margin: 0; font-size: 18px; font-weight: 600">Mis clientes con más venta</h2>
+          <p style="margin: 4px 0 0; font-size: 13px; color: #5F6368">Tus 12 clientes con más venta entre febrero de 2025 y enero de 2026: 505 pedidos a 79 clientes, S/&nbsp;1&nbsp;311&nbsp;698,35 en total. Falta confirmar la cartera oficial de cada vendedor.</p>
+        </div>
+        <a href="{{umbralHref}}" style="flex: none; font-size: 14px; font-weight: 600; text-decoration: none; color: #D01F29">{{umbralTxt}}</a>
+      </div>
+      <div style="display: grid; grid-template-columns: 2fr 0.7fr 1fr 0.8fr 1.2fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid #E3E3E3; font-size: 12px; font-weight: 600; color: #5F6368">
+        <div>Cliente</div><div style="text-align: right">Pedidos</div><div style="text-align: right">Monto 12 meses</div><div style="text-align: right">% de tu venta</div><div style="text-align: center">Nivel de volumen</div>
+      </div>
+      <sc-for list="{{ranking}}" as="c" hint-placeholder-count="5">
+        <div style="display: grid; grid-template-columns: 2fr 0.7fr 1fr 0.8fr 1.2fr; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid #EEEEEE; font-size: 14px">
+          <div>
+            <div style="font-weight: 600">{{c.pos}}. {{c.nombre}}</div>
+            
+          </div>
+          <div style="text-align: right">{{c.pedidos}}</div>
+          <div style="text-align: right; font-weight: 600">{{c.monto}}</div>
+          <div style="text-align: right">{{c.part}}</div>
+          <div style="text-align: center"><span style="display: inline-block; padding: 4px 12px; border-radius: 4px; font-size: 13px; font-weight: 600; background: {{c.iaBg}}; color: {{c.iaFg}}">{{c.ia}}</span></div>
+        </div>
+      </sc-for>
+    </section>
+
+
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1500}}'>
+class Component extends DCLogic {
+constructor(props) {
+  super(props);
+  this.state = { bellOpen: false, expOpen: false, sel: 0, inc: { resumen: true, meses: true, lineas: true, supuestos: false }, exportado: false };
+}
+renderVals() { return Object.assign(this.renderBase(), this.navVals()); }
+navVals() {
+  let rol = 'gerencia';
+  try { const r = 'vendedor'; if (r === 'vendedor' || r === 'logistica' || r === 'gerencia') rol = r; } catch (e) {}
+  const roles = { gerencia: { n: 'Gerencia comercial', i: 'GC' }, vendedor: { n: 'Vendedor B2B', i: 'VB' }, logistica: { n: 'Logística', i: 'LG' } };
+  const col = { t:'#5F6368', fg:'#3A3A3A', bg:'transparent', afg:'#D01F29', abg:'#FBE8E9' };
+  const D = {
+    panel: 'M3 3h7v9H3z M14 3h7v5h-7z M14 12h7v9h-7z M3 16h7v5H3z',
+    alertas: 'M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9 M13.73 21a2 2 0 0 1-3.46 0',
+    clientes: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z M22 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75',
+    cotiz: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8',
+    rutas: 'M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z M12 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',
+    import: 'M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z M3.3 7 12 12l8.7-5 M12 22V12',
+    rent: 'M22 7 13.5 15.5 8.5 10.5 2 17 M16 7h6v6',
+    integ: 'M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8 M3 3v5h5 M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16 M16 16h5v5',
+    config: 'M4 21v-7 M4 10V3 M12 21v-9 M12 8V3 M20 21v-5 M20 12V3 M1 14h6 M9 8h6 M17 16h6'
+  };
+  const grupos = [
+    { t: 'Inicio', items: [ ['Hoy', 'Vendedor.dc.html', D.panel, ['vendedor']] ] },
+    { t: 'Trabajo comercial', items: [
+      ['Mis clientes', 'VendedorClientes.dc.html', D.clientes, ['vendedor']],
+      ['Cotizaciones', 'VendedorCotizaciones.dc.html', D.cotiz, ['vendedor']] ] }
+  ];
+  const actual = 'VendedorClientes.dc.html';
+  const navItems = [];
+  grupos.forEach((g) => {
+    const vis = g.items.filter((x) => x[3].indexOf(rol) >= 0);
+    if (!vis.length) return;
+    navItems.push({ esTitulo: true, esItem: false, texto: g.t, cTitulo: col.t });
+    vis.forEach((x) => {
+      const on = x[1] === actual || (x[1] === 'Configuracion.dc.html' && actual === 'Integracion.dc.html');
+      navItems.push({ esTitulo: false, esItem: true, texto: x[0], href: x[1], d: x[2], actual: on ? 'page' : 'false', bg: on ? col.abg : col.bg, fg: on ? col.afg : col.fg });
+    });
+  });
+  const bellOn = rol === 'gerencia';
+  let hechas = {};
+  try { hechas = JSON.parse(window.localStorage.getItem('vetchain_alertas_done') || '{}') || {}; } catch (e) {}
+  const alBase = [
+    ['a1', "Corporacion Farmaceutica Veterinaria S.A.C.", "TRITOHEXIDIN PLUS X 50 ML · 24 unidades", 18],
+    ['a2', "H & P Distribuciones Y Representaciones S.A.C.", "TRITOHEXIDIN SHAMPOO X 250 ML · 25 unidades", '12,5'],
+    ['a5', "Corporacion Veterinaria Andes S.A.C.", "DOXILINA 150 MG · 12 unidades", 19],
+    ['a3', "Mapevas S.A.C.", "LEVOTIROXINA T4 TRITON 0,4 MG X 100 COMP · 2 unidades", 5],
+    ['a4', "Grupo Orlando S.A.C.", "NUTRAPRO K9 CANINE X 30 SOBRES · 3 unidades", 6]
+  ];
+  const bellPend = alBase.filter((a) => !hechas[a[0]]).length;
+  const bellItems = alBase.slice().sort((x, y) => (hechas[x[0]] ? 1 : 0) - (hechas[y[0]] ? 1 : 0)).map((a) => {
+    const h = !!hechas[a[0]];
+    return { cliente: a[1], detalle: a[2], chip: h ? 'Contactado' : '+' + a[3] + ' días', chipBg: h ? '#E5F3EA' : '#FBE8E9', chipFg: h ? '#1E6B3A' : '#A8161F', op: h ? '0.6' : '1' };
+  });
+  const bellAbierto = !!this.state.bellOpen;
+  const bellAct = (typeof actual !== 'undefined') && actual === 'VendedorAlertas.dc.html';
+  return { navItems, verGestion: rol !== 'vendedor', soloVend: rol === 'vendedor', rolNombre: roles[rol].n, rolIni: roles[rol].i, rolActual: rol,
+    bellVisible: bellOn, bellOpen: bellAbierto && bellOn, bellAria: bellAbierto ? 'true' : 'false',
+    bellCount: bellPend, bellShowCount: bellPend > 0,
+    bellLabel: 'Alertas del día: ' + bellPend + (bellPend === 1 ? ' pendiente' : ' pendientes'),
+    bellTitulo: bellPend + (bellPend === 1 ? ' pendiente' : ' pendientes') + ' de 5',
+    bellBd: bellAct || bellAbierto ? '#D01F29' : '#E3E3E3', bellBg: bellAct || bellAbierto ? '#FBE8E9' : '#FFFFFF', bellFg: bellAct || bellAbierto ? '#D01F29' : '#3A3A3A',
+    bellItems, bellToggle: () => this.setState({ bellOpen: !this.state.bellOpen }), bellClose: () => this.setState({ bellOpen: false }) };
+}
+renderBase() {
+  const fmt = (n) => 'S/ ' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ').replace('.', ',');
+  const pct = (n) => (Math.round(n * 10) / 10).toString().replace('.', ',') + ' %';
+  const mesesNom = ['Noviembre', 'Diciembre', 'Enero'];
+  const mg = { 'Antiparasitario oral 10 kg': 0.27, 'Vacuna polivalente canina': 0.241, 'Antibiótico inyectable 100 ml': 0.19, 'Suero fisiológico 500 ml': 0.12 };
+  const clientes = [
+    { nombre: 'Clínica Veterinaria Los Pinos', pres: [45000, 45000, 45000], antes: [28000, 24000, 22000], desp: [41500, 44800, 46200], mgBase: 0.20,
+      lineas: [['Antiparasitario oral 10 kg', 60, 520], ['Vacuna polivalente canina', 90, 180], ['Antibiótico inyectable 100 ml', 150, 74]] },
+    { nombre: 'Hospital Veterinario Central', pres: [52000, 52000, 52000], antes: [49000, 50500, 47000], desp: [54000, 56200, 55000], mgBase: 0.225,
+      lineas: [['Vacuna polivalente canina', 55, 180], ['Suero fisiológico 500 ml', 400, 22]] },
+    { nombre: 'Veterinaria Pet Salud', pres: [38000, 38000, 38000], antes: [30000, 28500, 27000], desp: [36200, 38500, 39100], mgBase: 0.19,
+      lineas: [['Antiparasitario oral 10 kg', 30, 520], ['Vacuna polivalente canina', 40, 180], ['Suero fisiológico 500 ml', 250, 22]] }
+  ];
+  let cfgv = { umbral: { alto: 50000, medio: 10000 }, niveles: [{ id: 'bajo', margen: 30, credito: 0 }, { id: 'medio', margen: 22, credito: 30 }, { id: 'alto', margen: 16, credito: 45 }] };
+  try { const raw = window.localStorage.getItem('vetchain_config_v2'); if (raw) { const cc = JSON.parse(raw); if (cc && cc.niveles && cc.umbral) cfgv = cc; } } catch (e) {}
+  const vol = [["CORPORACION FARMACEUTICA VETERINARIA S.A.C.", 13, 259153.26], ["H & P DISTRIBUCIONES Y REPRESENTACIONES S.A.C.", 16, 246366.22], ["GRUPO PHARMAX VETERINARIA S.A.C.", 30, 131263.04], ["MAPEVAS S.A.C.", 39, 109959.85], ["DISERVET PERU E.I.R.L.", 34, 84837.59], ["VETER PERU S.A.C.", 25, 83374.59], ["DISTRIBUCIONES AGROVENS E.I.R.L.", 10, 70811.37], ["GRUPO ORLANDO S.A.C.", 80, 56860.53], ["NOR VETERINARIOS S.R.L.", 11, 45988.75], ["CORPORACION VETERINARIA ANDES S.A.C.", 2, 36404.89], ["CEV BUSTAMANTE E.I.R.L.", 42, 31821.03], ["TORRES GARCIA GIULIANA ELVA", 12, 25876.82]];
+  const volTotal = 1311698.35;
+  const colN = { alto: ['#E5F3EA', '#1E6B3A'], medio: ['#FDF1DC', '#8A5300'], bajo: ['#EEEEEE', '#484848'] };
+  const ranking = vol.map((v, i) => {
+    const lv = v[2] >= cfgv.umbral.alto ? 'alto' : (v[2] >= cfgv.umbral.medio ? 'medio' : 'bajo');
+    const nv = cfgv.niveles.find((n) => n.id === lv) || cfgv.niveles[0];
+    return { pos: i + 1, nombre: v[0], pedidos: v[1], monto: fmt(v[2]), part: Math.round(v[2] / volTotal * 100) + ' %', prom: fmt(v[2] / v[1]), margen: nv.margen, credito: nv.credito === 0 ? 'al contado' : nv.credito + ' días', ia: { alto: 'A', medio: 'B', bajo: 'C' }[lv], iaBg: colN[lv][0], iaFg: colN[lv][1] };
+  });
+  let rolC = 'gerencia';
+  try { const rr = 'vendedor'; if (rr) rolC = rr; } catch (e) {}
+  const verUmbral = rolC === 'gerencia';
+  const abrirExp = () => this.setState({ expOpen: !this.state.expOpen });
+  const s = this.state;
+  const c = clientes[s.sel];
+  const sum = (a) => a.reduce((x, y) => x + y, 0);
+  const tPres = sum(c.pres), tAntes = sum(c.antes), tDesp = sum(c.desp);
+  const margenAntes = tAntes * c.mgBase;
+  const margenExtra = sum(c.lineas.map((l) => l[1] * l[2] * mg[l[0]]));
+  const margenDesp = margenAntes + margenExtra;
+  const cumpAntes = tAntes / tPres * 100, cumpDesp = tDesp / tPres * 100;
+  const tVenta = sum(c.lineas.map((l) => l[1] * l[2]));
+  const mx = 62000;
+  const tabs = clientes.map((x, i) => ({
+    nombre: x.nombre, sel: i === s.sel ? 'true' : 'false',
+    bg: i === s.sel ? '#D01F29' : '#FFFFFF', fg: i === s.sel ? '#FFFFFF' : '#161616', borde: i === s.sel ? '#D01F29' : '#C4C4C4',
+    elegir: () => this.setState({ sel: i, exportado: false })
+  }));
+  const kpis = [
+    { label: 'Presupuesto estimado (3 meses)', value: fmt(tPres), color: '#161616', note: 'Meta comercial acordada' },
+    { label: 'Proyección sin la venta', value: fmt(tAntes), color: '#8A5300', note: pct(cumpAntes) + ' del presupuesto' },
+    { label: 'Proyección con la venta', value: fmt(tDesp), color: '#A8161F', note: pct(cumpDesp) + ' del presupuesto' },
+    { label: 'Margen estimado con la venta', value: fmt(margenDesp), color: '#161616', note: 'Antes: ' + fmt(margenAntes) + ' (+' + fmt(margenExtra) + ')' }
+  ];
+  const meses = mesesNom.map((n, i) => ({
+    mes: n, pres: fmt(c.pres[i] / 1000 * 1000).replace('S/ ', '').replace(/ 000$/, ' mil'), antes: '', despues: '',
+    hPres: Math.round(c.pres[i] / mx * 170) + 'px', hAntes: Math.round(c.antes[i] / mx * 170) + 'px', hDespues: Math.round(c.desp[i] / mx * 170) + 'px'
+  }));
+  const k = (n) => (Math.round(n / 100) / 10).toString().replace('.', ',') + ' mil';
+  meses.forEach((m, i) => { m.pres = k(c.pres[i]); m.antes = k(c.antes[i]); m.despues = k(c.desp[i]); });
+  const lineas = c.lineas.map((l) => ({ producto: l[0], uds: String(l[1]), precio: fmt(l[2]), total: fmt(l[1] * l[2]) }));
+  const defs = [['resumen', 'Resumen y cumplimiento'], ['meses', 'Detalle por mes'], ['lineas', 'Productos de la venta'], ['supuestos', 'Supuestos y margen']];
+  const opciones = defs.map((d) => {
+    const on = !!s.inc[d[0]];
+    return {
+      nombre: d[1], ariaOn: on ? 'true' : 'false', marca: on ? '✓' : '',
+      caja: on ? '#D01F29' : '#FFFFFF', cajaBorde: on ? '#D01F29' : '#A0A0A0',
+      bg: on ? '#FBE8E9' : '#FFFFFF', borde: on ? '#D01F29' : '#E3E3E3',
+      alternar: () => this.setState({ inc: Object.assign({}, s.inc, { [d[0]]: !on }), exportado: false })
+    };
+  });
+  const preview = [
+    { k: 'Cliente', v: c.nombre },
+    { k: 'Brecha frente al presupuesto, sin la venta', v: '−' + fmt(tPres - tAntes) },
+    { k: 'Brecha frente al presupuesto, con la venta', v: (tDesp >= tPres ? '+' + fmt(tDesp - tPres) : '−' + fmt(tPres - tDesp)) },
+    { k: 'Mejora por la venta', v: '+' + fmt(tDesp - tAntes) }
+  ];
+  const exportar = () => {
+    const rows = [['Reporte de proyección', c.nombre], ['Datos ficticios de ejemplo']];
+    if (s.inc.resumen) rows.push([], ['Resumen'], ['Presupuesto 3 meses', tPres], ['Proyección sin la venta', tAntes], ['Proyección con la venta', tDesp], ['Cumplimiento sin la venta %', cumpAntes.toFixed(1)], ['Cumplimiento con la venta %', cumpDesp.toFixed(1)]);
+    if (s.inc.meses) { rows.push([], ['Mes', 'Presupuesto', 'Sin la venta', 'Con la venta']); mesesNom.forEach((n, i) => rows.push([n, c.pres[i], c.antes[i], c.desp[i]])); }
+    if (s.inc.lineas) { rows.push([], ['Producto', 'Unidades', 'Precio', 'Total']); c.lineas.forEach((l) => rows.push([l[0], l[1], l[2], l[1] * l[2]])); }
+    if (s.inc.supuestos) rows.push([], ['Supuestos'], ['Margen base del cliente %', (c.mgBase * 100).toFixed(1)], ['Margen estimado sin la venta', Math.round(margenAntes)], ['Margen estimado con la venta', Math.round(margenDesp)], ['Nota', 'La proyección con la venta supone que el cliente acepta la sugerencia completa']);
+    const csv = '﻿' + rows.map((r) => r.map((v) => '"' + String(v).replace(/"/g, '""') + '"').join(';')).join('\r\n');
+    try {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+      a.download = 'reporte_proyeccion_' + c.nombre.toLowerCase().replace(/[^a-z0-9]+/g, '_') + '.csv';
+      document.body.appendChild(a); a.click(); a.remove();
+    } catch (e) {}
+    this.setState({ exportado: true });
+  };
+  return { clientesTitulo: verUmbral ? 'Clientes' : 'Mis clientes', ranking, expOpen: !!s.expOpen, expAria: s.expOpen ? 'true' : 'false', expTxt: s.expOpen ? 'Cerrar exportación' : 'Exportar reporte', abrirExp, umbralHref: verUmbral ? 'Configuracion.dc.html' : 'VendedorClientes.dc.html', umbralTxt: verUmbral ? 'Cambiar umbrales en Configuración' : '', tabs, kpis: verUmbral ? kpis : kpis.filter((k) => k.label.indexOf('Margen') < 0), meses, lineas, opciones, preview, exportar, totalVenta: fmt(tVenta), exportado: s.exportado, mensaje: 'Reporte generado para ' + c.nombre + '. Ábrelo con Excel.' };
+}
+}
+</script>
+</body>
+</html>
