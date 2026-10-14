@@ -827,6 +827,120 @@ export interface paths {
         patch: operations["decide_import_api_v1_data_imports__import_id__patch"];
         trace?: never;
     };
+    "/api/v1/gmail/connection": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Gmail Connection */
+        get: operations["gmail_connection_api_v1_gmail_connection_get"];
+        put?: never;
+        post?: never;
+        /** Gmail Disconnect */
+        delete: operations["gmail_disconnect_api_v1_gmail_connection_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/gmail/connect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Gmail Connect */
+        get: operations["gmail_connect_api_v1_gmail_connect_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/gmail/callback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Gmail Callback */
+        get: operations["gmail_callback_api_v1_gmail_callback_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/email-senders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Senders
+         * @description Remitentes permitidos y si su proveedor está configurado.
+         */
+        get: operations["list_senders_api_v1_email_senders_get"];
+        put?: never;
+        /**
+         * Add Sender
+         * @description Agrega una cuenta Gmail o una dirección de un dominio verificado en Resend.
+         */
+        post: operations["add_sender_api_v1_email_senders_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/email-senders/{sender_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Sender */
+        put: operations["update_sender_api_v1_email_senders__sender_id__put"];
+        post?: never;
+        /** Delete Sender */
+        delete: operations["delete_sender_api_v1_email_senders__sender_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/emails": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send Email
+         * @description Envía con Gmail o Resend desde un remitente permitido.
+         */
+        post: operations["send_email_api_v1_emails_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -934,6 +1048,18 @@ export interface components {
              * @constant
              */
             data_origin: "estimated";
+        };
+        /** AttachmentIn */
+        AttachmentIn: {
+            /** File Name */
+            file_name: string;
+            /** Content Base64 */
+            content_base64: string;
+            /**
+             * Content Type
+             * @default application/pdf
+             */
+            content_type: string;
         };
         /** Body_stage_import_api_v1_data_imports_post */
         Body_stage_import_api_v1_data_imports_post: {
@@ -1589,6 +1715,53 @@ export interface components {
             /** Person */
             person: number;
         };
+        /** EmailIn */
+        EmailIn: {
+            /**
+             * Sender Id
+             * @description Vacío: enviar desde la cuenta Gmail conectada por este usuario
+             */
+            sender_id?: number | null;
+            /**
+             * From Email
+             * @description Obligatorio si el remitente es un dominio (@mederi.pe)
+             */
+            from_email?: string | null;
+            /** To */
+            to: string[];
+            /** Reply To */
+            reply_to?: string | null;
+            /** Subject */
+            subject: string;
+            /** Body */
+            body: string;
+            /** Attachments */
+            attachments?: components["schemas"]["AttachmentIn"][];
+        };
+        /** EmailSentOut */
+        EmailSentOut: {
+            /** Id */
+            id: number;
+            /**
+             * Status
+             * @description sent (el proveedor lo aceptó) o simulated (sin clave de Resend)
+             */
+            status: string;
+            /** From Email */
+            from_email: string;
+            /** To */
+            to: string[];
+        };
+        /** EmailSetupOut */
+        EmailSetupOut: {
+            /** Senders */
+            senders: components["schemas"]["SenderOut"][];
+            /**
+             * Provider Configured
+             * @description True si el proveedor del remitente predeterminado está configurado
+             */
+            provider_configured: boolean;
+        };
         /** FollowUpBucketOut */
         FollowUpBucketOut: {
             /**
@@ -1625,6 +1798,18 @@ export interface components {
              *     ]
              */
             warnings: string[];
+        };
+        /** GmailAuthorizationOut */
+        GmailAuthorizationOut: {
+            /** Authorization Url */
+            authorization_url: string;
+        };
+        /** GmailConnectionOut */
+        GmailConnectionOut: {
+            /** Available */
+            available: boolean;
+            /** Email */
+            email: string | null;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -2286,6 +2471,40 @@ export interface components {
             money_at_stake: number;
             /** Buckets */
             buckets: components["schemas"]["FollowUpBucketOut"][];
+        };
+        /** SenderIn */
+        SenderIn: {
+            /**
+             * Name
+             * @description Nombre que ve quien recibe, por ejemplo «Mederi Pharma»
+             */
+            name: string;
+            /**
+             * Address
+             * @description ventas@mederi.pe (dirección verificada) o @mederi.pe (dominio autenticado)
+             */
+            address: string;
+            /**
+             * Is Default
+             * @default false
+             */
+            is_default: boolean;
+        };
+        /** SenderOut */
+        SenderOut: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /** Address */
+            address: string;
+            /**
+             * Is Domain
+             * @description True: se puede enviar desde cualquier dirección de ese dominio
+             */
+            is_domain: boolean;
+            /** Is Default */
+            is_default: boolean;
         };
         /** SessionCreateIn */
         SessionCreateIn: {
@@ -3983,6 +4202,257 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataImportOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    gmail_connection_api_v1_gmail_connection_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GmailConnectionOut"];
+                };
+            };
+        };
+    };
+    gmail_disconnect_api_v1_gmail_connection_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    gmail_connect_api_v1_gmail_connect_get: {
+        parameters: {
+            query?: {
+                return_path?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GmailAuthorizationOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    gmail_callback_api_v1_gmail_callback_get: {
+        parameters: {
+            query: {
+                state: string;
+                code: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_senders_api_v1_email_senders_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EmailSetupOut"];
+                };
+            };
+        };
+    };
+    add_sender_api_v1_email_senders_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SenderIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SenderOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_sender_api_v1_email_senders__sender_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                sender_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SenderIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SenderOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_sender_api_v1_email_senders__sender_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                sender_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    send_email_api_v1_emails_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EmailIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EmailSentOut"];
                 };
             };
             /** @description Validation Error */

@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 import { briefSummaryText, downloadBriefPdf } from "./brief-exports";
 import { CustomerPicker, type PickedCustomer } from "./customer-picker";
 import { ShareDialog, type ShareChannel } from "./share-dialog";
+import { EmailComposer } from "./email-composer";
 import { Pending, PendingTile, StatTile, Status } from "./report-ui";
 
 export type Brief = components["schemas"]["CustomerBriefOut"];
@@ -40,6 +41,7 @@ export function CustomerBriefPage() {
   const projection = (["month", "semester", "year"].includes(params.get("projection") ?? "") ? params.get("projection") : "month") as Projection;
   const version: BriefVersion = params.get("version") === "customer" ? "customer" : "internal";
   const [picked, setPicked] = useState<PickedCustomer | null>(null);
+  const [channel, setChannel] = useState<ShareChannel | null>(null);
 
   const brief = useQuery(
     () => ruc ? api.GET("/api/v1/customers/{ruc}/brief", { params: { path: { ruc }, query: { from: from || undefined, to: to || undefined, projection } } }) : Promise.resolve({ data: null }),
@@ -60,7 +62,7 @@ export function CustomerBriefPage() {
       title="Ficha de cliente para reunión"
       subtitle="Cuánto compró, a qué precio, cuánto se ganó, qué proyectamos y qué ofrecerle según stock y merma."
       badge={<span className="inline-flex items-center gap-1.5 rounded-xs bg-brand-soft px-2 py-0.5 text-[13px] font-semibold text-brand" title="Las secciones con IA están pendientes de configurar Gemini"><Sparkles size={14} aria-hidden />Con IA</span>}
-      actions={<ShareActions brief={data} projection={projection} version={version} />}
+      actions={<ShareActions brief={data} projection={projection} version={version} onShare={setChannel} />}
     />
 
     <Card className="flex flex-col gap-5">
@@ -82,6 +84,14 @@ export function CustomerBriefPage() {
           : "Interna: para Gerencia y el vendedor. Incluye ranking, ritmo de compra y atraso; la ganancia, el stock y el guion se sumarán cuando estén los costos, los lotes y la IA."}</p>
       </div>
     </Card>
+
+    {data && channel === "email" && <EmailComposer ruc={data.ruc} version="customer"
+      attachment={() => downloadBriefPdf(data, PROJECTION_LABEL[projection], "customer", "blob")}
+      subject={`Resumen de sus compras · ${data.name}`} text={briefSummaryText(data, "customer")}
+      onClose={() => setChannel(null)} inline />}
+    {data && channel === "whatsapp" && <ShareDialog channel="whatsapp" ruc={data.ruc} version={version}
+      subject={version === "customer" ? `Resumen de sus compras · ${data.name}` : `Ficha para reunión · ${data.name}`}
+      text={briefSummaryText(data, version)} onClose={() => setChannel(null)} />}
 
     {!ruc ? <Card className="py-12 text-center text-sm text-ink-muted">Elige un cliente para armar su ficha.</Card>
       : <>
@@ -354,15 +364,11 @@ function ProductsCard({ brief, discountPct, forCustomer = false }: { brief: Brie
   </Card>;
 }
 
-function ShareActions({ brief, projection, version }: { brief: Brief | null; projection: Projection; version: BriefVersion }) {
-  const [channel, setChannel] = useState<ShareChannel | null>(null);
+function ShareActions({ brief, projection, version, onShare }: { brief: Brief | null; projection: Projection; version: BriefVersion; onShare: (channel: ShareChannel) => void }) {
   return <div className="flex flex-wrap gap-2">
     <Button disabled={!brief} onClick={() => brief && downloadBriefPdf(brief, PROJECTION_LABEL[projection], version)}><Download size={16} aria-hidden />Descargar PDF</Button>
-    <Button variant="outline" disabled={!brief} onClick={() => setChannel("email")}><Mail size={16} aria-hidden />Correo</Button>
-    <Button variant="outline" disabled={!brief} onClick={() => setChannel("whatsapp")}><MessageSquare size={16} aria-hidden />WhatsApp</Button>
-    {brief && channel && <ShareDialog channel={channel} ruc={brief.ruc} version={version}
-      subject={version === "customer" ? `Resumen de sus compras · ${brief.name}` : `Ficha para reunión · ${brief.name}`}
-      text={briefSummaryText(brief, version)} onClose={() => setChannel(null)} />}
+    <Button variant="outline" disabled={!brief} onClick={() => onShare("email")}><Mail size={16} aria-hidden />Correo</Button>
+    <Button variant="outline" disabled={!brief} onClick={() => onShare("whatsapp")}><MessageSquare size={16} aria-hidden />WhatsApp</Button>
   </div>;
 }
 

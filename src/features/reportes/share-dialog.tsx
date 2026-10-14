@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { api } from "@/lib/api/client";
 import { useQuery } from "@/lib/use-query";
+import { EmailComposer, type EmailAttachment } from "./email-composer";
 
 export type ShareChannel = "email" | "whatsapp";
 
@@ -19,7 +20,16 @@ export function peruMobile(phone: string | null | undefined): string | null {
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /** Panel para enviar la ficha por correo o WhatsApp: destinatario y texto editables, y siempre la opción de copiar. */
-export function ShareDialog({ channel, ruc, subject, text, version, onClose }: {
+export function ShareDialog(props: {
+  channel: ShareChannel; ruc?: string; subject: string; text: string; version: "internal" | "customer"; onClose: () => void;
+  attachment?: () => EmailAttachment | undefined;
+}) {
+  // El correo usa el remitente configurado o el Gmail conectado; WhatsApp abre wa.me.
+  if (props.channel === "email") return <EmailComposer {...props} />;
+  return <ManualShare {...props} />;
+}
+
+function ManualShare({ channel, ruc, subject, text, version, onClose }: {
   channel: ShareChannel; ruc?: string; subject: string; text: string; version: "internal" | "customer"; onClose: () => void;
 }) {
   const [to, setTo] = useState("");
