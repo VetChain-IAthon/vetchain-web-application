@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertCircle, Check, Info, Lock, Mail } from "lucide-react";
+import { AlertCircle, Check, Eye, EyeOff, Info, Lock, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -46,18 +46,17 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen bg-surface">
-      <section aria-hidden="true" className="flex flex-[0_0_46%] flex-col justify-between border-b-[6px] border-brand bg-night px-16 py-14 text-white">
+      <section aria-hidden="true" className="flex flex-[0_0_46%] flex-col border-b-[6px] border-brand bg-night px-16 py-14 text-white">
         <div>
           <div className="text-[28px] font-semibold tracking-[-0.015em]">VetChain</div>
           <div className="mt-1 text-sm text-night-muted">Mederi Pharma · piloto</div>
         </div>
-        <div className="max-w-[420px]">
+        <div className="my-auto max-w-[420px]">
           <div className="text-[34px] font-semibold leading-tight tracking-[-0.02em]">Sabe a quién llamar hoy y cuánto está en juego.</div>
           <div className="mt-4 text-base leading-relaxed text-night-muted">
-            Alertas de clientes que se atrasan, cotizaciones y seguimiento, con los datos de ventas de Mederi.
+            Alertas de clientes que se atrasan, cotizaciones y seguimiento, con los datos de ventas de tus clientes.
           </div>
         </div>
-        <div className="text-[13px] text-night-faint">Los datos que verás son de ejemplo o provienen de los archivos entregados por Mederi.</div>
       </section>
 
       <main className="flex min-w-0 flex-1 items-center justify-center px-8 py-12">
@@ -88,11 +87,11 @@ export default function LoginPage() {
               <Lock size={18} strokeWidth={1.8} className="absolute left-3.5 text-ink-muted" aria-hidden />
               <Input type={showPassword ? "text" : "password"} autoComplete="current-password" placeholder="Tu contraseña" value={password}
                 onChange={(e) => { setPassword(e.target.value); setError(null); }}
-                className="h-12 pl-11 pr-24 text-base font-normal" />
+                className="h-12 pl-11 pr-12 text-base font-normal" />
               <button type="button" onClick={() => setShowPassword((v) => !v)}
                 aria-label={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
-                className="absolute right-2 min-h-9 px-2.5 text-sm font-semibold text-brand hover:text-brand-hover">
-                {showPassword ? "Ocultar" : "Ver"}
+                className="absolute right-2 flex size-9 items-center justify-center rounded text-brand hover:text-brand-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand">
+                {showPassword ? <EyeOff size={18} aria-hidden /> : <Eye size={18} aria-hidden />}
               </button>
             </div>
           </label>

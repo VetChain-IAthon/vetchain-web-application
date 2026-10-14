@@ -23,7 +23,7 @@ const LEVELS: { level: Level; name: string; detail: string }[] = [
 const str = (n: number | null | undefined) => (n == null ? "" : String(n));
 const emptyRule = (): LevelRule => ({ margin: "", discount: "", credit: "" });
 const EMPTY: Form = {
-  pricing: { igv: "", validity: "", minMargin: "", promoCut: "" },
+  pricing: { igv: "18", validity: "", minMargin: "", promoCut: "" },
   levels: { A: emptyRule(), B: emptyRule(), C: emptyRule() },
   thresholds: { a: "", b: "" },
 };
@@ -55,6 +55,11 @@ async function loadForm(): Promise<Form> {
   return form;
 }
 
+// El IGV viene fijo (18 %), así que solo cuentan los tres valores que gerencia edita.
+const PRICING_FIELDS: [Exclude<keyof Pricing, "igv">, string][] = [
+  ["validity", "la vigencia"], ["minMargin", "el margen mínimo"], ["promoCut", "la rebaja de margen en promociones"],
+];
+
 const filled = (vals: string[]) => vals.filter((v) => v.trim() !== "").length;
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
 
@@ -62,7 +67,8 @@ const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b)
 function validate(f: Form): string | null {
   const nums = (vals: string[]) => vals.every((v) => parseNumber(v) != null);
   const p = Object.values(f.pricing);
-  if (filled(p) > 0 && filled(p) < 4) return "Completa los cuatro valores de «Impuestos y vigencia» o déjalos todos vacíos.";
+  const missing = PRICING_FIELDS.filter(([key]) => f.pricing[key].trim() === "").map(([, name]) => name);
+  if (missing.length > 0 && missing.length < PRICING_FIELDS.length) return `Falta definir ${missing.join(" y ")} en «Impuestos y vigencia». Completa esos valores o deja la sección vacía.`;
   if (filled(p) === 4) {
     if (!nums(p)) return "Los valores de «Impuestos y vigencia» deben ser números.";
     if (!Number.isInteger(parseNumber(f.pricing.validity)) || parseNumber(f.pricing.validity)! < 1) return "La vigencia de la cotización debe ser de al menos 1 día, sin decimales.";
@@ -86,9 +92,9 @@ function validate(f: Form): string | null {
   return null;
 }
 
-function Tile({ title, hint, children }: { title: string; hint: React.ReactNode; children: React.ReactNode }) {
+function Tile({ title, hint, children, className }: { title: string; hint: React.ReactNode; children: React.ReactNode; className?: string }) {
   return (
-    <div className="flex flex-[1_1_260px] flex-col gap-2.5 rounded-[10px] bg-canvas p-4">
+    <div className={cn("flex flex-col gap-2.5 rounded-[10px] bg-canvas p-4", className)}>
       <div className="text-[13px] font-semibold text-ink-muted">{title}</div>
       {children}
       <div className="text-[13px] text-ink-muted">{hint}</div>
@@ -186,16 +192,13 @@ export function BusinessRules() {
 
   return (
     <>
-      {missing.length > 0 && !dirty && (
-        <Notice tone="warn">
-          Gerencia aún no definió algunas reglas. VetChain no inventa valores por defecto: escribe cada valor y pulsa «Guardar cambios».
-        </Notice>
-      )}
-
       <Section title="Impuestos y vigencia" description="Los precios de las cotizaciones se calculan sin IGV y el impuesto se suma al final">
-        <div className="flex flex-wrap gap-4">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           <Tile title="IGV" hint={igv != null ? <>Ejemplo: un producto de {formatPen(100)} pasa a {formatPen(100 * (1 + igv / 100))}</> : "Tasa vigente según la ley"}>
-            <Stepper size="lg" label="IGV en porcentaje" suffix="%" max={100} value={form.pricing.igv} onChange={(v) => set((f) => { f.pricing.igv = v; })} />
+            <div className="flex min-h-11 items-center gap-3">
+              <strong className="text-[26px] tracking-[-0.02em] tabular-nums">{form.pricing.igv || "18"} %</strong>
+              <span className="rounded bg-line px-2 py-0.5 text-xs font-semibold text-ink-2">Fijo por ley</span>
+            </div>
           </Tile>
           <Tile title="Vigencia de la cotización" hint="Después de este plazo la cotización deja de ser válida">
             <Stepper size="lg" label="vigencia en días" suffix="días" min={1} value={form.pricing.validity} onChange={(v) => set((f) => { f.pricing.validity = v; })} />
@@ -203,7 +206,10 @@ export function BusinessRules() {
           <Tile title="Margen mínimo permitido" hint="Por debajo de este margen, la cotización necesita aprobación de gerencia">
             <Stepper size="lg" label="margen mínimo en porcentaje" suffix="%" max={100} value={form.pricing.minMargin} onChange={(v) => set((f) => { f.pricing.minMargin = v; })} />
           </Tile>
-          <Tile title="Rebaja de margen en promociones" hint="Los productos próximos a vencer se ofrecen con este margen menos que el normal del cliente">
+          <Tile title="Rebaja de margen en promociones" className="md:col-span-2 xl:col-span-3"
+            hint={<>Los productos próximos a vencer se ofrecen con este margen menos que el normal del cliente.
+              {parseNumber(form.levels.B.margin) != null && parseNumber(form.pricing.promoCut) != null
+                ? ` Ejemplo: margen ${form.levels.B.margin} % pasa a ${parseNumber(form.levels.B.margin)! - parseNumber(form.pricing.promoCut)!} %.` : null}</>}>
             <Stepper size="lg" label="rebaja de margen en promociones" suffix="pts" max={100} value={form.pricing.promoCut} onChange={(v) => set((f) => { f.pricing.promoCut = v; })} />
           </Tile>
         </div>
@@ -211,7 +217,7 @@ export function BusinessRules() {
 
       <Section title="Margen de ganancia según el nivel de volumen"
         description="Margen sobre el precio de venta. Más volumen de pedidos permite menos margen, más descuento y más días de crédito">
-        <div role="table" aria-label="Reglas por nivel de cliente" className="flex flex-col">
+        <div className="overflow-x-auto"><div role="table" aria-label="Reglas por nivel de cliente" className="flex min-w-[700px] flex-col">
           <div role="row" className="grid grid-cols-[1.3fr_1fr_1fr_1fr] gap-4 border-b border-line py-2.5 text-xs font-semibold text-ink-muted">
             <div role="columnheader">Nivel de volumen</div>
             <div role="columnheader" className="text-center">Margen de ganancia</div>
@@ -240,7 +246,7 @@ export function BusinessRules() {
               </div>
             );
           })}
-        </div>
+        </div></div>
       </Section>
 
       <Section title="Umbrales de volumen de pedidos"

@@ -1,4 +1,4 @@
-import { KpisReportPage } from "@/features/reportes/report-pages";
+import { KpisReportPage } from "@/features/reportes/kpis-report";
 
 export default function Page() {
   return <KpisReportPage />;
