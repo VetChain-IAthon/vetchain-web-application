@@ -812,7 +812,7 @@ export interface paths {
         };
         /**
          * Get Import
-         * @description Revisión de una carga: filas leídas, válidas y errores por línea.
+         * @description Revisión de una carga: filas leídas, válidas, errores por línea y, en revisión, qué pasará con cada fila.
          */
         get: operations["get_import_api_v1_data_imports__import_id__get"];
         put?: never;
@@ -1464,6 +1464,8 @@ export interface components {
             created_at: string;
             /** Decided At */
             decided_at: string | null;
+            /** @description Solo mientras la carga está en revisión */
+            preview?: components["schemas"]["ImportPreviewOut"] | null;
         };
         /** DataImportPageOut */
         DataImportPageOut: {
@@ -1629,6 +1631,29 @@ export interface components {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
+        /** ImportPreviewOut */
+        ImportPreviewOut: {
+            /**
+             * Columns
+             * @description Encabezados de las columnas que identifican cada fila
+             */
+            columns: string[];
+            /**
+             * Rows
+             * @description Hasta 500 filas, en el orden del archivo
+             */
+            rows: components["schemas"]["PreviewRowOut"][];
+            /**
+             * New Rows
+             * @description Filas válidas que se agregarán
+             */
+            new_rows: number;
+            /**
+             * Updated Rows
+             * @description Filas válidas que actualizan un registro existente
+             */
+            updated_rows: number;
+        };
         /** KpiOut */
         KpiOut: {
             /** Code */
@@ -1778,6 +1803,20 @@ export interface components {
             data_as_of: string | null;
             /** Warning */
             warning: string | null;
+        };
+        /** PreviewRowOut */
+        PreviewRowOut: {
+            /** Line */
+            line: number;
+            /** Values */
+            values: string[];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "new" | "update" | "error";
+            /** Message */
+            message: string | null;
         };
         /** PricePointOut */
         PricePointOut: {
