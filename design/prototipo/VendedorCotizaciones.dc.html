@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Cotizaciones</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+
+<style>
+body{margin:0}
+a{color:#D01F29}a:hover{color:#A8161F}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: nowrap; min-width: 1200px; font-family: 'IBM Plex Sans', sans-serif; font-variant-numeric: tabular-nums; color: #161616; background: #F5F5F5">
+
+  <aside style="flex: 0 0 240px; box-sizing: border-box; background: #FFFFFF; border-right: 1px solid #E3E3E3; padding: 24px 16px; display: flex; flex-direction: column; gap: 28px; position: sticky; top: 0; align-self: flex-start; height: 100vh; overflow-y: auto">
+    <div style="padding: 0 8px; display: flex; flex-direction: column; gap: 2px">
+      <div style="font-size: 18px; font-weight: 600; letter-spacing: -0.01em">VetChain</div>
+      <div style="font-size: 13px; color: #5F6368">Mederi Pharma · piloto</div>
+    </div>
+    <nav aria-label="Secciones" style="display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{navItems}}" as="it" hint-placeholder-count="10">
+        <sc-if value="{{ it.esTitulo }}" hint-placeholder-val="{{ false }}">
+          <div style="padding: 14px 12px 6px; font-size: 12px; font-weight: 600; color: {{it.cTitulo}}">{{it.texto}}</div>
+        </sc-if>
+        <sc-if value="{{ it.esItem }}" hint-placeholder-val="{{ true }}">
+          <a href="{{it.href}}" aria-current="{{it.actual}}" style="display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; background: {{it.bg}}; color: {{it.fg}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="{{it.d}}"></path></svg><span>{{it.texto}}</span></a>
+        </sc-if>
+      </sc-for>
+    </nav>
+  
+    <div style="margin-top: auto; border-top: 1px solid #E3E3E3; padding-top: 16px; display: flex; flex-direction: column; gap: 12px">
+      <a href="VendedorPerfil.dc.html" aria-label="Ver mi perfil" style="display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 8px; text-decoration: none; color: #161616">
+        <span style="flex: none; width: 36px; height: 36px; border-radius: 50%; background: #D01F29; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600">{{rolIni}}</span>
+        <span style="display: flex; flex-direction: column; min-width: 0"><span style="font-size: 14px; font-weight: 600">{{rolNombre}}</span><span style="font-size: 12px; color: #5F6368">Ver mi perfil</span></span>
+      </a>
+    </div>
+  </aside>
+
+  <main style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 32px 48px 48px; display: flex; flex-direction: column; gap: 24px">
+
+    <header style="display: flex; justify-content: space-between; align-items: center; gap: 16px">
+      <div>
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+          <h1 style="margin: 0; font-size: 26px; font-weight: 600; letter-spacing: -0.02em">Cotizaciones</h1>
+          <span style="padding: 2px 8px; border-radius: 4px; background: #FDF1DC; color: #8A5300; font-size: 12px; font-weight: 600">Costos sin validar</span>
+        </div>
+        <p style="margin: 6px 0 0; font-size: 14px; color: #5F6368">Nueva cotización {{numero}} · {{fecha}}</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px"><sc-if value="{{ bellVisible }}" hint-placeholder-val="{{ true }}">
+<div style="position: relative; font-family: 'IBM Plex Sans', sans-serif; font-variant-numeric: tabular-nums; line-height: 1.4">
+  <button type="button" onClick="{{ bellToggle }}" aria-label="{{ bellLabel }}" aria-expanded="{{ bellAria }}" aria-haspopup="true" title="Alertas del día" style="position: relative; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; border-radius: 6px; border: 1px solid {{ bellBd }}; background: {{ bellBg }}; color: {{ bellFg }}; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg><sc-if value="{{ bellShowCount }}" hint-placeholder-val="{{ true }}"><span style="position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; box-sizing: border-box; padding: 0 5px; border-radius: 999px; background: #A63224; color: #FFFFFF; border: 2px solid #F5F5F5; font-size: 11px; font-weight: 600; line-height: 14px; text-align: center">{{ bellCount }}</span></sc-if></button>
+  <sc-if value="{{ bellOpen }}" hint-placeholder-val="{{ false }}">
+    <div>
+      <button type="button" onClick="{{ bellClose }}" aria-label="Cerrar alertas" tabindex="-1" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 40; padding: 0; border: none; background: transparent; cursor: default"></button>
+      <div role="dialog" aria-label="Alertas del día" style="position: absolute; right: 0; top: 48px; z-index: 50; width: 400px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 8px; box-shadow: 0 8px 24px rgba(17,17,17,0.14); text-align: left; font-weight: 400">
+        <div style="padding: 16px 20px 12px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px">
+          <div>
+            <div style="font-size: 16px; font-weight: 600; color: #161616">Alertas del día</div>
+            <div style="margin-top: 2px; font-size: 13px; color: #5F6368">{{ bellTitulo }}</div>
+          </div>
+          <span style="flex: none; padding: 2px 8px; border-radius: 4px; background: #E5F3EA; color: #1E6B3A; font-size: 12px; font-weight: 600">Calculado</span>
+        </div>
+        <div style="border-top: 1px solid #EEEEEE; max-height: 340px; overflow-y: auto">
+          <sc-for list="{{ bellItems }}" as="b" hint-placeholder-count="5">
+            <a href="VendedorAlertas.dc.html" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid #EEEEEE; text-decoration: none; color: #161616; opacity: {{ b.op }}">
+              <span style="min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; font-weight: 600">{{ b.cliente }}</span><span style="font-size: 13px; color: #5F6368">{{ b.detalle }}</span></span>
+              <span style="flex: none; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; background: {{ b.chipBg }}; color: {{ b.chipFg }}">{{ b.chip }}</span>
+            </a>
+          </sc-for>
+        </div>
+        <div style="padding: 12px 20px 14px; display: flex; flex-direction: column; gap: 10px">
+          <div style="font-size: 12px; line-height: 1.5; color: #5F6368">Calculadas con el ritmo de compra de cada cliente. Datos hasta enero de 2026.</div>
+          <a href="VendedorAlertas.dc.html" style="display: block; padding: 9px 12px; border-radius: 8px; background: #D01F29; text-align: center; font-size: 14px; font-weight: 600; text-decoration: none; color: #FFFFFF">Ver todas las alertas</a>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</sc-if></div>
+    </header>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+
+      <div style="flex: 3 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+
+        <section style="box-sizing: border-box; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+          <h2 style="margin: 0; font-size: 18px; font-weight: 600">1. Cliente</h2>
+          <div style="position: relative">
+            <div style="position: relative; display: flex; align-items: center"><span style="position: absolute; left: 12px; color: #5F6368; display: flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M11 3a8 8 0 1 0 0 16 8 8 0 0 0 0-16z M21 21l-4.3-4.3"></path></svg></span><input type="text" aria-label="Buscar cliente" placeholder="Buscar cliente por nombre (tu cartera)" value="{{cqVal}}" onChange="{{cBuscar}}" style="box-sizing: border-box; width: 100%; min-height: 44px; padding: 0 12px 0 40px; border-radius: 8px; border: 1px solid #C4C4C4; background: #FFFFFF; font-family: inherit; font-size: 14px; color: #161616"></div>
+            <sc-if value="{{ hayBusqueda }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top: 6px; border: 1px solid #E3E3E3; border-radius: 8px; background: #FFFFFF; overflow: hidden">
+                <sc-for list="{{resultados}}" as="r" hint-placeholder-count="5">
+                  <button type="button" onClick="{{r.elegir}}" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; box-sizing: border-box; min-height: 44px; padding: 8px 14px; border: none; border-bottom: 1px solid #EEEEEE; background: #FFFFFF; color: #161616; font-family: inherit; font-size: 14px; text-align: left; cursor: pointer"><span style="font-weight: 600; min-width: 0; overflow-wrap: anywhere">{{r.nombre}}</span><span style="flex: none; font-size: 13px; color: #5F6368">{{r.venta}}</span></button>
+                </sc-for>
+                <sc-if value="{{ sinResultados }}" hint-placeholder-val="{{ false }}"><div style="padding: 14px; font-size: 14px; color: #5F6368">Ningún cliente coincide. Prueba con otra parte del nombre.</div></sc-if>
+              </div>
+            </sc-if>
+          </div>
+          <div style="font-size: 13px; color: #5F6368">Mayores clientes por venta de 12 meses:</div>
+          <div role="group" aria-label="Cliente" style="display: flex; flex-wrap: wrap; gap: 8px">
+            <sc-for list="{{tabs}}" as="t" hint-placeholder-count="5">
+              <button type="button" aria-pressed="{{t.on}}" onClick="{{t.pick}}" style="min-height: 44px; padding: 8px 14px; border-radius: 4px; border: 1px solid {{t.bd}}; background: {{t.bg}}; color: {{t.fg}}; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer">{{t.nombre}}</button>
+            </sc-for>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 12px">
+            <div style="flex: 2 1 240px; background: #F5F5F5; border-radius: 8px; padding: 12px 14px"><div style="font-size: 12px; color: #5F6368">Cliente seleccionado</div><div style="font-size: 15px; font-weight: 600; overflow-wrap: anywhere">{{cliSel}}</div></div>
+            <div style="flex: 1 1 140px; background: #F5F5F5; border-radius: 8px; padding: 12px 14px"><div style="font-size: 12px; color: #5F6368">Nivel de volumen</div><div style="font-size: 15px; font-weight: 600">{{nivel.nombre}}</div></div>
+            <div style="flex: 1 1 140px; background: #F5F5F5; border-radius: 8px; padding: 12px 14px"><div style="font-size: 12px; color: #5F6368">Venta de 12 meses</div><div style="font-size: 15px; font-weight: 600">{{ventaCli}}</div></div>
+            <div style="flex: 1 1 160px; background: #F5F5F5; border-radius: 8px; padding: 12px 14px"><label style="display: block; font-size: 12px; color: #5F6368">Descuento a este cliente</label><div style="display: flex; align-items: center; gap: 6px; margin-top: 4px"><input type="text" inputmode="decimal" aria-label="Descuento en porcentaje" placeholder="0" value="{{descVal}}" onChange="{{descEscribir}}" style="box-sizing: border-box; width: 72px; min-height: 36px; padding: 0 8px; border-radius: 6px; border: 1px solid #C4C4C4; background: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; color: #161616; text-align: right"><span style="font-size: 15px; font-weight: 600">%</span></div></div>
+            <div style="flex: 1 1 140px; background: #F5F5F5; border-radius: 8px; padding: 12px 14px"><div style="font-size: 12px; color: #5F6368">Condición de pago</div><div style="font-size: 15px; font-weight: 600">{{nivel.pago}}</div></div>
+          </div>
+          <p style="margin: 0; font-size: 12px; color: #5F6368">Nivel y condiciones vienen de Configuración; la venta de 12 meses es real (sin IGV). Si los cambias allá y guardas, vuelve a abrir esta pantalla para verlos.</p>
+        </section>
+
+        <section style="box-sizing: border-box; background: #FDF1DC; border: 1px solid #F0D9A8; border-radius: 8px; padding: 14px 20px; display: flex; flex-direction: column; gap: 10px">
+          <button type="button" onClick="{{ promosAlternar }}" aria-expanded="{{ promosAria }}" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; padding: 0; border: none; background: transparent; font-family: inherit; cursor: pointer; text-align: left"><span style="font-size: 15px; font-weight: 600; color: #6B4200">Promociones vigentes · {{promosN}} productos próximos a vencer</span><span style="font-size: 14px; font-weight: 600; color: #6B4200">{{ promosTxt }}</span></button>
+          <sc-if value="{{ promosOpen }}" hint-placeholder-val="{{ false }}">
+          <p style="margin: 0; font-size: 13px; color: #6B4200">Ofrecerlos ayuda a reducir la merma. Se cotizan con {{promoPts}} % menos que el último precio vendido. Los vencimientos son de ejemplo: los archivos aún no traen lotes ni fechas.</p>
+          <sc-for list="{{promos}}" as="m" hint-placeholder-count="3">
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; padding-top: 10px; border-top: 1px solid #F0D9A8; font-size: 14px">
+              <div><div style="font-weight: 600">{{m.nombre}}</div><div style="font-size: 12px; color: #6B4200">Lote vence en {{m.vence}} días (ejemplo)</div></div>
+              <div style="text-align: right"><span style="font-weight: 600">{{m.precio}}</span> <span style="font-size: 12px; color: #8A6A30; text-decoration: line-through">{{m.normal}}</span></div>
+            </div>
+          </sc-for>
+          </sc-if>
+        </section>
+
+        <section style="box-sizing: border-box; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+          <div>
+            <h2 style="margin: 0; font-size: 18px; font-weight: 600">2. Productos</h2>
+            <p style="margin: 4px 0 0; font-size: 13px; color: #5F6368">Por ahora el precio es el último precio vendido, sin IGV. Cuando se carguen los costos, saldrá del costo más el margen del nivel de volumen</p>
+          </div>
+          <div>
+            <div style="min-width: 0">
+              <div style="display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr) 120px; gap: 12px; padding: 8px 0; border-bottom: 1px solid #E3E3E3; font-size: 12px; font-weight: 600; color: #5F6368">
+                <div>Producto</div><div style="text-align: right">Precio unitario</div><div style="text-align: right">Acción</div>
+              </div>
+              <sc-for list="{{catalogo}}" as="p" hint-placeholder-count="7">
+                <div style="display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr) 120px; gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px solid #EEEEEE; font-size: 14px">
+                  <div><div style="font-weight: 600">{{p.nombre}}</div><div style="font-size: 12px; color: #5F6368">Se suele pedir de a {{p.paso}} unidades</div><div style="font-size: 12px; font-weight: 600; color: #8A5300">{{p.promoTxt}}</div></div>
+                  <div style="text-align: right"><div style="font-weight: 600">{{p.precio}}</div><div style="font-size: 12px; color: #8E8E8E; text-decoration: line-through">{{p.tachado}}</div></div>
+                  <div style="text-align: right"><button type="button" onClick="{{p.alternar}}" style="min-height: 44px; padding: 8px 14px; border-radius: 8px; border: 1px solid {{p.bd}}; background: {{p.bg}}; color: {{p.fg}}; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer">{{p.txt}}</button></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </section>
+
+        <section style="box-sizing: border-box; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+          <h2 style="margin: 0; font-size: 18px; font-weight: 600">3. Detalle de la cotización</h2>
+          <sc-if value="{{ vacia }}" hint-placeholder-val="{{ false }}">
+            <p style="margin: 0; padding: 20px; border-radius: 8px; background: #F5F5F5; font-size: 14px; color: #5F6368">Aún no agregaste productos. Elige alguno de la lista de arriba.</p>
+          </sc-if>
+          <sc-for list="{{lineas}}" as="l" hint-placeholder-count="2">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding-top: 12px; border-top: 1px solid #EEEEEE">
+              <div style="flex: 1 1 220px; min-width: 0"><div style="font-size: 14px; font-weight: 600">{{l.nombre}}</div><div style="font-size: 13px; color: #5F6368">{{l.precio}} por unidad</div></div>
+              <div style="display: flex; align-items: center; gap: 8px">
+                <button type="button" aria-label="Menos unidades de {{l.nombre}}" onClick="{{l.menos}}" style="width: 44px; height: 44px; border-radius: 8px; border: 1px solid #C4C4C4; background: #FFFFFF; color: #161616; font-family: inherit; font-size: 18px; font-weight: 600; cursor: pointer">−</button>
+                <input type="text" inputmode="numeric" aria-label="Cantidad de {{l.nombre}}" value="{{l.cantTxt}}" onChange="{{l.escribir}}" style="box-sizing: border-box; width: 72px; height: 44px; padding: 0 8px; border-radius: 8px; border: 1px solid #C4C4C4; background: #FFFFFF; color: #161616; font-family: inherit; font-size: 15px; font-weight: 600; text-align: center">
+                <button type="button" aria-label="Más unidades de {{l.nombre}}" onClick="{{l.mas}}" style="width: 44px; height: 44px; border-radius: 8px; border: 1px solid #C4C4C4; background: #FFFFFF; color: #161616; font-family: inherit; font-size: 18px; font-weight: 600; cursor: pointer">+</button>
+              </div>
+              <div style="min-width: 110px; text-align: right; font-size: 15px; font-weight: 600">{{l.total}}</div>
+            </div>
+          </sc-for>
+        </section>
+      </div>
+
+      <aside style="flex: 1 1 300px; min-width: 0; box-sizing: border-box; background: #FFFFFF; border: 2px solid #D01F29; border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+        <h2 style="margin: 0; font-size: 18px; font-weight: 600">Resumen</h2>
+        <div role="note" style="font-size: 13px; line-height: 1.5; color: #8A5300; background: #FDF1DC; border-radius: 8px; padding: 10px 12px">El descuento máximo de cada nivel se define en Ajustes. Si el nivel no tiene máximo definido, el descuento es referencial (hasta 30 %): falta confirmar la política de precios con Mederi.</div>
+        <div style="display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1px solid #E3E3E3; font-size: 14px">
+          <div style="display: flex; justify-content: space-between"><span style="color: #5F6368">Subtotal</span><span>{{subtotal}}</span></div>
+          <div style="display: flex; justify-content: space-between"><span style="color: #5F6368">Descuento</span><span>− {{descuento}}</span></div>
+          <div style="display: flex; justify-content: space-between"><span style="color: #5F6368">Valor de venta</span><span>{{neto}}</span></div>
+          <div style="display: flex; justify-content: space-between"><span style="color: #5F6368">IGV ({{igv}} %)</span><span>{{impuesto}}</span></div>
+          <div style="display: flex; justify-content: space-between; padding-top: 10px; border-top: 1px solid #E3E3E3; font-size: 18px; font-weight: 600"><span>Total</span><span>{{total}}</span></div>
+        </div>
+        <sc-if value="{{ verGestion }}" hint-placeholder-val="{{ true }}">
+        <div style="background: #F5F5F5; border-radius: 8px; padding: 12px 14px; font-size: 13px; color: #5F6368">Margen de ganancia resultante: <span style="font-weight: 600; color: #161616">{{margenReal}}</span></div>
+        </sc-if>
+        <div role="status" style="border-radius: 8px; padding: 12px 14px; font-size: 13px; line-height: 1.5; font-weight: 600; background: {{estadoBg}}; color: {{estadoFg}}">{{estadoTxt}}</div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <button type="button" onClick="{{exportarHtml}}" aria-disabled="{{bloqueada}}" style="min-height: 44px; padding: 10px 16px; border-radius: 8px; border: 1px solid {{btnBd}}; background: {{btnBg}}; color: {{btnFg}}; font-family: inherit; font-size: 14px; font-weight: 600; cursor: {{btnCursor}}">Descargar cotización (imprimible)</button>
+          <button type="button" onClick="{{exportarCsv}}" aria-disabled="{{bloqueada}}" style="min-height: 44px; padding: 10px 16px; border-radius: 8px; border: 1px solid #C4C4C4; background: #FFFFFF; color: {{csvFg}}; font-family: inherit; font-size: 14px; font-weight: 600; cursor: {{btnCursor}}">Descargar para Excel (CSV)</button>
+          <div style="height: 1px; background: #E3E3E3; margin: 4px 0"></div>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px"><span style="font-size: 13px; color: #5F6368">Enviar como</span><div role="group" aria-label="Formato del mensaje" style="display: flex; border: 1px solid #C4C4C4; border-radius: 8px; overflow: hidden">
+            <sc-for list="{{waOpts}}" as="o" hint-placeholder-count="2">
+              <button type="button" aria-pressed="{{o.on}}" onClick="{{o.elegir}}" style="min-height: 36px; padding: 0 14px; border: none; background: {{o.bg}}; color: {{o.fg}}; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer">{{o.txt}}</button>
+            </sc-for>
+          </div></div>
+          <button type="button" onClick="{{waEnviar}}" aria-disabled="{{bloqueada}}" style="min-height: 44px; padding: 10px 16px; border-radius: 8px; border: 1px solid {{waBd}}; background: {{waBg}}; color: {{waFg}}; font-family: inherit; font-size: 14px; font-weight: 600; cursor: {{btnCursor}}; display: flex; align-items: center; justify-content: center; gap: 8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="flex: none"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.300.5 1.700.6.7.2 1.400.2 1.900.1.600-.1 1.800-.7 2-1.400.3-.7.3-1.300.2-1.400-.1-.1-.3-.2-.6-.3zM12 2a10 10 0 0 0-8.600 15.100L2 22l5-1.300A10 10 0 1 0 12 2zm0 18.200c-1.500 0-2.900-.4-4.200-1.200l-.3-.2-3 .8.8-2.900-.2-.3A8.200 8.200 0 1 1 12 20.200z"></path></svg><span>Enviar por WhatsApp</span></button>
+        </div>
+        <sc-if value="{{ descargado }}" hint-placeholder-val="{{ false }}">
+          <div role="status" style="border-radius: 8px; background: #E5F3EA; color: #1E6B3A; padding: 10px 14px; font-size: 13px; font-weight: 600">{{descargadoTxt}}</div>
+        </sc-if>
+        <p style="margin: 0; font-size: 12px; line-height: 1.5; color: #5F6368">El archivo imprimible se abre en el navegador y se guarda como PDF con Imprimir. Vigencia de la cotización: {{validez}} días.</p>
+      </aside>
+    </div>
+
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1750}}'>
+class Component extends DCLogic {
+constructor(props) {
+  super(props);
+  this.state = { bellOpen: false, promosOpen: false, cli: 0, cq: '', cantDraft: {}, waFmt: 'texto', lineas: {}, desc: 0, descTxt: undefined, descargado: '' };
+}
+defaults() {
+  return {
+    igv: 18, validez: 7, piso: 12, promo: 3,
+    niveles: [
+      { id: 'bajo', nombre: 'Nivel C', margen: 30, desc: 0, credito: 0 },
+      { id: 'medio', nombre: 'Nivel B', margen: 22, desc: 0, credito: 30 },
+      { id: 'alto', nombre: 'Nivel A', margen: 16, desc: 0, credito: 45 }
+    ],
+    clientes: { A: 'medio', B: 'alto', C: 'bajo', E: 'alto', D: 'bajo' }
+  };
+}
+cargar() {
+  try {
+    const raw = window.localStorage.getItem('vetchain_config_v2');
+    if (raw) { const c = JSON.parse(raw); if (c && c.niveles && c.niveles.length === 3 && c.clientes) { if (typeof c.promo !== 'number') c.promo = 3; c.igv = 18; c.niveles.forEach((n) => { n.desc = (typeof n.desc === 'number' && n.desc >= 0 && n.desc <= 30) ? n.desc : 0; n.nombre = { bajo: 'Nivel C', medio: 'Nivel B', alto: 'Nivel A' }[n.id] || n.nombre; }); return c; } }
+  } catch (e) {}
+  return this.defaults();
+}
+renderVals() { return Object.assign(this.renderBase(), this.navVals()); }
+navVals() {
+  let rol = 'gerencia';
+  try { const r = 'vendedor'; if (r === 'vendedor' || r === 'logistica' || r === 'gerencia') rol = r; } catch (e) {}
+  const roles = { gerencia: { n: 'Gerencia comercial', i: 'GC' }, vendedor: { n: 'Vendedor B2B', i: 'VB' }, logistica: { n: 'Logística', i: 'LG' } };
+  const col = { t:'#5F6368', fg:'#3A3A3A', bg:'transparent', afg:'#D01F29', abg:'#FBE8E9' };
+  const D = {
+    panel: 'M3 3h7v9H3z M14 3h7v5h-7z M14 12h7v9h-7z M3 16h7v5H3z',
+    alertas: 'M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9 M13.73 21a2 2 0 0 1-3.46 0',
+    clientes: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z M22 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75',
+    cotiz: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8',
+    rutas: 'M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z M12 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',
+    import: 'M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z M3.3 7 12 12l8.7-5 M12 22V12',
+    rent: 'M22 7 13.5 15.5 8.5 10.5 2 17 M16 7h6v6',
+    integ: 'M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8 M3 3v5h5 M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16 M16 16h5v5',
+    config: 'M4 21v-7 M4 10V3 M12 21v-9 M12 8V3 M20 21v-5 M20 12V3 M1 14h6 M9 8h6 M17 16h6'
+  };
+  const grupos = [
+    { t: 'Inicio', items: [ ['Hoy', 'Vendedor.dc.html', D.panel, ['vendedor']] ] },
+    { t: 'Trabajo comercial', items: [
+      ['Clientes', 'VendedorClientes.dc.html', D.clientes, ['vendedor']],
+      ['Cotizaciones', 'VendedorCotizaciones.dc.html', D.cotiz, ['vendedor']] ] }
+  ];
+  const actual = 'VendedorCotizaciones.dc.html';
+  const navItems = [];
+  grupos.forEach((g) => {
+    const vis = g.items.filter((x) => x[3].indexOf(rol) >= 0);
+    if (!vis.length) return;
+    navItems.push({ esTitulo: true, esItem: false, texto: g.t, cTitulo: col.t });
+    vis.forEach((x) => {
+      const on = x[1] === actual || (x[1] === 'Configuracion.dc.html' && actual === 'Integracion.dc.html');
+      navItems.push({ esTitulo: false, esItem: true, texto: x[0], href: x[1], d: x[2], actual: on ? 'page' : 'false', bg: on ? col.abg : col.bg, fg: on ? col.afg : col.fg });
+    });
+  });
+  const bellOn = rol === 'gerencia';
+  let hechas = {};
+  try { hechas = JSON.parse(window.localStorage.getItem('vetchain_alertas_done') || '{}') || {}; } catch (e) {}
+  const alBase = [
+    ['a1', "Corporacion Farmaceutica Veterinaria S.A.C.", "TRITOHEXIDIN PLUS X 50 ML · 24 unidades", 18],
+    ['a2', "H & P Distribuciones Y Representaciones S.A.C.", "TRITOHEXIDIN SHAMPOO X 250 ML · 25 unidades", '12,5'],
+    ['a5', "Corporacion Veterinaria Andes S.A.C.", "DOXILINA 150 MG · 12 unidades", 19],
+    ['a3', "Mapevas S.A.C.", "LEVOTIROXINA T4 TRITON 0,4 MG X 100 COMP · 2 unidades", 5],
+    ['a4', "Grupo Orlando S.A.C.", "NUTRAPRO K9 CANINE X 30 SOBRES · 3 unidades", 6]
+  ];
+  const bellPend = alBase.filter((a) => !hechas[a[0]]).length;
+  const bellItems = alBase.slice().sort((x, y) => (hechas[x[0]] ? 1 : 0) - (hechas[y[0]] ? 1 : 0)).map((a) => {
+    const h = !!hechas[a[0]];
+    return { cliente: a[1], detalle: a[2], chip: h ? 'Contactado' : '+' + a[3] + ' días', chipBg: h ? '#E5F3EA' : '#FBE8E9', chipFg: h ? '#1E6B3A' : '#A8161F', op: h ? '0.6' : '1' };
+  });
+  const bellAbierto = !!this.state.bellOpen;
+  const bellAct = (typeof actual !== 'undefined') && actual === 'VendedorAlertas.dc.html';
+  return { navItems, verGestion: rol !== 'vendedor', soloVend: rol === 'vendedor', rolNombre: roles[rol].n, rolIni: roles[rol].i, rolActual: rol,
+    bellVisible: bellOn, bellOpen: bellAbierto && bellOn, bellAria: bellAbierto ? 'true' : 'false',
+    bellCount: bellPend, bellShowCount: bellPend > 0,
+    bellLabel: 'Alertas del día: ' + bellPend + (bellPend === 1 ? ' pendiente' : ' pendientes'),
+    bellTitulo: bellPend + (bellPend === 1 ? ' pendiente' : ' pendientes') + ' de 5',
+    bellBd: bellAct || bellAbierto ? '#D01F29' : '#E3E3E3', bellBg: bellAct || bellAbierto ? '#FBE8E9' : '#FFFFFF', bellFg: bellAct || bellAbierto ? '#D01F29' : '#3A3A3A',
+    bellItems, bellToggle: () => this.setState({ bellOpen: !this.state.bellOpen }), bellClose: () => this.setState({ bellOpen: false }) };
+}
+rebajaDe(nombre) {
+  try { const rb = JSON.parse(window.localStorage.getItem('vetchain_rebajas') || '{}') || {}; const k = Object.keys(rb).find((x) => x.toLowerCase().replace(/[^a-z0-9]/g, '') === String(nombre).toLowerCase().replace(/[^a-z0-9]/g, '')); const v = k ? parseFloat(String(rb[k]).replace(',', '.')) : 0; return isNaN(v) ? 0 : v; } catch (e) { return 0; }
+}
+renderBase() {
+  const s = this.state;
+  const cfg = this.cargar();
+  const nb = (t) => String(t).replace(/ /g, ' ');
+  const r2 = (n) => Math.round(n * 100) / 100;
+  const sol = (n) => 'S/ ' + r2(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ').replace('.', ',');
+  const pct1 = (n) => (Math.round(n * 10) / 10).toString().replace('.', ',') + ' %';
+
+  const CL = [["CORPORACION FARMACEUTICA VETERINARIA S.A.C.",259153.26],["H & P DISTRIBUCIONES Y REPRESENTACIONES S.A.C.",246366.22],["GRUPO PHARMAX VETERINARIA S.A.C.",131263.04],["MAPEVAS S.A.C.",109959.85],["DISERVET PERU E.I.R.L.",84837.59],["VETER PERU S.A.C.",83374.59],["DISTRIBUCIONES AGROVENS E.I.R.L.",70811.37],["GRUPO ORLANDO S.A.C.",56860.53],["NOR VETERINARIOS S.R.L.",45988.75],["CORPORACION VETERINARIA ANDES S.A.C.",36404.89],["CEV BUSTAMANTE E.I.R.L.",31821.03],["TORRES GARCIA GIULIANA ELVA",25876.82],["SCF ASOCIADOS S.A.C.",10868.84],["PAREDES APAZA MAGDA MARCIA IRENE",9496.94],["ARCA SERVICIOS GENERALES SRL",8196.76],["DISTRIBUIDORA VETERINARIA GLOBAL E.I.R.L.",6655.95],["SCF INVERSIONES S.A.C.",6509.43],["LIDERVET SUR E.I.R.L.",6325.45],["PET LIMA S.A.C.",6138.23],["VETERINARIA UNIDAS SJL E.I.R.L.",5917.87],["L & G VETERINARIOS S.A.C.",4572.98],["MUNDO LAB VET S.A.C.",4008.53],["AGRIVET E INVERSIONES S.A.C.",3806.01],["INVERSIONES VETERINARIAS KFLP E.I.R.L.",3444.99],["ALI PETS E.I.R.L.",2800.96],["PET SHOP RONDON S.A.C.",2572.94],["MARSEV S.A.C.",2542.4],["ALFREDO ORTEGA CLINICA DERMATOLOGICA VETERINARIA E.I.R.L.",2443.23],["INSTITUTO VETERINARIO DE ESPECIALIDADES MEDICAS S.A.C.",2194.14],["VETERINARIA ANIMAL LIFE S.A.C",2183.09],["VETERINARIA AMORES PERROS S.A.C",2002.58],["CUATRO PATAS S.A.C.",1881.38],["CLINICA VETERINARIA SAN GABRIEL S.A.C.",1766.97],["CLINICA VETERINARIA SAN JUAN MACIAS S.R.L",1718.66],["PIAZZE LOVATON CLAUDIA GIULIANA",1627.2],["ALERTA VETERINARIA S.A.C.",1622.88],["EUGENIA BOZA OBISPO",1606.78],["VETERINARIA AMA E.I.R.L.",1591.6],["DISTRIBUIDORA AGRO SUNI DEL PERU S.A.C.",1507.63],["INVETMONT S.A.C.",1356.03],["CLEAN DOG S.R.L.",1346.62],["MIYO MIROSLAV MUSTAPICH JOYO",1309.34],["FILOTHER ANTINEDORO TORDECILLO INOCENTE",1159.36],["ANIMEDICA VET S.A.C.",1159.33],["INVERSIONES CIRILO E.I.R.L.",1032.2],["P.Y. SERVET E.I.R.L.",998.31],["QUIJADA ROJAS MARIELA",961.04],["VETERINARIA WASY VET E.I.R.L.",922.9],["VETERINARIA D TAISA S.A.C.",892.39],["ECHEVARRIA GUTIERREZ GIANCARLO",705.09],["VETERINARIAS RUNA LUNA E.I.R.L.",661.03],["CLINICA VETERINARIA PET PARTY E.I.R.L",644.08],["DOG CAT E.I.R.L.",644.08],["PAOLA INES NAVARRO ORTIZ",638.98],["TITO PEDRAZA PATTY NOHELY",635.6],["CLINICA VETERINARIA PORTALINO & RONDON S.A.C.",608.47],["TABOADA SERAS PAUL ENRIQUE",518.65],["NAKURA S.A.C.",516.95],["INVERSIONES ICATAR E.I.R.L.",488.14],["ALOMASCOTAS.COM S.A.C.",481.37],["ESPECIALIDADES VETERINARIAS E.I.R.L.",466.95],["PRIVET E.I.R.L",455.09],["SALAS MATOS JULIANA ROSARIO",455.08],["VETERINARIA DR. OSORIO E.I.R.L.",447.48],["ORFANOS CRISOSTOMO NIKOLAS",416.96],["JULCAPARI PORTUGUEZ VIGNI RAUL",416.96],["VETERINARIA MAZVET S.A.C.",391.55],["PILCO VERONA ERICK ROBERTO",383.05],["ZUAZO CORTEZ MILAGRITOS ADRIANA",355.93],["MIGUEL ANGEL GARCIA MEDINA",330.51],["ROLANDO VIOLETA GARCIA",287.3],["CASTRO FRETEL MARGGORY ALEXANDRA",265.26],["GUZMAN ITURBE HECTOR RICARDO",144.07],["VET SANTA LUCIA S.A.C.",126.27],["R.H.K. SOLUCIONES VETERINARIAS E.I.R.L.",119.49],["MULTISERVICIOS FERDI HNOS E.I.R.L.",101.02],["FEEL VET S.A.C.",47.46],["YEPEZ GRANDE GIOVANNA MILUSKA",44.92],["FERHATI ASTUDILLO LINDA",40.68]];
+  const productos = [
+    { id: 'p1', nombre: 'TRITOHEXIDIN SHAMPOO X 250 ML', ultimo: 34.75, costo: null, paso: 5 },
+    { id: 'p2', nombre: 'NUTRAPRO K9 CANINE X 30 SOBRES', ultimo: 161.02, costo: null, paso: 2 },
+    { id: 'p3', nombre: 'NEUMOFLOGIN X 16 COMP', ultimo: 48.31, costo: null, paso: 3 },
+    { id: 'p4', nombre: 'ANTIBIOTICO BUCAL TRITON X 20 COMP', ultimo: 62.71, costo: null, paso: 3, vence: 30 },
+    { id: 'p5', nombre: 'TRITOHEXIDIN PLUS X 50 ML', ultimo: 40.68, costo: null, paso: 5 },
+    { id: 'p6', nombre: 'SOSTEN CG ORAL X 80 COMP', ultimo: 160.17, costo: null, paso: 2 },
+    { id: 'p7', nombre: 'PROPANTELINA X 80 COMP', ultimo: 116.95, costo: null, paso: 1, vence: 52 }
+  ];
+
+  const cli = Math.min(s.cli || 0, CL.length - 1);
+  const umb = cfg.umbral || { alto: 50000, medio: 10000 };
+  const idNivel = CL[cli][1] >= umb.alto ? 'alto' : (CL[cli][1] >= umb.medio ? 'medio' : 'bajo');
+  const nivel = cfg.niveles.find((n) => n.id === idNivel) || cfg.niveles[0];
+  const margen = nivel.margen / 100;
+  const margenPromo = Math.max(1, nivel.margen - cfg.promo) / 100;
+  const promoPct = Math.min(cfg.promo, nivel.margen - 1);
+  const precioNormal = (p) => p.costo != null ? r2(p.costo / (1 - margen)) : p.ultimo;
+  const precio = (p) => p.costo != null ? r2(p.costo / (1 - (p.vence ? margenPromo : margen))) : (p.vence ? r2(p.ultimo * (1 - promoPct / 100)) : p.ultimo);
+
+  const promos = productos.filter((p) => p.vence).map((p) => ({ nombre: p.nombre, vence: p.vence, stock: '', precio: sol(precio(p)), normal: sol(precioNormal(p)) }));
+  const tabs = CL.slice(0, 5).map((c, k) => {
+    const on = k === cli;
+    return { nombre: c[0], on: on ? 'true' : 'false', bg: on ? '#D01F29' : '#FFFFFF', fg: on ? '#FFFFFF' : '#161616', bd: on ? '#D01F29' : '#C4C4C4',
+      pick: () => this.setState({ cli: k, cq: '', desc: this.rebajaDe(c[0]), descTxt: undefined, descargado: '' }) };
+  });
+  const qn = String(s.cq || '').toLowerCase().trim();
+  const resultados = qn ? CL.map((c, k) => [c, k]).filter((x) => x[0][0].toLowerCase().indexOf(qn) >= 0).slice(0, 8).map((x) => ({ nombre: x[0][0], venta: x[0][1] > 0 ? sol(x[0][1]) : 'Sin compras en 12 meses', elegir: () => this.setState({ cli: x[1], cq: '', desc: this.rebajaDe(x[0][0]), descTxt: undefined, descargado: '' }) })) : [];
+  const hayBusqueda = !!qn;
+  const sinResultados = hayBusqueda && resultados.length === 0;
+  const waOpts = [['texto', 'Texto'], ['pdf', 'PDF adjunto']].map((o) => { const on = (s.waFmt || 'texto') === o[0]; return { txt: o[1], on: on ? 'true' : 'false', bg: on ? '#E5F3EA' : '#FFFFFF', fg: on ? '#1E6B3A' : '#161616', elegir: () => this.setState({ waFmt: o[0] }) }; });
+
+  const catalogo = productos.map((p) => {
+    const en = s.lineas[p.id] !== undefined;
+    return { nombre: p.nombre, stock: '', paso: p.paso, precio: sol(precio(p)), promoTxt: p.vence ? 'Promoción · lote vence en ' + p.vence + ' días' : '', tachado: p.vence ? sol(precioNormal(p)) : '',
+      txt: en ? 'Quitar' : 'Agregar', bg: en ? '#FFFFFF' : '#D01F29', fg: en ? '#161616' : '#FFFFFF', bd: en ? '#C4C4C4' : '#D01F29',
+      alternar: () => { const l = Object.assign({}, s.lineas); if (en) delete l[p.id]; else l[p.id] = p.paso * 2; this.setState({ lineas: l, cantDraft: {}, descargado: '' }); } };
+  });
+
+  let subtotal = 0, costoTotal = 0, sinCosto = false;
+  const detalle = [];
+  const lineas = productos.filter((p) => s.lineas[p.id] !== undefined).map((p) => {
+    const cant = s.lineas[p.id];
+    const pu = precio(p);
+    const tot = r2(pu * cant);
+    subtotal += tot; if (p.costo == null) sinCosto = true; else costoTotal += p.costo * cant;
+    detalle.push({ nombre: p.nombre, cant: cant, pu: pu, total: tot });
+    const dr = s.cantDraft && s.cantDraft[p.id];
+    return { nombre: p.nombre, precio: sol(pu), cant: cant, cantTxt: dr !== undefined ? dr : String(cant), total: sol(tot),
+      escribir: (e) => { const t = String(e.target.value).replace(/[^0-9]/g, '').slice(0, 5); const n = parseInt(t, 10); const l = Object.assign({}, s.lineas); if (!isNaN(n) && n >= 1) l[p.id] = n; this.setState({ lineas: l, cantDraft: Object.assign({}, s.cantDraft, { [p.id]: t }), descargado: '' }); },
+      menos: () => { const l = Object.assign({}, s.lineas); l[p.id] = Math.max(p.paso, cant - p.paso); this.setState({ lineas: l, cantDraft: {}, descargado: '' }); },
+      mas: () => { const l = Object.assign({}, s.lineas); l[p.id] = cant + p.paso; this.setState({ lineas: l, cantDraft: {}, descargado: '' }); } };
+  });
+
+  const descuento = r2(subtotal * s.desc / 100);
+  const neto = r2(subtotal - descuento);
+  const impuesto = r2(neto * cfg.igv / 100);
+  const total = r2(neto + impuesto);
+  const margenReal = neto > 0 ? (neto - costoTotal) / neto * 100 : 0;
+  const vacia = lineas.length === 0;
+  const excedeDesc = nivel.desc > 0 && s.desc > nivel.desc;
+  const bajoPiso = !vacia && !sinCosto && margenReal < cfg.piso;
+  const requiere = excedeDesc || bajoPiso;
+  const bloqueada = vacia || requiere;
+
+  let estadoTxt = 'Agrega productos para armar la cotización.', estadoBg = '#EEEEEE', estadoFg = '#484848';
+  if (!vacia && !requiere) { estadoTxt = 'Lista para enviar al cliente.'; estadoBg = '#E5F3EA'; estadoFg = '#1E6B3A'; }
+  if (requiere) {
+    estadoTxt = excedeDesc
+      ? 'El descuento supera el máximo de este nivel (' + nivel.desc + ' %). Requiere aprobación de Gerencia.'
+      : 'El margen queda por debajo del mínimo (' + cfg.piso + ' %). Requiere aprobación de Gerencia.';
+    estadoBg = '#FDF1DC'; estadoFg = '#8A5300';
+  }
+
+  const numero = 'COT-2026-0001';
+  const fecha = '10 de octubre de 2026';
+  const cliente = CL[cli][0];
+  const pago = nivel.credito === 0 ? 'Al contado' : 'Crédito a ' + nivel.credito + ' días';
+  const hoy = new Date(2026, 9, 10);
+  const vence = new Date(hoy.getTime() + cfg.validez * 86400000);
+  const venceTxt = vence.getDate() + '/' + (vence.getMonth() + 1) + '/' + vence.getFullYear();
+
+  const descargar = (nombre, contenido, tipo) => {
+    try {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([contenido], { type: tipo }));
+      a.download = nombre;
+      document.body.appendChild(a); a.click(); a.remove();
+    } catch (e) {}
+  };
+  const num = (n) => r2(n).toFixed(2);
+  const base = numero + '_' + cliente.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+
+  const exportarCsv = () => {
+    if (bloqueada) return;
+    const filas = [['Cotización', numero], ['Cliente', cliente], ['Fecha', fecha], ['Válida hasta', venceTxt], ['Condición de pago', pago], ['Datos ficticios de ejemplo'], [],
+      ['Producto', 'Cantidad', 'Precio unitario (sin IGV)', 'Total']];
+    detalle.forEach((d) => filas.push([d.nombre, d.cant, num(d.pu), num(d.total)]));
+    filas.push([], ['Subtotal', '', '', num(subtotal)], ['Descuento ' + s.desc + ' %', '', '', num(-descuento)], ['Valor de venta', '', '', num(neto)],
+      ['IGV ' + cfg.igv + ' %', '', '', num(impuesto)], ['Total', '', '', num(total)]);
+    const csv = '﻿' + filas.map((f) => f.map((v) => '"' + String(v).replace(/"/g, '""') + '"').join(';')).join('\r\n');
+    descargar(base + '.csv', csv, 'text/csv;charset=utf-8');
+    this.setState({ descargado: 'Se descargó el archivo para Excel.' });
+  };
+
+  const exportarHtml = () => {
+    if (bloqueada) return;
+    const filas = detalle.map((d) => '<tr><td>' + d.nombre + '</td><td class="n">' + d.cant + '</td><td class="n">' + sol(d.pu) + '</td><td class="n">' + sol(d.total) + '</td></tr>').join('');
+    const doc = '<!doctype html><html lang="es"><head><meta charset="utf-8"><title>' + numero + '</title><style>'
+      + 'body{font-family:Arial,sans-serif;color:#161616;max-width:760px;margin:32px auto;padding:0 24px}h1{margin:0;font-size:24px}'
+      + '.top{display:flex;justify-content:space-between;border-bottom:3px solid #D01F29;padding-bottom:12px;margin-bottom:20px}'
+      + 'table{width:100%;border-collapse:collapse;margin:16px 0}th,td{padding:8px;border-bottom:1px solid #E3E3E3;text-align:left;font-size:14px}th{background:#F5F5F5}'
+      + '.n{text-align:right}.tot td{border:none;padding:4px 8px}.grande td{font-size:18px;font-weight:bold;border-top:2px solid #D01F29}'
+      + '.nota{margin-top:28px;font-size:12px;color:#5F6368}</style></head><body>'
+      + '<div class="top"><div><h1>Cotización ' + numero + '</h1><div>Corporación Mederi Pharma S.A.C.</div></div><div style="text-align:right"><div>' + fecha + '</div><div>Válida hasta ' + venceTxt + '</div></div></div>'
+      + '<p><b>Cliente:</b> ' + cliente + '<br><b>Condición de pago:</b> ' + pago + '<br><b>Atendido por:</b> Rodrigo, vendedor B2B</p>'
+      + '<table><thead><tr><th>Producto</th><th class="n">Cantidad</th><th class="n">Precio unitario</th><th class="n">Total</th></tr></thead><tbody>' + filas + '</tbody></table>'
+      + '<table class="tot"><tr><td class="n">Subtotal</td><td class="n" style="width:140px">' + sol(subtotal) + '</td></tr>'
+      + '<tr><td class="n">Descuento (' + s.desc + ' %)</td><td class="n">− ' + sol(descuento) + '</td></tr>'
+      + '<tr><td class="n">Valor de venta</td><td class="n">' + sol(neto) + '</td></tr>'
+      + '<tr><td class="n">IGV (' + cfg.igv + ' %)</td><td class="n">' + sol(impuesto) + '</td></tr>'
+      + '<tr class="grande"><td class="n">Total</td><td class="n">' + sol(total) + '</td></tr></table>'
+      + '<p class="nota">Precios en soles. Documento de ejemplo generado por el prototipo VetChain con datos ficticios; no tiene validez comercial. Para guardar como PDF, usa Imprimir.</p>'
+      + '</body></html>';
+    descargar(base + '.html', doc, 'text/html;charset=utf-8');
+    this.setState({ descargado: 'Se descargó la cotización. Ábrela y usa Imprimir para guardarla como PDF.' });
+  };
+
+  const abrirWa = (txt) => { try { window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank', 'noopener'); } catch (e) {} };
+  const waTexto = () => {
+    if (bloqueada) return;
+    const msg = '*Cotización ' + numero + '* – Corporación Mederi Pharma\nCliente: ' + cliente + '\n\n'
+      + detalle.map((d) => '• ' + d.nombre + ' x' + d.cant + ' = ' + sol(d.total)).join('\n')
+      + '\n\nSubtotal: ' + sol(subtotal) + (s.desc > 0 ? '\nDescuento ' + s.desc + ' %: − ' + sol(descuento) : '')
+      + '\nIGV (' + cfg.igv + ' %): ' + sol(impuesto) + '\n*Total: ' + sol(total) + '*\nPago: ' + pago + '\nVálida hasta ' + venceTxt + '\n(Datos de ejemplo)';
+    abrirWa(msg);
+    this.setState({ descargado: 'Se abrió WhatsApp con el resumen. Elige el contacto y envía.' });
+  };
+  const waPdf = () => {
+    if (bloqueada) return;
+    exportarHtml();
+    abrirWa('Hola, te comparto la cotización ' + numero + ' de Corporación Mederi Pharma (total ' + sol(total) + '). Adjunto el PDF a continuación.');
+    this.setState({ descargado: 'Se descargó la cotización y se abrió WhatsApp. Guárdala como PDF con Imprimir y adjúntala en el chat; WhatsApp no permite adjuntar archivos desde un enlace.' });
+  };
+
+  return { promosOpen: !!this.state.promosOpen, promosAria: this.state.promosOpen ? 'true' : 'false', promosTxt: this.state.promosOpen ? 'Ocultar' : 'Ver promociones', promosAlternar: () => this.setState({ promosOpen: !this.state.promosOpen }), promosN: promos.length,
+    waTexto, waPdf, waEnviar: () => ((s.waFmt || 'texto') === 'pdf' ? waPdf() : waTexto()), waOpts, resultados, hayBusqueda, sinResultados, cliSel: cliente, cBuscar: (e) => this.setState({ cq: e.target.value }), cqVal: s.cq || '', waBg: bloqueada ? '#EEEEEE' : '#1E8E4E', waFg: bloqueada ? '#8E8E8E' : '#FFFFFF', waBd: bloqueada ? '#E3E3E3' : '#1E8E4E', waBg2: bloqueada ? '#8E8E8E' : '#1E6B3A',
+    ventaCli: sol(CL[cli][1]), promos, promoPts: promoPct, promoMargen: Math.max(1, nivel.margen - cfg.promo),
+    numero, fecha, tabs, catalogo, lineas, vacia,
+    nivel: { nombre: nivel.nombre, margen: nivel.margen, desc: nivel.desc, pago },
+    desc: s.desc, igv: cfg.igv, validez: cfg.validez,
+    subtotal: sol(subtotal), descuento: sol(descuento), neto: sol(neto), impuesto: sol(impuesto), total: sol(total),
+    margenReal: (vacia || sinCosto) ? 'No disponible: faltan los costos de compra' : pct1(margenReal),
+    estadoTxt, estadoBg, estadoFg,
+    bloqueada: bloqueada ? 'true' : 'false',
+    btnBg: bloqueada ? '#EEEEEE' : '#D01F29', btnFg: bloqueada ? '#8E8E8E' : '#FFFFFF', btnBd: bloqueada ? '#E3E3E3' : '#D01F29',
+    csvFg: bloqueada ? '#8E8E8E' : '#161616', btnCursor: bloqueada ? 'not-allowed' : 'pointer',
+    descVal: s.descTxt !== undefined ? s.descTxt : (s.desc ? String(s.desc).replace('.', ',') : ''),
+    descEscribir: (e) => { let t = String(e.target.value).replace('.', ',').replace(/[^0-9,]/g, ''); const p = t.split(','); t = p[0].slice(0, 2) + (p.length > 1 ? ',' + p.slice(1).join('').slice(0, 1) : ''); let n = parseFloat(t.replace(',', '.')); if (isNaN(n)) n = 0; if (n > 30) { n = 30; t = '30'; } this.setState({ desc: n, descTxt: t, descargado: '' }); },
+    descMenos: () => this.setState({ desc: Math.max(0, s.desc - 1), descargado: '' }),
+    descMas: () => this.setState({ desc: Math.min(20, s.desc + 1), descargado: '' }),
+    exportarCsv, exportarHtml,
+    descargado: !!s.descargado, descargadoTxt: s.descargado
+  };
+}
+}
+</script>
+</body>
+</html>

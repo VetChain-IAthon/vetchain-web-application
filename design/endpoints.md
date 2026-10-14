@@ -1,155 +1,147 @@
-# Contrato de la API (versión 2)
+# Contrato de endpoints (base `/api/v1`)
 
-Base: `/api/v1` (excepto `/health`, que está en la raíz).
-Roles: **M** = manager (gerencia), **S** = salesperson (vendedor).
-Prioridad: 1 = sin esto la web no arranca, 2 = pantallas principales, 3 = el resto.
-Todos los endpoints, salvo `POST /sessions` y `GET /health`, exigen sesión (header `Authorization: Bearer <token>`).
+Capa de interfaz de la API. Las reglas de cada capa están en [`capas.md`](capas.md) y
+[`capas-aplicacion-presentacion.md`](capas-aplicacion-presentacion.md). `tests/test_contract.py` verifica que las rutas de
+la app coincidan con las tablas de este documento, y `docs/openapi.json` se regenera con `python -m scripts.export_openapi`.
+
+- **Roles:** M = `manager` (gerencia), S = `salesperson` (vendedor).
+- **Estado:** ✅ hecho · ⏳ responde 501 hasta que se construya el módulo.
+- **Origen del dato:** las respuestas con cifras llevan `data_origin` (`real` | `synthetic` | `estimated` | `simulated`).
 
 ## Convenciones REST
-- Sustantivos en plural y sin verbos: `/customers`, no `/getCustomers`.
-- Minúsculas con guiones: `/import-suggestions`.
-- Filtros, orden y paginación en la URL: `?status=dormant&sort=-ordered_amount_12m&page=1&per_page=20`.
-- Métodos: GET lee, POST crea, PUT reemplaza, PATCH cambia una parte.
-- Códigos: 200 ok, 201 creado, 400 regla de negocio rota, 401 sin sesión, 403 sin permiso, 404 no existe,
-  409 conflicto, 422 formato inválido (lo valida FastAPI), 501 aún no construido.
-- **400 frente a 422:** 422 cuando el cuerpo no tiene el formato esperado; 400 cuando se rompe una regla del negocio
-  (por ejemplo, un descuento mayor al que permite el nivel del cliente).
-- Forma de los errores, siempre igual:
-  `{"error": {"code": "business_rule", "message": "El descuento supera el máximo del nivel.", "details": []}}`
-- Forma de las listas, siempre igual: `{"items": [...], "total": 0, "page": 1, "per_page": 20}`.
-- Dinero como número en soles (PEN), sin IGV salvo que el campo diga `_with_tax`. El formato (miles y decimales) lo aplica la web.
-- **Origen del dato:** las respuestas con cifras incluyen `data_origin`: `real`, `synthetic`, `estimated` o `simulated`.
-  Hereda el `origin` con que se cargó el CSV (ver `POST /data-imports`); lo calculado a partir de supuestos va como `estimated`.
-- **PDFs:** los genera la web. La API solo entrega los datos; no hay endpoints `/pdf`.
-- El vendedor (S) solo ve **sus** clientes, alertas y cotizaciones: el backend fuerza el filtro `salesperson_code`
-  con el código del usuario; no depende de lo que mande la web.
+- Sustantivos en plural y sin verbos en la ruta: `/customers`, no `/getCustomers`. Minúsculas con guiones: `/quotation-previews`.
+- Filtros, orden y paginación en la URL: `?status=dormant&sort=-sales_12m&page=1&per_page=20`.
+- Métodos: GET lee, POST crea, PUT reemplaza, PATCH cambia una parte, DELETE elimina.
+- Códigos: 200 ok, 201 creado, 204 sin contenido, 400 regla de negocio rota, 401 sin sesión, 403 sin permiso,
+  404 no existe, 409 conflicto de estado, 422 formato inválido, 501 aún no construido.
+- Una sola forma de error: `{"error": {"code": "...", "message": "...", "details": ...}}`. `message` va en español.
+- Listas: `{"items": [...], "total", "page", "per_page"}`.
+- Dinero como número en soles (PEN), sin IGV salvo que el campo diga `_with_tax`. Fechas ISO. Sin PDF: el formato
+  visual y los PDF los hace la web.
+- Autenticación: `Authorization: Bearer <token>` en todo, salvo `POST /sessions` y `GET /health`.
+- Alcance del vendedor: para un `salesperson` el backend fuerza el filtro `salesperson_code` con su propio código,
+  sin importar lo que mande la web.
 
-## Sesión y perfil · prioridad 1 · pantallas: login, Mi perfil
-| Método | Ruta | Para qué sirve | Roles |
-|---|---|---|---|
-| POST | /sessions | Inicia sesión y devuelve el token | todos |
-| GET | /me | Usuario actual y su rol (arma el menú) | todos |
-| PATCH | /me | Cambia teléfono y correo propios | todos |
-Cerrar sesión: la web borra el token. No hay endpoint ni lista de tokens revocados. El cambio de contraseña queda fuera del MVP.
+## Sesión y perfil — `auth`
+| Método | Ruta | Para qué | Roles | Estado |
+|---|---|---|---|---|
+| POST | /sessions | Iniciar sesión; devuelve el token y el usuario | todos | ✅ |
+| GET | /me | Usuario actual y su rol (la web arma el menú) | M, S | ✅ |
+| PATCH | /me | Cambiar el correo o el teléfono propios | M, S | ✅ |
 
-## Usuarios · prioridad 1 · no está en el prototipo, hace falta para crear cuentas
-| Método | Ruta | Para qué sirve | Roles |
-|---|---|---|---|
-| GET | /users | Lista usuarios | M |
-| POST | /users | Crea un usuario | M |
-| PATCH | /users/{user_id} | Cambia rol o desactiva | M |
+## Usuarios — `auth`
+| Método | Ruta | Para qué | Roles | Estado |
+|---|---|---|---|---|
+| GET | /users | Listar usuarios | M | ✅ |
+| POST | /users | Crear un usuario | M | ✅ |
+| PATCH | /users/{user_id} | Cambiar el rol o activar / desactivar | M | ✅ |
 
-## Carga de datos · prioridad 1 · pantalla: Ajustes → Carga de datos
-Los datos entran subiendo los CSV exportados de Defontana. No hay conexión automática.
-| Método | Ruta | Para qué sirve | Roles |
-|---|---|---|---|
-| GET | /data-sources | Los 7 archivos: contenido, registros, período, estado, origen | M |
-| POST | /data-imports | Sube un CSV (multipart: `source`, `origin`, `file`). Se valida, todavía no se aplica | M |
-| GET | /data-imports | Cargas anteriores | M |
-| GET | /data-imports/{import_id} | Revisión: filas leídas, errores por línea | M |
-| PATCH | /data-imports/{import_id} | `{"status": "confirmed"}` aplica la carga; `"cancelled"` la descarta | M |
-- `source`: `customers`, `salespeople`, `products`, `orders`, `order_lines`, `stock_balances`, `payments`.
-- `origin`: `real`, `synthetic` o `simulated`.
-- Confirmar una carga **actualiza e inserta; no borra** (para no romper contactos, cotizaciones ni alertas).
-- Al confirmar una carga de `orders`, la API revisa qué cotizaciones se convirtieron (ver "Conversión").
+## Alertas — `customers`
+| Método | Ruta | Para qué | Roles | Estado |
+|---|---|---|---|---|
+| GET | /alerts | Alertas del día, ordenadas por dinero en juego. Filtros: date, salesperson_code, contacted | M, S | ⏳ |
+| GET | /alerts/summary | Totales: alertas, contactados hoy, monto de 12 meses en juego | M, S | ⏳ |
+| GET | /alerts/{alert_id} | Una alerta: producto habitual, producto cruzado, motivos y probabilidad | M, S | ⏳ |
+| GET | /alerts/{alert_id}/explanation | Texto de IA (Gemini, solo cifras agregadas) | M, S | ⏳ |
 
-## Alertas · prioridad 2 · pantallas: Alertas del día, campana, Panel gerencial
-| Método | Ruta | Para qué sirve | Roles |
-|---|---|---|---|
-| GET | /alerts | Alertas del día, de más a menos soles en juego. Filtros: `date`, `salesperson_code`, `contacted` | M, S |
-| GET | /alerts/summary | Totales: alertas, contactadas hoy, venta de 12 meses en juego | M, S |
-| GET | /alerts/{alert_id} | Una alerta: producto habitual, producto cruzado, motivos, probabilidad | M, S |
-| GET | /alerts/{alert_id}/explanation | Texto de IA que explica la alerta (solo cifras agregadas) | M, S |
-`/alerts/summary` se declara antes que `/alerts/{alert_id}`; `alert_id` es numérico.
-Las alertas se guardan en la tabla `alerts` (se generan cada día) y cada contacto apunta a su alerta.
+## Clientes — `customers`
+| Método | Ruta | Para qué | Roles | Estado |
+|---|---|---|---|---|
+| GET | /customers | Lista por monto de 12 meses. Filtros: level, search, salesperson_code (status llega con las alertas) | M, S | ✅ |
+| GET | /customers/{ruc} | Ficha con nivel y resumen de 12 meses | M, S | ✅ |
+| GET | /customers/{ruc}/orders | Historial de pedidos | M, S | ✅ |
+| GET | /customers/{ruc}/products | Qué compra y con qué frecuencia | M, S | ✅ |
+| GET | /customers/{ruc}/commercial-terms | Nivel, margen, descuento máximo y días de crédito | M, S | ✅ |
+| GET | /customers/{ruc}/contacts | Registro de contactos | M, S | ✅ |
+| POST | /customers/{ruc}/contacts | Registrar un contacto y su resultado | M, S | ✅ |
+| GET | /customers/{ruc}/whatsapp-link | Enlace wa.me con el mensaje sugerido | M, S | ✅ |
+| GET | /customers/{ruc}/brief | Ficha para reunión. Query: from, to, projection (month, semester, year) | M | ⏳ |
 
-## Clientes · prioridad 2 · pantallas: Clientes, Ficha de cliente
-| Método | Ruta | Para qué sirve | Roles |
-|---|---|---|---|
-| GET | /customers | Lista. Filtros: `level`, `status` (active, at_risk, dormant), `search`, `salesperson_code`, `sort` | M, S |
-| GET | /customers/{ruc} | Ficha del cliente: datos, nivel, resumen de 12 meses | M, S |
-| GET | /customers/{ruc}/orders | Historial de pedidos | M, S |
-| GET | /customers/{ruc}/products | Qué compra y con qué frecuencia | M, S |
-| GET | /customers/{ruc}/commercial-terms | Nivel, margen, descuento máximo, días de crédito | M, S |
-| GET | /customers/{ruc}/contacts | Registro de contactos | M, S |
-| POST | /customers/{ruc}/contacts | Registra un contacto y su resultado (puede enlazar `alert_id`) | M, S |
-| GET | /customers/{ruc}/whatsapp-link | Enlace wa.me con el mensaje sugerido | M, S |
-| GET | /customers/{ruc}/brief | Datos de la ficha para reunión. Parámetros: `from`, `to`, `horizon` (month, semester, year) | M |
+Fecha de corte: la ventana de 12 meses termina en el último pedido cargado (`data_as_of`), no en la fecha de hoy,
+porque los CSV son una foto. `level` es `null` (y `levels_configured` es `false`) mientras gerencia no defina los
+umbrales; filtrar por nivel o pedir `commercial-terms` sin umbrales responde 400 `thresholds_not_configured`.
+Un vendedor solo ve su cartera: pedir un cliente ajeno responde 403 `outside_portfolio`.
 
-## Cotizaciones · prioridad 2 · pantalla: Cotizaciones
-VetChain solo crea cotizaciones. La venta se concreta fuera (Defontana) y VetChain se entera al subir los CSV.
-| Método | Ruta | Para qué sirve | Roles |
-|---|---|---|---|
-| GET | /products | Busca productos para agregar. Filtros: `search`, `family` | M, S |
-| GET | /products/{code} | Un producto con su precio de referencia | M, S |
-| POST | /quotation-previews | Calcula totales, margen, IGV y avisos sin guardar | M, S |
-| GET | /quotations | Lista. Filtros: `status`, `ruc`, `from`, `to` | M, S |
-| POST | /quotations | Emite una cotización (queda en estado `issued`) | M, S |
-| GET | /quotations/{quotation_id} | Detalle con líneas | M, S |
-- Estados: `issued` (emitida), `converted` (hay un pedido posterior), `expired` (pasó su vigencia sin convertirse).
-- Una cotización emitida no se edita: si hay que cambiar algo, se emite otra.
-- **Aprobación:** si el descuento supera el máximo del nivel o el margen queda bajo el mínimo, la vista previa devuelve
-  `approval_required: true`. La aprobación se da fuera de VetChain (el gerente habla con el vendedor, o decide el vendedor).
-  Para emitir, el cuerpo debe traer `approval_confirmed: true` y, opcionalmente, `approval_note`. No hay endpoints de aprobación.
-- Sin costos cargados, el margen sale `null` con el aviso `no_cost_data`, y el piso de margen no se evalúa.
-  El precio de referencia es el último precio pagado (`data_origin: estimated`).
+## Productos y cotizaciones — `quotations`
+| Método | Ruta | Para qué | Roles | Estado |
+|---|---|---|---|---|
+| GET | /products | Buscar productos. Filtros: search, family | M, S | ⏳ |
+| GET | /products/{code} | Un producto con su precio de referencia | M, S | ⏳ |
+| POST | /quotation-previews | Calcular totales, IGV y margen sin guardar | M, S | ⏳ |
+| GET | /quotations | Lista. Filtros: status, ruc, from, to | M, S | ⏳ |
+| POST | /quotations | Emitir. Si requiere aprobación, solo un M puede confirmarla (`approval_confirmed`) | M, S | ⏳ |
+| GET | /quotations/{quotation_id} | Detalle con líneas | M, S | ⏳ |
 
-## Conversión (cotización → pedido)
-VetChain no convierte nada. Al confirmar una carga de `orders`, se busca para cada cotización `issued` un pedido del
-mismo cliente con fecha entre la emisión y su vigencia; si existe, la cotización pasa a `converted` y guarda `order_id`.
-Si pasó la vigencia sin pedido, pasa a `expired`.
+## Predicción — `prediction`
+| Método | Ruta | Para qué | Roles | Estado |
+|---|---|---|---|---|
+| GET | /prediction/model | Versión, fecha de entrenamiento, AUC y precisión en el 10 % superior | M | ⏳ |
 
-## Reportes y panel · prioridad 2-3 · pantallas: Panel gerencial, Reportes y sus 6 páginas
-| Método | Ruta | Para qué sirve | Roles |
-|---|---|---|---|
-| GET | /dashboard/summary | Resumen de la semana y cifras principales (también alimenta "Pulso del negocio") | M |
-| GET | /reports | Catálogo de reportes y el origen de sus datos | M |
-| GET | /reports/kpis | Los 12 indicadores con su estado | M |
-| GET | /reports/sales | Pedidos por mes, producto y categoría; precio pagado frente a precio de referencia. Parámetro `group_by` | M |
-| GET | /reports/customers | Concentración, maestro de clientes, en riesgo, dormidos | M |
-| GET | /reports/stock | Saldo por producto; lotes por vencer y sobrestock solo como `simulated` | M |
-| GET | /reports/receivables | Deuda vencida por antigüedad y nivel (estimada con los días de crédito) | M |
-| GET | /reports/salespeople | Pedidos por vendedor y seguimiento de alertas (alimenta el Panel) | M |
-| GET | /reports/funnel | Alertas → contactos → cotizaciones → convertidas, y monto recuperado | M |
-Todos aceptan `from` y `to`. La web usa la palabra "venta" mientras Mederi no confirme qué significan los estados A, C y D de los pedidos.
+## Panel y reportes — `reports`
+| Método | Ruta | Para qué | Roles | Estado |
+|---|---|---|---|---|
+| GET | /dashboard/summary | Resumen semanal y cifras principales (incluye pedidos por mes y seguimiento de alertas) | M | ⏳ |
+| GET | /reports | Catálogo de reportes con el origen de sus datos | M | ⏳ |
+| GET | /reports/kpis | Los KPIs con su estado | M | ⏳ |
+| GET | /reports/sales | Pedidos por mes, producto y categoría; precio pagado frente a referencia | M | ⏳ |
+| GET | /reports/customers | Concentración, maestro de clientes, en riesgo y dormidos | M | ⏳ |
+| GET | /reports/stock | Estado del stock, sobrestock y quiebres | M | ⏳ |
+| GET | /reports/receivables | Deuda por antigüedad y nivel (estimada) | M | ⏳ |
+| GET | /reports/salespeople | Pedidos de 12 meses y seguimiento de alertas por vendedor | M | ⏳ |
+| GET | /reports/funnel | Embudo: alertas, contactos, cotizaciones, convertidas y monto recuperado | M | ⏳ |
 
-## Preguntas a los datos · prioridad 3 · Reportes: "Pregúntale a tus datos"
-| Método | Ruta | Para qué sirve | Roles |
-|---|---|---|---|
-| POST | /insights/questions | Pregunta en lenguaje natural; la respuesta indica sus fuentes | M |
-Gemini solo convierte la pregunta en una consulta de una lista permitida (con sus filtros). La respuesta sale de la base
-de datos. Nombres de clientes y RUC no viajan a Gemini.
+Todos aceptan `?from=&to=`.
 
-## Planificación de importación · prioridad 3 · pantalla: Planificación de importación
-| Método | Ruta | Para qué sirve | Roles |
-|---|---|---|---|
-| GET | /import-suggestions | Pedido sugerido por producto. Filtro: `supplier` | M |
-| PATCH | /import-suggestions/{suggestion_id} | Decisión: `approved`, `rejected` o `pending` | M |
-Con los datos actuales solo la demanda mensual es real; stock, proveedor, vencimientos y costos son `simulated`.
+## Preguntas a los datos — `explanations`
+| Método | Ruta | Para qué | Roles | Estado |
+|---|---|---|---|---|
+| POST | /insights/questions | Pregunta en lenguaje natural; la respuesta sale de la base y lista sus fuentes | M | ⏳ |
 
-## Ajustes · prioridad 2 · pantalla: Ajustes → Reglas del negocio
-| Método | Ruta | Para qué sirve | Roles |
-|---|---|---|---|
-| GET | /settings/pricing | IGV, vigencia de cotizaciones, margen mínimo, rebaja de margen en promociones | M |
-| PUT | /settings/pricing | Cambia esos valores | M |
-| GET | /settings/customer-levels | Niveles A, B y C: margen, descuento máximo, días de crédito | M, S |
-| PUT | /settings/customer-levels/{level} | Cambia un nivel | M |
-| GET | /settings/level-thresholds | Umbrales de volumen de pedidos para pasar a nivel B y A | M |
-| PUT | /settings/level-thresholds | Cambia los umbrales | M |
-El nivel de cada cliente se calcula con esos umbrales a partir de sus pedidos de los últimos 12 meses.
+## Planificación de importación — `import_planning`
+| Método | Ruta | Para qué | Roles | Estado |
+|---|---|---|---|---|
+| GET | /import-suggestions | Pedido sugerido por producto. Filtro: supplier | M | ⏳ |
+| PATCH | /import-suggestions/{suggestion_id} | Decisión: approved, rejected o volver a pending | M | ⏳ |
 
-## Modelo de predicción · prioridad 3
-| Método | Ruta | Para qué sirve | Roles |
-|---|---|---|---|
-| GET | /prediction/model | Versión, fecha de entrenamiento y calidad del modelo | M |
+Sin stock y costos validados, la respuesta lleva un aviso y solo la demanda mensual es real.
+
+## Ajustes — `settings`
+| Método | Ruta | Para qué | Roles | Estado |
+|---|---|---|---|---|
+| GET | /settings/pricing | IGV, días de vigencia, margen mínimo, rebaja de margen en promociones | M | ✅ |
+| PUT | /settings/pricing | Cambiar esos valores | M | ✅ |
+| GET | /settings/customer-levels | Niveles A, B y C con margen, descuento máximo y días de crédito | M, S | ✅ |
+| PUT | /settings/customer-levels/{level} | Cambiar un nivel | M | ✅ |
+| GET | /settings/level-thresholds | Montos de 12 meses para ser B y A | M | ✅ |
+| PUT | /settings/level-thresholds | Cambiar los umbrales | M | ✅ |
+
+Mientras gerencia no configure un valor, el GET responde 404 (`pricing_not_configured`, `thresholds_not_configured`),
+y `customer-levels` devuelve `missing_levels`. No hay valores por defecto inventados.
+
+## Carga de datos — `data_imports`
+| Método | Ruta | Para qué | Roles | Estado |
+|---|---|---|---|---|
+| GET | /data-sources | Los 7 archivos: contenido, registros, período y estado | M | ⏳ |
+| POST | /data-imports | Subir un CSV (multipart, campo `source`); se valida, no se aplica | M | ⏳ |
+| GET | /data-imports | Cargas anteriores | M | ⏳ |
+| GET | /data-imports/{import_id} | Revisión: filas leídas y errores por línea | M | ⏳ |
+| PATCH | /data-imports/{import_id} | Confirmar (actualiza e inserta, nunca borra) o cancelar | M | ⏳ |
 
 ## General
-| Método | Ruta | Para qué sirve |
-|---|---|---|
-| GET | /health | Para saber si la API está viva (sin sesión, sin prefijo) |
+| Método | Ruta | Para qué | Roles | Estado |
+|---|---|---|---|---|
+| GET | /health | La API está viva (fuera de `/api/v1`) | todos | ✅ |
 
-## Fuera de este contrato
-- Rutas de vendedores (fase 2, simulada en el prototipo).
-- Envíos programados y envío por correo (no hay servicio de correo en el stack).
-- Cambio de contraseña y cierre de sesión en el servidor.
-- Pantalla de aprobación de cotizaciones (la aprobación es externa).
+## Cambios respecto a la primera versión del contrato
+Prevalecen el contrato de capas y la tabla de casos de uso:
+- **Sin PDF en el backend.** Se quitaron `/customer-briefs/{id}/pdf`, `/quotations/{id}/pdf` y "agregar /pdf a cualquier reporte".
+- **Ficha para reunión.** `POST /customer-briefs` y `GET /customer-briefs/{id}` pasan a `GET /customers/{ruc}/brief`
+  (caso de uso `GetCustomerBrief`), porque no se guarda.
+- **Cotizaciones.** Una cotización emitida no se edita: se quitaron `PUT` y `PATCH /quotations/{id}`. Los estados son
+  `issued`, `converted` y `expired`; la conversión y el vencimiento los calcula `MatchConversions` al cargar pedidos.
+  La aprobación se confirma al emitir.
+- **Cerrar sesión.** Se quitó `DELETE /sessions/current`: con JWT sin lista de revocados, cerrar sesión es borrar el
+  token en la web.
+- **Panel.** `/dashboard/monthly-sales` y `/dashboard/alert-follow-up` se integran en `/dashboard/summary` y
+  `/reports/salespeople`. `/reports/overview` se reemplaza por `/reports/funnel`.
+- **Nuevo:** `GET /prediction/model`.

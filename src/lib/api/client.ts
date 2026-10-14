@@ -3,11 +3,16 @@ import type { paths } from "./schema";
 
 const TOKEN_KEY = "vetchain_token";
 
+/** El token vive en localStorage si el usuario pidió «Recordarme»; si no, en sessionStorage (se borra al cerrar el navegador). */
 export function getToken(): string | null {
-  try { return window.localStorage.getItem(TOKEN_KEY); } catch { return null; }
+  try { return window.localStorage.getItem(TOKEN_KEY) ?? window.sessionStorage.getItem(TOKEN_KEY); } catch { return null; }
 }
-export function setToken(token: string | null) {
-  try { token ? window.localStorage.setItem(TOKEN_KEY, token) : window.localStorage.removeItem(TOKEN_KEY); } catch { /* sin storage */ }
+export function setToken(token: string | null, remember = true) {
+  try {
+    window.localStorage.removeItem(TOKEN_KEY);
+    window.sessionStorage.removeItem(TOKEN_KEY);
+    if (token) (remember ? window.localStorage : window.sessionStorage).setItem(TOKEN_KEY, token);
+  } catch { /* sin storage */ }
 }
 
 const auth: Middleware = {
@@ -31,4 +36,14 @@ export const api = createClient<paths>({ baseUrl: process.env.NEXT_PUBLIC_API_UR
 api.use(auth);
 
 /** Forma de error única del backend: {"error": {"code","message","details"}}. */
-export type ApiError = { error: { code: string; message: string; details: unknown[] } };
+export type ApiError = { error: { code: string; message: string; details: unknown } };
+
+/** Código del error del backend, si lo trae. */
+export function errorCode(err: unknown): string | null {
+  return (err as ApiError | undefined)?.error?.code ?? null;
+}
+
+/** Mensaje para mostrar: el del backend si existe; si no, el texto de respaldo. */
+export function errorMessage(err: unknown, fallback: string): string {
+  return (err as ApiError | undefined)?.error?.message ?? fallback;
+}

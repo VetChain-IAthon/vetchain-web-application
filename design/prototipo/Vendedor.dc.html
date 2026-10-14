@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Hoy</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#D01F29}a:hover{color:#8E1119}
+a:focus-visible,button:focus-visible{outline:2px solid #D01F29;outline-offset:2px}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: nowrap; min-width: 1200px; min-height: 1000px; font-family: 'IBM Plex Sans', sans-serif; font-variant-numeric: tabular-nums; color: #161616; background: #F5F5F5">
+
+  <aside style="flex: 0 0 240px; box-sizing: border-box; background: #FFFFFF; border-right: 1px solid #E3E3E3; padding: 24px 16px; display: flex; flex-direction: column; gap: 28px; position: sticky; top: 0; align-self: flex-start; height: 100vh; overflow-y: auto">
+    <div style="padding: 0 8px; display: flex; flex-direction: column; gap: 2px">
+      <div style="font-size: 18px; font-weight: 600; letter-spacing: -0.01em">VetChain</div>
+      <div style="font-size: 13px; color: #5F6368">Mederi Pharma · piloto</div>
+    </div>
+    <nav aria-label="Secciones" style="display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{navItems}}" as="it" hint-placeholder-count="10">
+        <sc-if value="{{ it.esTitulo }}" hint-placeholder-val="{{ false }}">
+          <div style="padding: 14px 12px 6px; font-size: 12px; font-weight: 600; color: {{it.cTitulo}}">{{it.texto}}</div>
+        </sc-if>
+        <sc-if value="{{ it.esItem }}" hint-placeholder-val="{{ true }}">
+          <a href="{{it.href}}" aria-current="{{it.actual}}" style="display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; background: {{it.bg}}; color: {{it.fg}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="{{it.d}}"></path></svg><span style="flex: 1">{{it.texto}}</span><sc-if value="{{ it.hayBadge }}" hint-placeholder-val="{{ false }}"><span style="min-width: 22px; height: 22px; box-sizing: border-box; padding: 0 6px; border-radius: 999px; background: #C8323B; color: #FFFFFF; font-size: 12px; font-weight: 600; line-height: 22px; text-align: center">{{it.badge}}</span></sc-if></a>
+        </sc-if>
+      </sc-for>
+    </nav>
+  
+    <div style="margin-top: auto; border-top: 1px solid #E3E3E3; padding-top: 16px; display: flex; flex-direction: column; gap: 12px">
+      <a href="VendedorPerfil.dc.html" aria-label="Ver mi perfil" style="display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 8px; text-decoration: none; color: #161616">
+        <span style="flex: none; width: 36px; height: 36px; border-radius: 50%; background: #D01F29; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600">{{rolIni}}</span>
+        <span style="display: flex; flex-direction: column; min-width: 0"><span style="font-size: 14px; font-weight: 600">{{rolNombre}}</span><span style="font-size: 12px; color: #5F6368">Cartera provisional</span></span>
+      </a>
+    </div>
+  </aside>
+
+  <main style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 32px 48px 48px; display: flex; flex-direction: column; gap: 20px">
+
+    <header>
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap"><h1 style="margin: 0; font-size: 32px; font-weight: 600; letter-spacing: -0.015em">Hoy</h1><span style="padding: 2px 10px; border-radius: 4px; background: #E5F3EA; color: #1E6B3A; font-size: 12px; font-weight: 600">Datos reales</span></div>
+      <p style="margin: 6px 0 0; font-size: 15px; color: #5F6368">Lunes 12 de octubre · prioridades calculadas al corte de datos (enero de 2026)</p>
+    </header>
+
+    <section aria-label="Siguiente paso" style="display: flex; align-items: center; gap: 16px; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 10px; padding: 20px 24px">
+      <span style="flex: none; width: 42px; height: 42px; border-radius: 50%; background: #FBE8E9; color: #D01F29; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14 M13 6l6 6-6 6"></path></svg></span>
+      <div style="font-size: 16px; line-height: 1.4"><span style="font-weight: 600">{{sigTitulo}}</span> {{sigTexto}}</div>
+    </section>
+
+    <section aria-label="Resumen del día" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+      <div style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 10px; padding: 20px 24px; display: flex; flex-direction: column; gap: 8px">
+        <div style="font-size: 14px; font-weight: 500; color: #5F6368">Por contactar</div>
+        <div style="font-size: 32px; font-weight: 600; letter-spacing: -0.02em">{{kSoles}}</div>
+        <div style="font-size: 14px; color: #5F6368">{{kSolesNota}}</div>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 10px; padding: 20px 24px; display: flex; flex-direction: column; gap: 8px">
+        <div style="font-size: 14px; font-weight: 500; color: #5F6368">Contactados</div>
+        <div style="font-size: 32px; font-weight: 600; letter-spacing: -0.02em">{{kCont}}</div>
+        <div style="height: 6px; border-radius: 3px; background: #EEEEEE; margin-top: 6px"><div style="width: {{kPct}}; height: 6px; border-radius: 3px; background: #D01F29"></div></div>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 10px; padding: 20px 24px; display: flex; flex-direction: column; gap: 8px">
+        <div style="font-size: 14px; font-weight: 500; color: #5F6368">Pidieron cotización</div>
+        <div style="font-size: 32px; font-weight: 600; letter-spacing: -0.02em">{{kCotiz}}</div>
+        <div style="font-size: 14px; color: #5F6368">Quedan en Cotizaciones para seguimiento</div>
+      </div>
+    </section>
+
+    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-top: 8px">
+      <h2 style="margin: 0; font-size: 20px; font-weight: 600">Clientes para hoy</h2>
+      <span style="font-size: 14px; color: #5F6368">Ordenados por soles en juego</span>
+    </div>
+
+    <sc-for list="{{filas}}" as="f" hint-placeholder-count="5">
+      <section style="box-sizing: border-box; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 10px; padding: 24px 28px; display: flex; flex-direction: column; gap: 20px">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 24px">
+          <div style="display: flex; align-items: flex-start; gap: 16px; min-width: 0">
+            <span style="flex: none; width: 36px; height: 36px; border-radius: 50%; background: #C8323B; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600">{{f.n}}</span>
+            <div style="min-width: 0">
+              <div style="font-size: 18px; font-weight: 600">{{f.cliente}}</div>
+              <div style="margin-top: 4px; font-size: 15px; color: #A8161F">{{f.atraso}}</div>
+            </div>
+          </div>
+          <div style="flex: none; text-align: right">
+            <div style="font-size: 28px; font-weight: 600; letter-spacing: -0.02em">{{f.prom}}</div>
+            <div style="margin-top: 4px; font-size: 14px; color: #5F6368">pedido promedio en juego</div>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.2fr) minmax(0, 1fr); gap: 32px; padding-left: 52px">
+          <div>
+            <div style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; color: #5F6368">SUELE PEDIR</div>
+            <div style="margin-top: 6px; font-size: 16px; font-weight: 600">{{f.pide}}</div>
+            <div style="margin-top: 4px; font-size: 14px; color: #5F6368">{{f.tambien}}</div>
+          </div>
+          <div>
+            <div style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; color: #5F6368">PEDIDO PROMEDIO</div>
+            <div style="margin-top: 6px; font-size: 16px; line-height: 1.5">{{f.formula}}</div>
+          </div>
+          <div>
+            <div style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; color: #5F6368">COBRANZA</div>
+            <div style="margin-top: 6px"><span style="display: inline-block; padding: 6px 12px; border-radius: 6px; font-size: 14px; font-weight: 600; line-height: 1.4; background: {{f.cobBg}}; color: {{f.cobFg}}">{{f.cobro}}</span></div>
+          </div>
+        </div>
+        <sc-if value="{{ f.verAcciones }}" hint-placeholder-val="{{ true }}">
+          <div style="padding-left: 52px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+            <a href="VendedorCotizaciones.dc.html" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 8px; background: #D01F29; color: #FFFFFF; font-size: 15px; font-weight: 600; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15-6.7L21 8 M21 3v5h-5 M21 12a9 9 0 0 1-15 6.7L3 16 M3 21v-5h5"></path></svg>Repetir pedido habitual</a>
+            <button type="button" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 20px; border-radius: 8px; border: 1px solid #C4C4C4; background: #FFFFFF; color: #161616; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>WhatsApp</button>
+            <button type="button" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 20px; border-radius: 8px; border: 1px solid #C4C4C4; background: #FFFFFF; color: #161616; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"></path></svg>Llamar</button>
+            <button type="button" onClick="{{ f.abrir }}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px; border: none; background: transparent; color: #D01F29; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2 M9 2h6v4H9z M9 14l2 2 4-4"></path></svg>Registrar resultado</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ f.verPanel }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-left: 52px; box-sizing: border-box; background: #F5F5F5; border: 1px solid #E3E3E3; border-radius: 10px; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px">
+            <div style="font-size: 16px; font-weight: 600">¿Cómo te fue con este cliente?</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px">
+              <sc-for list="{{f.opciones}}" as="o" hint-placeholder-count="5">
+                <button type="button" onClick="{{ o.elegir }}" style="min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid #C4C4C4; background: #FFFFFF; color: #161616; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer">{{o.txt}}</button>
+              </sc-for>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px">
+              <span style="font-size: 14px; color: #5F6368">Gerencia ve estos resultados por vendedor, de la alerta al pedido.</span>
+              <button type="button" onClick="{{ f.cancelar }}" style="min-height: 36px; padding: 0 8px; border: none; background: transparent; color: #3A3A3A; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer">Cancelar</button>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ f.resuelto }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-left: 52px; box-sizing: border-box; background: #E8F3EB; border-radius: 8px; padding: 14px 20px; display: flex; align-items: center; gap: 14px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E6B3A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M20 6 9 17l-5-5"></path></svg>
+            <div style="flex: 1; min-width: 0">
+              <div style="font-size: 15px; font-weight: 600; color: #1E6B3A">Contactado · {{f.chip}}</div>
+              <div style="margin-top: 2px; font-size: 14px; color: #3F6B50">{{f.nota}}</div>
+            </div>
+            <button type="button" onClick="{{ f.deshacer }}" style="min-height: 32px; padding: 0 4px; border: none; background: transparent; color: #1E6B3A; font-family: inherit; font-size: 15px; font-weight: 600; text-decoration: underline; cursor: pointer">Cambiar</button>
+          </div>
+        </sc-if>
+      </section>
+    </sc-for>
+
+    <p style="margin: 4px 0 0; font-size: 14px; line-height: 1.5; color: #5F6368">Pedido promedio = venta de los últimos 12 meses ÷ número de pedidos, con los datos de Mederi hasta enero de 2026. Cobranza usa datos de ejemplo hasta incorporar cobros.csv.</p>
+
+    <section style="display: flex; align-items: flex-start; gap: 14px; border: 1px dashed #C4C4C4; border-radius: 10px; padding: 20px 24px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5F6368" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 2px"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z M12 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"></path></svg>
+      <div><div style="font-size: 16px; font-weight: 600">Ruta de visitas</div><div style="margin-top: 4px; font-size: 15px; color: #5F6368">Se suma aquí en la fase 2, cuando los clientes tengan ubicación en el mapa.</div></div>
+    </section>
+
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1040}}'>
+class Component extends DCLogic {
+constructor(props) { super(props); let c0 = {}; try { c0 = JSON.parse(window.localStorage.getItem('vetchain_contactos') || '{}') || {}; } catch (e) {} this.state = { bellOpen: false, cont: c0, abierto: '' }; }
+renderVals() { return Object.assign(this.renderBase(), this.navVals()); }
+navVals() {
+  let rol = 'gerencia';
+  rol = 'vendedor';
+  const roles = { gerencia: { n: 'Gerencia comercial', i: 'GC' }, vendedor: { n: 'Vendedor B2B', i: 'VB' }, logistica: { n: 'Logística', i: 'LG' } };
+  const col = { t:'#5F6368', fg:'#3A3A3A', bg:'transparent', afg:'#D01F29', abg:'#FBE8E9' };
+  const D = {
+    panel: 'M3 3h7v9H3z M14 3h7v5h-7z M14 12h7v9h-7z M3 16h7v5H3z',
+    alertas: 'M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9 M13.73 21a2 2 0 0 1-3.46 0',
+    clientes: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z M22 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75',
+    cotiz: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8',
+    rutas: 'M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z M12 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',
+    import: 'M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z M3.3 7 12 12l8.7-5 M12 22V12',
+    rent: 'M22 7 13.5 15.5 8.5 10.5 2 17 M16 7h6v6',
+    integ: 'M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8 M3 3v5h5 M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16 M16 16h5v5',
+    config: 'M4 21v-7 M4 10V3 M12 21v-9 M12 8V3 M20 21v-5 M20 12V3 M1 14h6 M9 8h6 M17 16h6'
+  };
+  const grupos = [
+    { t: 'Inicio', items: [ ['Hoy', 'Vendedor.dc.html', D.panel, ['vendedor']] ] },
+    { t: 'Trabajo comercial', items: [
+      ['Clientes', 'VendedorClientes.dc.html', D.clientes, ['vendedor']],
+      ['Cotizaciones', 'VendedorCotizaciones.dc.html', D.cotiz, ['vendedor']] ] }
+  ];
+  const actual = 'Vendedor.dc.html';
+  let hechas0 = {};
+  try { hechas0 = JSON.parse(window.localStorage.getItem('vetchain_alertas_done') || '{}') || {}; } catch (e) {}
+  const bellPend0 = ['a1','a5','a2','a3','a4'].filter((k) => !(this.state.cont || {})[k] && !hechas0[k]).length;
+  const navItems = [];
+  grupos.forEach((g) => {
+    const vis = g.items.filter((x) => x[3].indexOf(rol) >= 0);
+    if (!vis.length) return;
+    if (rol !== 'vendedor') navItems.push({ esTitulo: true, esItem: false, texto: g.t, cTitulo: col.t });
+    vis.forEach((x) => {
+      const on = x[1] === actual || (x[1] === 'Configuracion.dc.html' && actual === 'Integracion.dc.html');
+      navItems.push({ esTitulo: false, esItem: true, texto: x[0], href: x[1], d: x[2], hayBadge: x[0] === 'Hoy' && bellPend0 > 0, badge: String(bellPend0), actual: on ? 'page' : 'false', bg: on ? col.abg : col.bg, fg: on ? col.afg : col.fg });
+    });
+  });
+  const bellOn = rol === 'gerencia';
+  let hechas = {};
+  try { hechas = JSON.parse(window.localStorage.getItem('vetchain_alertas_done') || '{}') || {}; } catch (e) {}
+  const alBase = [
+    ['a1', "Corporacion Farmaceutica Veterinaria S.A.C.", "TRITOHEXIDIN PLUS X 50 ML · 24 unidades", 18],
+    ['a2', "H & P Distribuciones Y Representaciones S.A.C.", "TRITOHEXIDIN SHAMPOO X 250 ML · 25 unidades", '12,5'],
+    ['a5', "Corporacion Veterinaria Andes S.A.C.", "DOXILINA 150 MG · 12 unidades", 19],
+    ['a3', "Mapevas S.A.C.", "LEVOTIROXINA T4 TRITON 0,4 MG X 100 COMP · 2 unidades", 5],
+    ['a4', "Grupo Orlando S.A.C.", "NUTRAPRO K9 CANINE X 30 SOBRES · 3 unidades", 6]
+  ];
+  const bellPend = alBase.filter((a) => !hechas[a[0]]).length;
+  const bellItems = alBase.slice().sort((x, y) => (hechas[x[0]] ? 1 : 0) - (hechas[y[0]] ? 1 : 0)).map((a) => {
+    const h = !!hechas[a[0]];
+    return { cliente: a[1], detalle: a[2], chip: h ? 'Contactado' : '+' + a[3] + ' días', chipBg: h ? '#E5F3EA' : '#FBE8E9', chipFg: h ? '#1E6B3A' : '#A8161F', op: h ? '0.6' : '1' };
+  });
+  const bellAbierto = !!this.state.bellOpen;
+  const bellAct = (typeof actual !== 'undefined') && actual === 'VendedorAlertas.dc.html';
+  return { navItems, verGestion: rol !== 'vendedor', soloVend: rol === 'vendedor', rolNombre: roles[rol].n, rolIni: roles[rol].i, rolActual: rol,
+    bellVisible: bellOn, bellOpen: bellAbierto && bellOn, bellAria: bellAbierto ? 'true' : 'false',
+    bellCount: bellPend, bellShowCount: bellPend > 0,
+    bellLabel: 'Alertas del día: ' + bellPend + (bellPend === 1 ? ' pendiente' : ' pendientes'),
+    bellTitulo: bellPend + (bellPend === 1 ? ' pendiente' : ' pendientes') + ' de 5',
+    bellBd: bellAct || bellAbierto ? '#D01F29' : '#E3E3E3', bellBg: bellAct || bellAbierto ? '#FBE8E9' : '#FFFFFF', bellFg: bellAct || bellAbierto ? '#D01F29' : '#3A3A3A',
+    bellItems, bellToggle: () => this.setState({ bellOpen: !this.state.bellOpen }), bellClose: () => this.setState({ bellOpen: false }) };
+}
+renderBase() {
+  const nb = (s) => String(s).replace(/ /g, '\u00A0');
+  const ent = (n) => nb('S/ ' + Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '));
+  const base = [
+    ['a1', 'Corporacion Farmaceutica Veterinaria S.A.C.', 'TRITOHEXIDIN PLUS X 50 ML · 24 u.', 'También: SOSTEN CG ORAL X 80 COMP', '18 días más de lo habitual sin comprar', 19934.87, 259153.26, 13, 'Paga a tiempo', 1],
+    ['a5', 'Corporacion Veterinaria Andes S.A.C.', 'DOXILINA 150 MG · 12 u.', '', '19 días más de lo habitual sin comprar', 18202.44, 36404.89, 2, 'Deuda vencida: revisar antes de cotizar', 0],
+    ['a2', 'H & P Distribuciones Y Representaciones S.A.C.', 'TRITOHEXIDIN SHAMPOO X 250 ML · 25 u.', 'También: NEUMOFLOGIN X 16 COMP', '12,5 días más de lo habitual sin comprar', 15397.89, 246366.22, 16, 'Al día', 1],
+    ['a3', 'Mapevas S.A.C.', 'LEVOTIROXINA T4 TRITON 0,4 MG X 100 COMP · 2 u.', 'También: NUTRAPRO K9 CANINE X 30 SOBRES', '5 días más de lo habitual sin comprar', 2819.48, 109959.85, 39, 'Al día', 1],
+    ['a4', 'Grupo Orlando S.A.C.', 'NUTRAPRO K9 CANINE X 30 SOBRES · 3 u.', 'También: TRITOHEXIDIN SHAMPOO X 250 ML', '6 días más de lo habitual sin comprar', 710.76, 56860.53, 80, 'Al día', 1]
+  ];
+  const res = { cotizacion: ['Pidió cotización', 'La cotización queda en Cotizaciones para seguimiento.'], directo: ['Hará pedido directo', 'Gerencia lo verá como pedido directo, sin cotización.'], noNecesita: ['No necesita por ahora', 'Se vuelve a avisar cuando se pase su ritmo de compra.'], otro: ['Compró a otro proveedor', 'Gerencia lo verá como cliente que compró a la competencia.'], noContesto: ['No contestó', 'Queda para volver a intentarlo.'] };
+  const guardar = (id, v) => {
+    const nc = Object.assign({}, this.state.cont || {});
+    if (v) nc[id] = v; else delete nc[id];
+    let done = {};
+    try { done = JSON.parse(window.localStorage.getItem('vetchain_alertas_done') || '{}') || {}; } catch (e) {}
+    if (v) done[id] = true; else delete done[id];
+    try { window.localStorage.setItem('vetchain_contactos', JSON.stringify(nc)); window.localStorage.setItem('vetchain_alertas_done', JSON.stringify(done)); } catch (e) {}
+    this.setState({ cont: nc, abierto: '' });
+  };
+  const hoy = this.state.cont || {};
+  const abierto = this.state.abierto || '';
+  let hechos = 0, cotiz = 0, pend = 0, total = 0, sig = null;
+  const filas = base.map((a, i) => {
+    const v = hoy[a[0]];
+    total += a[5];
+    if (v) hechos += 1; else { pend += a[5]; if (!sig) sig = a; }
+    if (v === 'cotizacion') cotiz += 1;
+    const deuda = a[9] === 0;
+    return {
+      n: String(i + 1), cliente: a[1], atraso: a[4], prom: ent(a[5]), pide: a[2], tambien: a[3],
+      formula: 'Venta de 12 meses ' + ent(a[6]) + ' ÷ ' + a[7] + ' pedidos',
+      cobro: a[8], cobBg: deuda ? '#FBE8E9' : '#E5F3EA', cobFg: deuda ? '#A8161F' : '#1E6B3A',
+      verAcciones: !v && abierto !== a[0], verPanel: !v && abierto === a[0], resuelto: !!v,
+      chip: v ? res[v][0] : '', nota: v ? res[v][1] : '',
+      abrir: () => this.setState({ abierto: a[0] }), cancelar: () => this.setState({ abierto: '' }),
+      opciones: Object.keys(res).map((k) => ({ txt: res[k][0], elegir: () => guardar(a[0], k) })),
+      deshacer: () => guardar(a[0], null)
+    };
+  });
+  return {
+    filas,
+    sigTitulo: sig ? 'Sigue con ' + sig[1] + ':' : 'Todo contactado:',
+    sigTexto: sig ? ent(sig[5]) + ' en juego y lleva ' + sig[4].split(' más')[0] + ' más de lo habitual sin comprar.' : 'ya registraste el resultado de los 5 clientes de hoy.',
+    kSoles: ent(pend), kSolesNota: 'de ' + ent(total) + ' en juego hoy',
+    kCont: hechos + ' de ' + base.length, kPct: Math.round(hechos / base.length * 100) + '%',
+    kCotiz: String(cotiz)
+  };
+}
+}
+</script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#D01F29}a:hover{color:#8E1119}
+a:focus-visible,button:focus-visible{outline:2px solid #D01F29;outline-offset:2px}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: nowrap; min-width: 1200px; min-height: 1000px; font-family: 'IBM Plex Sans', sans-serif; font-variant-numeric: tabular-nums; color: #161616; background: #F5F5F5">
+
+  <aside style="flex: 0 0 240px; box-sizing: border-box; background: #FFFFFF; border-right: 1px solid #E3E3E3; padding: 24px 16px; display: flex; flex-direction: column; gap: 28px; position: sticky; top: 0; align-self: flex-start; height: 100vh; overflow-y: auto">
+    <div style="padding: 0 8px; display: flex; flex-direction: column; gap: 2px">
+      <div style="font-size: 18px; font-weight: 600; letter-spacing: -0.01em">VetChain</div>
+      <div style="font-size: 13px; color: #5F6368">Mederi Pharma · piloto</div>
+    </div>
+    <nav aria-label="Secciones" style="display: flex; flex-direction: column; gap: 2px">
+      <sc-for list="{{navItems}}" as="it" hint-placeholder-count="10">
+        <sc-if value="{{ it.esTitulo }}" hint-placeholder-val="{{ false }}">
+          <div style="padding: 14px 12px 6px; font-size: 12px; font-weight: 600; color: {{it.cTitulo}}">{{it.texto}}</div>
+        </sc-if>
+        <sc-if value="{{ it.esItem }}" hint-placeholder-val="{{ true }}">
+          <a href="{{it.href}}" aria-current="{{it.actual}}" style="display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; background: {{it.bg}}; color: {{it.fg}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="{{it.d}}"></path></svg><span>{{it.texto}}</span></a>
+        </sc-if>
+      </sc-for>
+    </nav>
+  
+    <div style="margin-top: auto; border-top: 1px solid #E3E3E3; padding-top: 16px; display: flex; flex-direction: column; gap: 12px">
+      <a href="VendedorPerfil.dc.html" aria-label="Ver mi perfil" style="display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 8px; text-decoration: none; color: #161616">
+        <span style="flex: none; width: 36px; height: 36px; border-radius: 50%; background: #D01F29; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600">{{rolIni}}</span>
+        <span style="display: flex; flex-direction: column; min-width: 0"><span style="font-size: 14px; font-weight: 600">{{rolNombre}}</span><span style="font-size: 12px; color: #5F6368">Cartera provisional</span></span>
+      </a>
+    </div>
+  </aside>
+
+  <main style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 32px 48px 48px; display: flex; flex-direction: column; gap: 20px">
+
+    <header>
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap"><h1 style="margin: 0; font-size: 32px; font-weight: 600; letter-spacing: -0.015em">Hoy</h1><span style="padding: 2px 10px; border-radius: 4px; background: #E5F3EA; color: #1E6B3A; font-size: 12px; font-weight: 600">Datos reales</span></div>
+      <p style="margin: 6px 0 0; font-size: 15px; color: #5F6368">Lunes 12 de octubre · prioridades calculadas al corte de datos (enero de 2026)</p>
+    </header>
+
+    <section aria-label="Siguiente paso" style="display: flex; align-items: center; gap: 16px; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 10px; padding: 20px 24px">
+      <span style="flex: none; width: 42px; height: 42px; border-radius: 50%; background: #FBE8E9; color: #D01F29; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14 M13 6l6 6-6 6"></path></svg></span>
+      <div style="font-size: 16px; line-height: 1.4"><span style="font-weight: 600">{{sigTitulo}}</span> {{sigTexto}}</div>
+    </section>
+
+    <section aria-label="Resumen del día" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+      <div style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 10px; padding: 20px 24px; display: flex; flex-direction: column; gap: 8px">
+        <div style="font-size: 14px; font-weight: 500; color: #5F6368">Por contactar</div>
+        <div style="font-size: 32px; font-weight: 600; letter-spacing: -0.02em">{{kSoles}}</div>
+        <div style="font-size: 14px; color: #5F6368">{{kSolesNota}}</div>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 10px; padding: 20px 24px; display: flex; flex-direction: column; gap: 8px">
+        <div style="font-size: 14px; font-weight: 500; color: #5F6368">Contactados</div>
+        <div style="font-size: 32px; font-weight: 600; letter-spacing: -0.02em">{{kCont}}</div>
+        <div style="height: 6px; border-radius: 3px; background: #EEEEEE; margin-top: 6px"><div style="width: {{kPct}}; height: 6px; border-radius: 3px; background: #D01F29"></div></div>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 10px; padding: 20px 24px; display: flex; flex-direction: column; gap: 8px">
+        <div style="font-size: 14px; font-weight: 500; color: #5F6368">Pidieron cotización</div>
+        <div style="font-size: 32px; font-weight: 600; letter-spacing: -0.02em">{{kCotiz}}</div>
+        <div style="font-size: 14px; color: #5F6368">Quedan en Cotizaciones para seguimiento</div>
+      </div>
+    </section>
+
+    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-top: 8px">
+      <h2 style="margin: 0; font-size: 20px; font-weight: 600">Clientes para hoy</h2>
+      <span style="font-size: 14px; color: #5F6368">Ordenados por soles en juego</span>
+    </div>
+
+    <sc-for list="{{filas}}" as="f" hint-placeholder-count="5">
+      <section style="box-sizing: border-box; background: #FFFFFF; border: 1px solid #E3E3E3; border-radius: 10px; padding: 24px 28px; display: flex; flex-direction: column; gap: 20px">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 24px">
+          <div style="display: flex; align-items: flex-start; gap: 16px; min-width: 0">
+            <span style="flex: none; width: 36px; height: 36px; border-radius: 50%; background: #C8323B; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600">{{f.n}}</span>
+            <div style="min-width: 0">
+              <div style="font-size: 18px; font-weight: 600">{{f.cliente}}</div>
+              <div style="margin-top: 4px; font-size: 15px; color: #A8161F">{{f.atraso}}</div>
+            </div>
+          </div>
+          <div style="flex: none; text-align: right">
+            <div style="font-size: 28px; font-weight: 600; letter-spacing: -0.02em">{{f.prom}}</div>
+            <div style="margin-top: 4px; font-size: 14px; color: #5F6368">pedido promedio en juego</div>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.2fr) minmax(0, 1fr); gap: 32px; padding-left: 52px">
+          <div>
+            <div style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; color: #5F6368">SUELE PEDIR</div>
+            <div style="margin-top: 6px; font-size: 16px; font-weight: 600">{{f.pide}}</div>
+            <div style="margin-top: 4px; font-size: 14px; color: #5F6368">{{f.tambien}}</div>
+          </div>
+          <div>
+            <div style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; color: #5F6368">PEDIDO PROMEDIO</div>
+            <div style="margin-top: 6px; font-size: 16px; line-height: 1.5">{{f.formula}}</div>
+          </div>
+          <div>
+            <div style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; color: #5F6368">COBRANZA</div>
+            <div style="margin-top: 6px"><span style="display: inline-block; padding: 6px 12px; border-radius: 6px; font-size: 14px; font-weight: 600; line-height: 1.4; background: {{f.cobBg}}; color: {{f.cobFg}}">{{f.cobro}}</span></div>
+          </div>
+        </div>
+        <sc-if value="{{ f.verAcciones }}" hint-placeholder-val="{{ true }}">
+          <div style="padding-left: 52px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+            <a href="VendedorCotizaciones.dc.html" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 8px; background: #D01F29; color: #FFFFFF; font-size: 15px; font-weight: 600; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15-6.7L21 8 M21 3v5h-5 M21 12a9 9 0 0 1-15 6.7L3 16 M3 21v-5h5"></path></svg>Repetir pedido habitual</a>
+            <button type="button" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 20px; border-radius: 8px; border: 1px solid #C4C4C4; background: #FFFFFF; color: #161616; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>WhatsApp</button>
+            <button type="button" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 20px; border-radius: 8px; border: 1px solid #C4C4C4; background: #FFFFFF; color: #161616; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"></path></svg>Llamar</button>
+            <button type="button" onClick="{{ f.abrir }}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px; border: none; background: transparent; color: #D01F29; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2 M9 2h6v4H9z M9 14l2 2 4-4"></path></svg>Registrar resultado</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ f.verPanel }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-left: 52px; box-sizing: border-box; background: #F5F5F5; border: 1px solid #E3E3E3; border-radius: 10px; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px">
+            <div style="font-size: 16px; font-weight: 600">¿Cómo te fue con este cliente?</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px">
+              <sc-for list="{{f.opciones}}" as="o" hint-placeholder-count="5">
+                <button type="button" onClick="{{ o.elegir }}" style="min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid #C4C4C4; background: #FFFFFF; color: #161616; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer">{{o.txt}}</button>
+              </sc-for>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px">
+              <span style="font-size: 14px; color: #5F6368">Gerencia ve estos resultados por vendedor, de la alerta al pedido.</span>
+              <button type="button" onClick="{{ f.cancelar }}" style="min-height: 36px; padding: 0 8px; border: none; background: transparent; color: #3A3A3A; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer">Cancelar</button>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ f.resuelto }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-left: 52px; box-sizing: border-box; background: #E8F3EB; border-radius: 8px; padding: 14px 20px; display: flex; align-items: center; gap: 14px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E6B3A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M20 6 9 17l-5-5"></path></svg>
+            <div style="flex: 1; min-width: 0">
+              <div style="font-size: 15px; font-weight: 600; color: #1E6B3A">Contactado · {{f.chip}}</div>
+              <div style="margin-top: 2px; font-size: 14px; color: #3F6B50">{{f.nota}}</div>
+            </div>
+            <button type="button" onClick="{{ f.deshacer }}" style="min-height: 32px; padding: 0 4px; border: none; background: transparent; color: #1E6B3A; font-family: inherit; font-size: 15px; font-weight: 600; text-decoration: underline; cursor: pointer">Cambiar</button>
+          </div>
+        </sc-if>
+      </section>
+    </sc-for>
+
+    <p style="margin: 4px 0 0; font-size: 14px; line-height: 1.5; color: #5F6368">Pedido promedio = venta de los últimos 12 meses ÷ número de pedidos, con los datos de Mederi hasta enero de 2026. Cobranza usa datos de ejemplo hasta incorporar cobros.csv.</p>
+
+    <section style="display: flex; align-items: flex-start; gap: 14px; border: 1px dashed #C4C4C4; border-radius: 10px; padding: 20px 24px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5F6368" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 2px"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z M12 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"></path></svg>
+      <div><div style="font-size: 16px; font-weight: 600">Ruta de visitas</div><div style="margin-top: 4px; font-size: 15px; color: #5F6368">Se suma aquí en la fase 2, cuando los clientes tengan ubicación en el mapa.</div></div>
+    </section>
+
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1040}}'>
+class Component extends DCLogic {
+constructor(props) { super(props); let c0 = {}; try { c0 = JSON.parse(window.localStorage.getItem('vetchain_contactos') || '{}') || {}; } catch (e) {} this.state = { bellOpen: false, cont: c0, abierto: '' }; }
+renderVals() { return Object.assign(this.renderBase(), this.navVals()); }
+navVals() {
+  let rol = 'gerencia';
+  rol = 'vendedor';
+  const roles = { gerencia: { n: 'Gerencia comercial', i: 'GC' }, vendedor: { n: 'Vendedor B2B', i: 'VB' }, logistica: { n: 'Logística', i: 'LG' } };
+  const col = { t:'#5F6368', fg:'#3A3A3A', bg:'transparent', afg:'#D01F29', abg:'#FBE8E9' };
+  const D = {
+    panel: 'M3 3h7v9H3z M14 3h7v5h-7z M14 12h7v9h-7z M3 16h7v5H3z',
+    alertas: 'M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9 M13.73 21a2 2 0 0 1-3.46 0',
+    clientes: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z M22 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75',
+    cotiz: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8',
+    rutas: 'M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z M12 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',
+    import: 'M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z M3.3 7 12 12l8.7-5 M12 22V12',
+    rent: 'M22 7 13.5 15.5 8.5 10.5 2 17 M16 7h6v6',
+    integ: 'M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8 M3 3v5h5 M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16 M16 16h5v5',
+    config: 'M4 21v-7 M4 10V3 M12 21v-9 M12 8V3 M20 21v-5 M20 12V3 M1 14h6 M9 8h6 M17 16h6'
+  };
+  const grupos = [
+    { t: 'Inicio', items: [ ['Hoy', 'Vendedor.dc.html', D.panel, ['vendedor']] ] },
+    { t: 'Trabajo comercial', items: [
+      ['Clientes', 'VendedorClientes.dc.html', D.clientes, ['vendedor']],
+      ['Cotizaciones', 'VendedorCotizaciones.dc.html', D.cotiz, ['vendedor']] ] }
+  ];
+  const actual = 'Vendedor.dc.html';
+  const navItems = [];
+  grupos.forEach((g) => {
+    const vis = g.items.filter((x) => x[3].indexOf(rol) >= 0);
+    if (!vis.length) return;
+    if (rol !== 'vendedor') navItems.push({ esTitulo: true, esItem: false, texto: g.t, cTitulo: col.t });
+    vis.forEach((x) => {
+      const on = x[1] === actual || (x[1] === 'Configuracion.dc.html' && actual === 'Integracion.dc.html');
+      navItems.push({ esTitulo: false, esItem: true, texto: x[0], href: x[1], d: x[2], hayBadge: x[0] === 'Hoy' && bellPend0 > 0, badge: String(bellPend0), actual: on ? 'page' : 'false', bg: on ? col.abg : col.bg, fg: on ? col.afg : col.fg });
+    });
+  });
+  const bellOn = rol === 'gerencia';
+  let hechas = {};
+  try { hechas = JSON.parse(window.localStorage.getItem('vetchain_alertas_done') || '{}') || {}; } catch (e) {}
+  const alBase = [
+    ['a1', "Corporacion Farmaceutica Veterinaria S.A.C.", "TRITOHEXIDIN PLUS X 50 ML · 24 unidades", 18],
+    ['a2', "H & P Distribuciones Y Representaciones S.A.C.", "TRITOHEXIDIN SHAMPOO X 250 ML · 25 unidades", '12,5'],
+    ['a5', "Corporacion Veterinaria Andes S.A.C.", "DOXILINA 150 MG · 12 unidades", 19],
+    ['a3', "Mapevas S.A.C.", "LEVOTIROXINA T4 TRITON 0,4 MG X 100 COMP · 2 unidades", 5],
+    ['a4', "Grupo Orlando S.A.C.", "NUTRAPRO K9 CANINE X 30 SOBRES · 3 unidades", 6]
+  ];
+  const bellPend = alBase.filter((a) => !hechas[a[0]]).length;
+  const bellItems = alBase.slice().sort((x, y) => (hechas[x[0]] ? 1 : 0) - (hechas[y[0]] ? 1 : 0)).map((a) => {
+    const h = !!hechas[a[0]];
+    return { cliente: a[1], detalle: a[2], chip: h ? 'Contactado' : '+' + a[3] + ' días', chipBg: h ? '#E5F3EA' : '#FBE8E9', chipFg: h ? '#1E6B3A' : '#A8161F', op: h ? '0.6' : '1' };
+  });
+  const bellAbierto = !!this.state.bellOpen;
+  const bellAct = (typeof actual !== 'undefined') && actual === 'VendedorAlertas.dc.html';
+  return { navItems, verGestion: rol !== 'vendedor', soloVend: rol === 'vendedor', rolNombre: roles[rol].n, rolIni: roles[rol].i, rolActual: rol,
+    bellVisible: bellOn, bellOpen: bellAbierto && bellOn, bellAria: bellAbierto ? 'true' : 'false',
+    bellCount: bellPend, bellShowCount: bellPend > 0,
+    bellLabel: 'Alertas del día: ' + bellPend + (bellPend === 1 ? ' pendiente' : ' pendientes'),
+    bellTitulo: bellPend + (bellPend === 1 ? ' pendiente' : ' pendientes') + ' de 5',
+    bellBd: bellAct || bellAbierto ? '#D01F29' : '#E3E3E3', bellBg: bellAct || bellAbierto ? '#FBE8E9' : '#FFFFFF', bellFg: bellAct || bellAbierto ? '#D01F29' : '#3A3A3A',
+    bellItems, bellToggle: () => this.setState({ bellOpen: !this.state.bellOpen }), bellClose: () => this.setState({ bellOpen: false }) };
+}
+renderBase() {
+  const nb = (s) => String(s).replace(/ /g, '\u00A0');
+  const fmt = (n) => nb('S/ ' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ').replace('.', ','));
+  let cont = {};
+  try { cont = JSON.parse(window.localStorage.getItem('vetchain_contactos') || '{}') || {}; } catch (e) {}
+  const base = [
+    ['a1', 'Corporacion Farmaceutica Veterinaria S.A.C.', 'TRITOHEXIDIN PLUS X 50 ML · 24 unidades', '18 días de atraso', 21131.66],
+    ['a2', 'H & P Distribuciones Y Representaciones S.A.C.', 'TRITOHEXIDIN SHAMPOO X 250 ML · 25 unidades', '12,5 días de atraso', 15548.51],
+    ['a5', 'Corporacion Veterinaria Andes S.A.C.', 'DOXILINA 150 MG · 12 unidades', '19 días de atraso', 6669.76],
+    ['a3', 'Mapevas S.A.C.', 'LEVOTIROXINA T4 TRITON 0,4 MG X 100 COMP · 2 unidades', '5 días de atraso', 2749.17],
+    ['a4', 'Grupo Orlando S.A.C.', 'NUTRAPRO K9 CANINE X 30 SOBRES · 3 unidades', '6 días de atraso', 710.76]
+  ];
+  const max = base[0][4];
+  const res = { cotizacion: ['Pidió cotización', '#E5F3EA', '#1E6B3A'], noNecesita: ['No necesita', '#EEEEEE', '#484848'], otro: ['Compró a otro', '#FBE9E6', '#A63224'], noContesto: ['No contestó', '#FDF1DC', '#8A5300'] };
+  const guardar = (id, v) => {
+    const nc = Object.assign({}, cont);
+    if (v) nc[id] = v; else delete nc[id];
+    let done = {};
+    try { done = JSON.parse(window.localStorage.getItem('vetchain_alertas_done') || '{}') || {}; } catch (e) {}
+    if (v) done[id] = true; else delete done[id];
+    try { window.localStorage.setItem('vetchain_contactos', JSON.stringify(nc)); window.localStorage.setItem('vetchain_alertas_done', JSON.stringify(done)); } catch (e) {}
+    this.setState({ cont: nc });
+  };
+  const hoy = this.state.cont || cont;
+  let pend = 0, cotiz = 0, soles = 0;
+  const filas = base.map((a) => {
+    const v = hoy[a[0]];
+    if (!v) { pend += 1; soles += a[4]; }
+    if (v === 'cotizacion') cotiz += 1;
+    return {
+      cliente: a[1], detalle: a[2], prom: fmt(a[4]), w: Math.max(4, Math.round(a[4] / max * 100)) + '%', atraso: a[3],
+      pendiente: !v, resuelto: !!v, cotizar: v === 'cotizacion',
+      chip: v ? res[v][0] : '', chipBg: v ? res[v][1] : '#EEEEEE', chipFg: v ? res[v][2] : '#484848',
+      opciones: Object.keys(res).map((k) => ({ txt: res[k][0], elegir: () => guardar(a[0], k) })),
+      deshacer: () => guardar(a[0], null)
+    };
+  });
+  const kpis = [
+    { label: 'Por contactar hoy', value: String(pend), note: 'de ' + base.length + ' alertas', borde: 'none' },
+    { label: 'Pidieron cotización', value: String(cotiz), note: 'Siguen en Cotizaciones', borde: '1px solid #E3E3E3' },
+    { label: 'Soles en juego sin contactar', value: fmt(soles), note: 'Suma del pedido promedio de cada cliente', borde: '1px solid #E3E3E3' }
+  ];
+  return { kpis, filas };
+}
+}
+</script>
+</body>
+</html>

@@ -1,5 +1,6 @@
-import { ScreenStub } from "@/components/layout/screen-stub";
+import { ManagerOnly } from "@/components/auth/manager-only";
+import { SettingsView } from "@/features/ajustes/settings-view";
 
 export default function Page() {
-  return <ScreenStub screenKey="ajustes" />;
+  return <ManagerOnly><SettingsView /></ManagerOnly>;
 }

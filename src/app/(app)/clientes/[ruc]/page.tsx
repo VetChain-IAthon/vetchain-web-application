@@ -1,5 +1,6 @@
-import { ScreenStub } from "@/components/layout/screen-stub";
+import { CustomerDetail } from "@/features/clientes/customer-detail";
 
-export default function Page() {
-  return <ScreenStub screenKey="ficha" />;
+export default async function Page({ params }: { params: Promise<{ ruc: string }> }) {
+  const { ruc } = await params;
+  return <CustomerDetail ruc={ruc} />;
 }
