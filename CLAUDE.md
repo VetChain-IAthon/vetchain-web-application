@@ -41,7 +41,7 @@ Datos: `openapi-fetch` con tipos generados (`src/lib/api/schema.d.ts`). Desplieg
 - Los **PDF los genera la web** (no hay endpoints de PDF): ficha para reunión y cotizaciones.
 - El vendedor solo recibe sus datos (el backend lo fuerza); la web solo oculta lo que no le corresponde en el menú.
 - Cierre de sesión = borrar el token. No hay cambio de contraseña en el MVP.
-- Correo: `src/features/reportes/email-composer.tsx` ofrece «Mi Gmail» (OAuth por usuario, conectado también desde Perfil)
+- Correo: `src/features/reportes/email-composer.tsx` ofrece «Mi Gmail» (OAuth por usuario, conectado desde el formulario de envío)
   y «Correo general» (remitente único de Ajustes › Correo; el backend decide Resend o Gmail SMTP). Si
   `provider_configured` es falso, el envío general queda deshabilitado con aviso. Reglas de remitente en `src/lib/email-sender.ts`,
   iguales a las del backend.
