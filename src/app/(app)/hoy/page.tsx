@@ -1,5 +1,5 @@
-import { ScreenStub } from "@/components/layout/screen-stub";
+import { TodayView } from "@/features/hoy/today-view";
 
 export default function Page() {
-  return <ScreenStub screenKey="hoy" />;
+  return <TodayView />;
 }
