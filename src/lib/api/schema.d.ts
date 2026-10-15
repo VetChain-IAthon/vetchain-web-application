@@ -319,12 +319,12 @@ export interface paths {
         put?: never;
         /**
          * Discard Customer
-         * @description Descarta un cliente dormido: sale de la lista de dormidos y pasa a la de descartados. Se puede restaurar.
+         * @description Descarta un cliente dormido: sale de la lista de dormidos y pasa a la de descartados. Se puede restaurar. Solo gerencia.
          */
         post: operations["discard_customer_api_v1_customers__ruc__discard_post"];
         /**
          * Restore Customer
-         * @description Restaura un cliente descartado: vuelve a la lista de dormidos. El descarte queda en el historial.
+         * @description Restaura un cliente descartado: vuelve a la lista de dormidos. El descarte queda en el historial. Solo gerencia.
          */
         delete: operations["restore_customer_api_v1_customers__ruc__discard_delete"];
         options?: never;
@@ -1049,6 +1049,11 @@ export interface components {
              * @description Pedidos de 12 meses, sin IGV
              */
             amount_12m: number;
+            /**
+             * Order Count 12M
+             * @description Pedidos de 12 meses: pedido promedio = amount_12m ÷ order_count_12m
+             */
+            order_count_12m: number;
         };
         /** AtRiskCustomerPageOut */
         AtRiskCustomerPageOut: {
