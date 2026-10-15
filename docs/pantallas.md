@@ -7,7 +7,7 @@ Roles: M = manager (gerencia), S = salesperson (vendedor). P1 = sin esto no arra
 |---|---|---|---|---|---|---|
 | Iniciar sesión | `/login` | M, S | Login.dc.html | `POST /sessions`<br>`GET /me` | real | P1 |
 | Panel gerencial | `/panel` | M | Main.dc.html | `GET /dashboard/summary`<br>`GET /reports/salespeople`<br>`GET /reports/funnel` | real | P2 |
-| Hoy | `/hoy` | S | Vendedor.dc.html | `GET /alerts`<br>`GET /alerts/summary` | estimated | P2 |
+| Hoy | `/hoy` | S | Vendedor.dc.html | `GET /customers/at-risk`<br>`GET /customers/{ruc}/products`<br>`GET /customers/{ruc}`<br>`GET /customers/{ruc}/contacts`<br>`POST /customers/{ruc}/contacts`<br>`GET /customers/{ruc}/whatsapp-link` | estimated | P2 |
 | Alertas del día | `/alertas` | M, S | Alertas.dc.html | `GET /alerts`<br>`GET /alerts/summary`<br>`GET /alerts/{alert_id}`<br>`GET /alerts/{alert_id}/explanation`<br>`POST /customers/{ruc}/contacts`<br>`GET /customers/{ruc}/whatsapp-link` | estimated | P2 |
 | Clientes | `/clientes` | M, S | Clientes.dc.html (gerencia) y VendedorClientes.dc.html (vendedor) | `GET /customers`<br>`GET /settings/customer-levels`<br>`GET /customers/dormant`<br>`GET /customers/discarded`<br>`POST /customers/{ruc}/discard`<br>`DELETE /customers/{ruc}/discard` | real | P2 |
 | Ficha de cliente | `/clientes/[ruc]` | M, S | Ficha-icvr.dc.html (versión para reunión) y Clientes.dc.html (detalle) | `GET /customers/{ruc}`<br>`GET /customers/{ruc}/orders`<br>`GET /customers/{ruc}/products`<br>`GET /customers/{ruc}/commercial-terms`<br>`GET /customers/{ruc}/contacts`<br>`POST /customers/{ruc}/contacts`<br>`GET /customers/{ruc}/whatsapp-link` | real | P2 |
@@ -26,9 +26,9 @@ Roles: M = manager (gerencia), S = salesperson (vendedor). P1 = sin esto no arra
 
 ## Reglas por pantalla
 - **Panel gerencial:** Muestra montos de pedidos veterinarios sin IGV ni líneas bonificadas. No son ventas facturadas. Alertas y embudo permanecen sin cifras.
-- **Hoy:** El backend fuerza el filtro del vendedor.
+- **Hoy:** El backend fuerza el filtro del vendedor. Usa clientes en riesgo (reglas de ritmo) mientras /alerts y el modelo estén pendientes. Cobranza sin datos hasta enlazar cobros. «Repetir pedido habitual» abre /cotizaciones?ruc=&producto=&cantidad= y al emitir registra «Pidió cotización».
 - **Alertas del día:** Las alertas calculadas se distinguen de las demostraciones simuladas.
-- **Clientes:** Pestañas: por volumen, dormidos y descartados. Solo se descartan clientes sin pedidos en 12 meses; se restauran desde Descartados.
+- **Clientes:** Pestañas: por volumen, dormidos y descartados. Solo gerencia descarta (clientes sin pedidos en 12 meses) y restaura desde Descartados; el vendedor solo consulta.
 - **Cotizaciones:** Solo se emiten; no se editan. Si approval_required, pedir approval_confirmed + approval_note. Sin costos, margen null con aviso no_cost_data. Precio de referencia = último precio pagado (estimated).
 - **Planificación de importación:** Los cuatro laboratorios y todas las cifras son simulados. Revisar una sugerencia no crea pedidos.
 - **Reportes:** Las preguntas en lenguaje natural siguen pendientes.

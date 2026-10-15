@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageCircle, Search } from "lucide-react";
+import { MessageCircle, Search, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Notice } from "@/components/data/notice";
 import { OriginBadge } from "@/components/data/origin-badge";
@@ -82,10 +82,39 @@ export function QuotationsPage() {
   const [detail, setDetail] = useState<Quotation | null>(null);
   const [detailError, setDetailError] = useState<string | null>(null);
   const [restored, setRestored] = useState(false);
+  const [fromToday, setFromToday] = useState<{ ruc: string; note: string; error: boolean } | null>(null);
+
+  async function prefillFromToday(ruc: string, productCode: string | null, quantity: string | null) {
+    try {
+      const [found, product] = await Promise.all([
+        api.GET("/api/v1/customers", { params: { query: { search: ruc, page: 1, per_page: 5 } } }),
+        productCode ? api.GET("/api/v1/products/{code}", { params: { path: { code: productCode } } }) : Promise.resolve(null),
+      ]);
+      const match = found.data?.items.find((item) => item.ruc === ruc);
+      if (!match) { setFromToday({ ruc, note: "No se encontró al cliente en tu cartera. Búscalo por nombre o RUC.", error: true }); return; }
+      const usable = product?.data && product.data.reference_price != null ? product.data : null;
+      setCustomer(match); setCustomerText(match.name); setDiscount(""); setProductPage(1);
+      setLines(usable ? [{ product: usable, quantity: quantity && Number(quantity) > 0 ? quantity : "1" }] : []);
+      setPreview(null); setIssued(null); setApprovalConfirmed(false); setApprovalNote("");
+      setFromToday({ ruc, error: false, note: usable
+        ? `Se cargó el pedido habitual de ${match.name}: ${usable.name} × ${quantity ?? 1}. Revisa la cantidad, agrega otros productos y define el descuento.`
+        : `Se eligió a ${match.name}. Su producto habitual no tiene precio de referencia: agrega los productos del catálogo.` });
+    } catch {
+      setFromToday({ ruc, note: "No hay conexión con el servidor de VetChain.", error: true });
+    }
+  }
 
   // Se recupera después de montar (no en el estado inicial) para que el HTML del servidor y el del navegador coincidan.
   useEffect(() => {
     if (!user || restored) return;
+    // «Repetir pedido habitual» (Hoy) llega con ?ruc=…&producto=…&cantidad=… y reemplaza el borrador guardado.
+    const params = new URLSearchParams(window.location.search);
+    const ruc = params.get("ruc");
+    if (ruc) {
+      window.history.replaceState(null, "", window.location.pathname);
+      prefillFromToday(ruc, params.get("producto"), params.get("cantidad")).finally(() => setRestored(true));
+      return;
+    }
     const draft = readDraft(user.id);
     if (draft) {
       setCustomer(draft.customer); setCustomerText(draft.customerText); setLines(draft.lines); setDiscount(draft.discount);
@@ -160,7 +189,7 @@ export function QuotationsPage() {
   );
 
   const startOver = () => {
-    setCustomer(null); setCustomerText(""); setLines([]); setDiscount(""); setProductText(""); setProductPage(1); invalidatePreview();
+    setCustomer(null); setCustomerText(""); setLines([]); setDiscount(""); setProductText(""); setProductPage(1); setFromToday(null); invalidatePreview();
   };
   const invalidatePreview = () => { setPreview(null); setPreviewOpen(false); setIssued(null); setPreviewError(null); setActionStatus(null); setApprovalConfirmed(false); setApprovalNote(""); };
   const chooseCustomer = (item: Customer) => { setCustomer(item); setCustomerText(item.name); setProductPage(1); invalidatePreview(); };
@@ -240,7 +269,15 @@ export function QuotationsPage() {
         body: { ...requestBody(), approval_confirmed: approvalConfirmed, approval_note: approvalNote.trim() || null },
       });
       if (!data) setPreviewError(errorMessage(error, "No se pudo emitir la cotización."));
-      else { setIssued(data); setPreview(null); quotations.reload(); setDetail(data); }
+      else {
+        setIssued(data); setPreview(null); quotations.reload(); setDetail(data);
+        // Si vino de Hoy, el contacto queda como «Pidió cotización» y gerencia lo ve en el seguimiento.
+        if (fromToday && !fromToday.error && fromToday.ruc === data.ruc) {
+          const contact = await api.POST("/api/v1/customers/{ruc}/contacts", { params: { path: { ruc: data.ruc } }, body: { outcome: "Pidió cotización" } });
+          setFromToday(contact.data ? { ...fromToday, note: "Cotización emitida. En Hoy, el cliente quedó como contactado: «Pidió cotización»." }
+            : { ...fromToday, error: true, note: "Cotización emitida, pero no se pudo registrar el contacto. Regístralo desde Hoy." });
+        }
+      }
     } catch { setPreviewError("No hay conexión con el servidor de VetChain."); }
     finally { setBusy(false); }
   }
@@ -275,6 +312,11 @@ export function QuotationsPage() {
     <PageHeader title={manager ? "Cotizaciones" : "Mis cotizaciones"} origin="estimated"
       subtitle="Nueva cotización · los precios se basan en el último importe pagado, sin IGV"
       actions={customer || lines.length ? <Button type="button" variant="outline" onClick={startOver}>Empezar otra cotización</Button> : undefined} />
+
+    {fromToday && <Notice tone={fromToday.error ? "danger" : "warn"} className="flex items-center justify-between gap-4">
+      <span>{fromToday.note}</span>
+      <Button type="button" variant="ghost" size="sm" onClick={() => setFromToday(null)}>Cerrar</Button>
+    </Notice>}
 
     <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,3fr)_minmax(320px,1fr)]">
       <div className="flex flex-col gap-4">
@@ -373,6 +415,9 @@ export function QuotationsPage() {
                   onChange={(event) => updateQuantity(line.product.code, event.target.value)} aria-label={`Cantidad de ${line.product.name}`} />
                 <Button type="button" variant="outline" size="sm" onClick={() => adjustQuantity(line.product.code, 1)}
                   aria-label={`Más unidades de ${line.product.name}`}>+</Button>
+                <Button type="button" variant="ghost" size="sm" className="ml-2 text-brand-strong hover:bg-brand-soft"
+                  onClick={() => removeProduct(line.product.code)} aria-label={`Quitar ${line.product.name} de la cotización`}>
+                  <Trash2 size={16} aria-hidden /> Quitar</Button>
               </div>
             </div>)}</div>}
         </section>
