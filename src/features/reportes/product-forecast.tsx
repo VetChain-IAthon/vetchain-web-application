@@ -14,7 +14,8 @@ import type { components } from "@/lib/api/schema";
 type Forecast = components["schemas"]["ForecastComparisonOut"];
 type Explanation = components["schemas"]["ForecastExplanationOut"];
 
-/** Sección de Stock y merma: compara promedio móvil de seis meses y el modelo predictivo (Extra Trees) para un producto. */
+/** Sección de Stock y merma: compara promedio móvil de seis meses y el modelo predictivo para un producto.
+ *  El modelo predictivo es la mezcla de Extra Trees, Gradient Boosting y promedio móvil que calcula el backend. */
 export function ProductForecast() {
   const [productId, setProductId] = useState("");
   const [scenario, setScenario] = useState<"A" | "B">("A");
@@ -95,7 +96,7 @@ export function ProductForecast() {
       <p className="text-sm text-ink-muted">Escenario {result.scenario} · Corte {result.cutoff_month} · Desde {result.forecast_start_month} · {result.horizon_months} {result.horizon_months === 1 ? "mes" : "meses acumulados"}</p>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded bg-canvas p-5"><p className="text-sm text-ink-muted">Promedio móvil de 6 meses · método estadístico</p><p className="mt-2 text-3xl font-semibold">{formatNumber(result.moving_average_6m, 2)}</p></div>
-        <div className="rounded bg-canvas p-5"><div className="flex flex-wrap items-center justify-between gap-2"><p className="text-sm text-ink-muted">Modelo predictivo</p><AiBadge kind="predictive" /></div><p className="mt-2 text-3xl font-semibold">{formatNumber(result.extra_trees, 2)}</p></div>
+        <div className="rounded bg-canvas p-5"><div className="flex flex-wrap items-center justify-between gap-2"><p className="text-sm text-ink-muted">Modelo predictivo</p><AiBadge kind="predictive" /></div><p className="mt-2 text-3xl font-semibold">{formatNumber(result.predictive_model, 2)}</p></div>
       </div>
       <p className="text-sm text-ink-muted">{result.warning} Las dos cifras son cantidades de presentaciones registradas, no importes en soles.</p>
       {explanationError && <p role="alert" className="text-sm text-danger">{explanationError}</p>}
