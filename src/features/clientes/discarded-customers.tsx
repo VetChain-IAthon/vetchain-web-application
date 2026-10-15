@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { api, errorMessage } from "@/lib/api/client";
+import { useAuth } from "@/lib/auth";
 import { formatDate, formatInt, formatPen } from "@/lib/format";
 import { DISCARD_REASONS, discardReasonLabel, type DiscardReason } from "@/lib/labels";
 import { useQuery } from "@/lib/use-query";
@@ -20,8 +21,9 @@ const FILTERS: [DiscardReason | "", string, "all" | DiscardReason][] = [
   ["", "Todos", "all"], ...DISCARD_REASONS.map((r) => [r.value, r.label, r.value] as [DiscardReason, string, DiscardReason]),
 ];
 
-/** Clientes dormidos descartados: por qué, quién y cuándo. Se pueden restaurar a la lista de dormidos. */
+/** Clientes dormidos descartados: por qué, quién y cuándo. Solo gerencia los restaura a la lista de dormidos. */
 export function DiscardedCustomers() {
+  const manager = useAuth().user?.role === "manager";
   const [searchText, setSearchText] = useState("");
   const [search, setSearch] = useState("");
   const [reason, setReason] = useState<DiscardReason | "">("");
@@ -100,7 +102,7 @@ export function DiscardedCustomers() {
         <p className="py-8 text-center text-sm text-ink-muted">Cargando clientes descartados…</p>
       ) : data.items.length === 0 ? (
         <p className="py-8 text-center text-sm text-ink-muted">
-          {search || reason ? "Ningún cliente descartado coincide con la búsqueda." : "Aún no hay clientes descartados. Puedes descartarlos desde «Clientes dormidos»."}
+          {search || reason ? "Ningún cliente descartado coincide con la búsqueda." : manager ? "Aún no hay clientes descartados. Puedes descartarlos desde «Clientes dormidos»." : "Aún no hay clientes descartados. Gerencia los descarta desde «Clientes dormidos»."}
         </p>
       ) : (
         <div className={cn(loading && "opacity-60 transition-opacity")} aria-busy={loading}>
@@ -112,7 +114,7 @@ export function DiscardedCustomers() {
                 <TH>Descartado</TH>
                 <TH numeric>Venta histórica</TH>
                 <TH numeric>Última compra</TH>
-                <TH><span className="sr-only">Acciones</span></TH>
+                {manager && <TH><span className="sr-only">Acciones</span></TH>}
               </TR>
             </THead>
             <TBody>
@@ -135,10 +137,10 @@ export function DiscardedCustomers() {
                     {formatDate(c.last_order_date)}
                     {c.ordered_after_discard && <div className="mt-1"><span className="inline-flex rounded-xs bg-warn-bg px-2 py-0.5 text-xs font-semibold text-warn-fg">Volvió a pedir</span></div>}
                   </TD>
-                  <TD className="text-right">
+                  {manager && <TD className="text-right">
                     <Button size="sm" variant="outline" disabled={restoring === c.ruc} onClick={() => restore(c.ruc, c.name)}
                       aria-label={`Restaurar a ${c.name}`}>{restoring === c.ruc ? "Restaurando…" : "Restaurar"}</Button>
-                  </TD>
+                  </TD>}
                 </TR>
               ))}
             </TBody>

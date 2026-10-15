@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { api, errorMessage } from "@/lib/api/client";
+import { useAuth } from "@/lib/auth";
 import { formatDate, formatInt, formatPen } from "@/lib/format";
 import { useQuery } from "@/lib/use-query";
 import { cn } from "@/lib/utils";
@@ -25,8 +26,10 @@ const TYPE_BADGE: Record<string, [string, string]> = {
 type Done = { ruc: string; name: string; undone?: boolean; error?: string };
 
 /** Clientes sin pedidos en los últimos 12 meses, incluidos los que nunca pidieron, por venta histórica.
- *  Cada fila se puede descartar (cerró, cambió de datos o ya no es viable); el descarte se deshace o se restaura después. */
+ *  Gerencia puede descartar cada fila (cerró, cambió de datos o ya no es viable); el descarte se deshace o se restaura después.
+ *  El vendedor solo consulta: el backend rechaza el descarte con 403. */
 export function DormantCustomers({ onShowDiscarded }: { onShowDiscarded?: () => void }) {
+  const manager = useAuth().user?.role === "manager";
   const [searchText, setSearchText] = useState("");
   const [search, setSearch] = useState("");
   const [type, setType] = useState<TypeFilter>("");
@@ -126,7 +129,7 @@ export function DormantCustomers({ onShowDiscarded }: { onShowDiscarded?: () => 
                 <TH numeric>Pedidos</TH>
                 <TH numeric>Venta histórica</TH>
                 <TH numeric>Última compra</TH>
-                <TH><span className="sr-only">Acciones</span></TH>
+                {manager && <TH><span className="sr-only">Acciones</span></TH>}
               </TR>
             </THead>
             <TBody>
@@ -143,10 +146,10 @@ export function DormantCustomers({ onShowDiscarded }: { onShowDiscarded?: () => 
                     <TD numeric>{c.order_count ? formatInt(c.order_count) : "—"}</TD>
                     <TD numeric className="font-semibold">{c.order_count ? formatPen(c.lifetime_amount) : <span className="font-normal text-ink-muted">Sin pedidos</span>}</TD>
                     <TD numeric className="whitespace-nowrap text-ink-2">{formatDate(c.last_order_date)}</TD>
-                    <TD className="text-right">
+                    {manager && <TD className="text-right">
                       <Button size="sm" variant="outline" onClick={() => { setDone(null); setDiscarding({ ruc: c.ruc, name: c.name }); }}
                         aria-label={`Descartar a ${c.name}`}>Descartar</Button>
-                    </TD>
+                    </TD>}
                   </TR>
                 );
               })}
@@ -156,7 +159,7 @@ export function DormantCustomers({ onShowDiscarded }: { onShowDiscarded?: () => 
         </div>
       )}
 
-      {discarding && (
+      {manager && discarding && (
         <DiscardDialog customer={discarding} onClose={() => setDiscarding(null)}
           onDiscarded={() => { setDone({ ...discarding }); setDiscarding(null); reload(); }} />
       )}
