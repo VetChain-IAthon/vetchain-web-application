@@ -147,7 +147,7 @@ y `customer-levels` devuelve `missing_levels`. No hay valores por defecto invent
 
 ## Correo — `messaging`
 Gerencia define el correo compartido de origen en Ajustes › Correo. Para dominios propios, el dominio debe estar
-verificado en Resend. Cada usuario puede conectar su propio Gmail desde el formulario de envío mediante
+verificado en Resend. Cada usuario puede conectar su propio Gmail desde Perfil o el formulario de envío mediante
 Google OAuth (permiso `gmail.send`), sin entregar una contraseña SMTP. Para activar esta opción, habilita Gmail API,
 crea un cliente OAuth web y configura `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`,
 `GOOGLE_OAUTH_REDIRECT_URI`, `GOOGLE_OAUTH_TOKEN_KEY` y `FRONTEND_URL`. El URI de redirección debe coincidir
