@@ -1,7 +1,7 @@
 "use client";
 
 import { jsPDF } from "jspdf";
-import { ArrowLeft, BarChart3, Download, Mail, MessageSquare } from "lucide-react";
+import { ArrowLeft, Download, Mail, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
@@ -16,6 +16,7 @@ import { useQuery } from "@/lib/use-query";
 import { cn } from "@/lib/utils";
 import { Pending, PendingTile, StatTile, Status, Warnings } from "./report-ui";
 import { ShareDialog, type ShareChannel } from "./share-dialog";
+import { ProductForecast } from "./product-forecast";
 import { ReportGeminiSummary } from "./report-gemini-summary";
 
 /** Estructura de design/prototipo/Stock-uwfm.dc.html. Lo real: saldo del kardex (POR CONFIRMAR) frente a la demanda de 12 meses.
@@ -71,12 +72,7 @@ export function StockReportPage() {
     <Status loading={query.loading && !data} error={query.error} reload={query.reload} />
     {data && <>
       <Card className="flex flex-col gap-4 p-8">
-        <div className="flex items-center gap-3">
-          <span className="flex size-9 items-center justify-center rounded bg-brand-soft text-brand"><BarChart3 size={18} aria-hidden /></span>
-          <h2 className="text-lg font-semibold">Lo que dicen los datos</h2>
-        </div>
-        <ol className="list-decimal space-y-2 pl-5 text-[15px] leading-relaxed text-ink-2">{insights.map((line) => <li key={line}>{line}</li>)}</ol>
-        <ReportGeminiSummary report="stock" metrics={{ products: items.length, normal: by("normal").length, overstock: overstock.length, slow: by("slow").length, out_with_demand: outWithDemand.length, coverage_days: coverage }} />
+        <ReportGeminiSummary title="Lo que dicen los datos" report="stock" metrics={{ products: items.length, normal: by("normal").length, overstock: overstock.length, slow: by("slow").length, out_with_demand: outWithDemand.length, coverage_days: coverage }} />
       </Card>
       <Warnings codes={data.warnings.filter((w) => w === "stock_balance_unconfirmed")} />
 
@@ -97,7 +93,7 @@ export function StockReportPage() {
       </div>
 
       <Pending kind="data" title="Lotes por vencer y a quién ofrecerlos">
-        Por cada lote que vence pronto: unidades, valor, los clientes que compran ese producto y la acción sugerida (promoción, sumarlo a su pedido habitual) sin bajar del margen mínimo. Necesita el archivo de lotes, los costos y Gemini.
+        Por cada lote que vence pronto: unidades, valor, los clientes que compran ese producto y la acción sugerida (promoción, sumarlo a su pedido habitual) sin bajar del margen mínimo. Necesita el archivo de lotes, los costos y la IA generativa.
       </Pending>
 
       <Card className="flex flex-col gap-4 p-8">
@@ -115,6 +111,8 @@ export function StockReportPage() {
         </div>
         <p className="text-[13px] text-ink-muted">La acción sugerida (frenar la importación, ofrecer por volumen, incluir en el próximo pedido) llegará con la IA y la planificación de importación.</p>
       </Card>
+
+      <ProductForecast />
 
       <p className="text-[13px] leading-relaxed text-ink-muted">Cómo se calcula: stock = último saldo del kardex de cada almacén (campo por confirmar con Mederi). Cobertura = stock ÷ unidades pedidas por día en los 12 meses hasta la fecha del stock.
         Sobrestock y lento usan umbrales provisionales (120 y 90 días). Lotes, vencimientos y merma saldrán del archivo de lotes y bajas.</p>

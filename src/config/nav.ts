@@ -20,7 +20,6 @@ export const NAV: NavGroup[] = [
       { label: "Ficha de cliente", href: "/reportes/ficha" },
       { label: "Indicadores (KPIs)", href: "/reportes/kpis" },
       { label: "Ventas y rentabilidad", href: "/reportes/ventas" },
-      { label: "Pronóstico por producto", href: "/reportes/pronosticos" },
       { label: "Retención de clientes", href: "/reportes/clientes" },
       { label: "Stock y merma", href: "/reportes/stock" },
       { label: "Cartera y cobranza", href: "/reportes/cobranza" },

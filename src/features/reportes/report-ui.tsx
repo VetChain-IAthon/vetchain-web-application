@@ -93,8 +93,8 @@ export function ShareBars({ items, valueLabel }: { items: { key: string; label: 
 }
 
 const PENDING = {
-  model: { icon: BrainCircuit, badge: "Función pendiente", hint: "La predicción por producto está disponible en Pronósticos; esta sección requiere una integración específica." },
-  ai: { icon: Sparkles, badge: "Redacción pendiente", hint: "Esta sección todavía no llama a Gemini." },
+  model: { icon: BrainCircuit, badge: "Función pendiente", hint: "La predicción por producto está disponible en Stock y merma; esta sección requiere una integración específica." },
+  ai: { icon: Sparkles, badge: "Redacción pendiente", hint: "Esta sección todavía no usa IA generativa." },
   data: { icon: Database, badge: "Faltan datos de Mederi", hint: "" },
   feature: { icon: Clock, badge: "Próximamente", hint: "" },
 } as const;

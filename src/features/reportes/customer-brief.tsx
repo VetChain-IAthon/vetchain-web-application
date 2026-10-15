@@ -124,7 +124,7 @@ function BriefBody({ brief, projection }: { brief: Brief; projection: Projection
     </Card>
 
     <Pending kind="feature" title="Resumen para la reunión">
-      Cuatro líneas con lo esencial: cuánto compra y qué lugar ocupa, si va atrasado, cuánto paga frente a la referencia y qué proponerle. El resumen individual queda pendiente de una política de uso de datos del cliente con Gemini.
+      Cuatro líneas con lo esencial: cuánto compra y qué lugar ocupa, si va atrasado, cuánto paga frente a la referencia y qué proponerle. El resumen individual queda pendiente de una política de uso de datos del cliente con IA generativa.
     </Pending>
 
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">

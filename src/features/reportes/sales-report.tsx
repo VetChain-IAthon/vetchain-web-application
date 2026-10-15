@@ -1,7 +1,7 @@
 "use client";
 
 import { jsPDF } from "jspdf";
-import { ArrowLeft, BarChart3, Download, Mail, MessageSquare } from "lucide-react";
+import { ArrowLeft, Download, Mail, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
@@ -103,13 +103,8 @@ export function SalesReportPage() {
     <Status loading={query.loading && !data} error={query.error} reload={query.reload} />
     {data && <>
       <Card className="flex flex-col gap-4 p-8">
-        <div className="flex items-center gap-3">
-          <span className="flex size-9 items-center justify-center rounded bg-brand-soft text-brand"><BarChart3 size={18} aria-hidden /></span>
-          <h2 className="text-lg font-semibold">Lo que dicen los datos</h2>
-        </div>
-        <ol className="list-decimal space-y-2 pl-5 text-[15px] leading-relaxed text-ink-2">{insights.map((line) => <li key={line}>{line}</li>)}</ol>
-        {!seller && <ReportGeminiSummary report="sales" metrics={{ amount_pen: data.amount, orders: data.order_count, invoice_discount_pen: data.invoice_discount, below_reference_pct: data.below_reference_pct }} />}
-        {sellerName && <p className="text-[13px] text-ink-muted">Vista filtrada por {titleCase(sellerName)}. El resumen con Gemini está disponible en la vista de todos los vendedores.</p>}
+        {!seller && <ReportGeminiSummary title="Lo que dicen los datos" report="sales" metrics={{ amount_pen: data.amount, orders: data.order_count, invoice_discount_pen: data.invoice_discount, below_reference_pct: data.below_reference_pct }} />}
+        {sellerName && <p className="text-[13px] text-ink-muted">Vista filtrada por {titleCase(sellerName)}. El resumen redactado está disponible en la vista de todos los vendedores.</p>}
       </Card>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
@@ -181,7 +176,7 @@ function MonthlyCard({ data }: { data: Sales }) {
         </BarChart>
       </ResponsiveContainer>
     </div>
-    <p className="rounded bg-canvas p-4 text-sm text-ink-muted">La proyección en soles permanece pendiente. <Link href="/reportes/pronosticos" className="font-semibold text-brand">Consultar pronóstico de cantidades por producto</Link>.</p>
+    <p className="rounded bg-canvas p-4 text-sm text-ink-muted">La proyección en soles permanece pendiente. <Link href="/reportes/stock#pronostico" className="font-semibold text-brand">Consultar pronóstico de cantidades por producto</Link>.</p>
   </Card>;
 }
 

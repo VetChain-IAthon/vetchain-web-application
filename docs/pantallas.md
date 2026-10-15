@@ -17,9 +17,8 @@ Roles: M = manager (gerencia), S = salesperson (vendedor). P1 = sin esto no arra
 | Ficha de cliente para reunión | `/reportes/ficha` | M | Ficha-icvr.dc.html | `GET /customers/{ruc}/brief`<br>`GET /customers` | real | P3 |
 | Indicadores clave | `/reportes/kpis` | M | KPIs-svux.dc.html | `GET /reports/kpis` | real | P3 |
 | Pedidos y productos | `/reportes/ventas` | M | Ventas-ubd8.dc.html | `GET /reports/sales` | real | P3 |
-| Pronóstico por producto | `/reportes/pronosticos` | M | Sin prototipo previo | `GET /products`<br>`GET /prediction/forecasts` | estimated | P3 |
 | Clientes: retención y reactivación | `/reportes/clientes` | M | Clientes-9xcu.dc.html | `GET /reports/customers` | real | P3 |
-| Stock | `/reportes/stock` | M | Stock-uwfm.dc.html | `GET /reports/stock` | real | P3 |
+| Stock | `/reportes/stock` | M | Stock-uwfm.dc.html | `GET /reports/stock`<br>`GET /products`<br>`GET /prediction/forecasts` | real | P3 |
 | Cartera y cobranza | `/reportes/cobranza` | M | Cobranza-6f07.dc.html | `GET /reports/receivables` | real | P3 |
 | Vendedores y seguimiento | `/reportes/vendedores` | M | Vendedores-45z4.dc.html | `GET /reports/salespeople`<br>`GET /reports/funnel` | real | P3 |
 | Ajustes | `/ajustes` | M | Configuracion.dc.html (reglas) e Integracion.dc.html (carga de datos) | `GET /settings/pricing`<br>`PUT /settings/pricing`<br>`GET /settings/customer-levels`<br>`PUT /settings/customer-levels/{level}`<br>`GET /settings/level-thresholds`<br>`PUT /settings/level-thresholds`<br>`GET /data-sources`<br>`POST /data-imports`<br>`GET /data-imports`<br>`GET /data-imports/{import_id}`<br>`PATCH /data-imports/{import_id}`<br>`GET /users`<br>`POST /users`<br>`PATCH /users/{user_id}` | real | P2 |
@@ -36,8 +35,7 @@ Roles: M = manager (gerencia), S = salesperson (vendedor). P1 = sin esto no arra
 - **Ficha de cliente para reunión:** El PDF lo genera la web. Resumen, ofertas y guion esperan Gemini; proyección, el modelo; ganancia, costos; cobranza, cobros enlazados.
 - **Indicadores clave:** Sin metas configuradas, no se muestra estado de cumplimiento.
 - **Pedidos y productos:** Rentabilidad sin cifra mientras no haya costos validados.
-- **Pronóstico por producto:** Muestra cantidades solicitadas estimadas, no ventas facturadas ni una recomendación de importación.
-- **Stock:** Saldo de kardex sujeto a confirmación. No hay datos de lotes ni vencimientos.
+- **Stock:** Saldo de kardex sujeto a confirmación. No hay datos de lotes ni vencimientos. Incluye el pronóstico por producto: cantidades solicitadas estimadas, no ventas facturadas ni una recomendación de importación.
 - **Cartera y cobranza:** Sin cifras de deuda: los cobros no están enlazados con pedidos.
 - **Ajustes:** Carga de datos: los CSV de Defontana se suben, se revisan y se confirman (upsert, nunca borra). Usuarios no está en el prototipo.
 - **Mi perfil:** Solo teléfono y correo. Sin cambio de contraseña ni cierre de sesión en servidor (borrar el token).

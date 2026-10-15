@@ -24,6 +24,8 @@ Datos: `openapi-fetch` con tipos generados (`src/lib/api/schema.d.ts`). Desplieg
 2. Usa primero `src/components/ui` (estilo shadcn); crea un componente propio solo si ninguno sirve.
 3. Tailwind en clases; sin CSS suelto salvo `globals.css`.
 4. **Origen del dato visible** en cada módulo con cifras: `<OriginBadge origin="real|synthetic|estimated|simulated" />`.
+   Lo que produce la IA lleva además `<AiBadge kind="generative|predictive" />` («IA generativa» para texto redactado,
+   «IA predictiva» para cifras del modelo de pronóstico). Nunca se nombra el proveedor ni el modelo en la interfaz.
    Las alertas calculadas se distinguen de las demostraciones simuladas.
 5. **Sin falsa certeza:** si faltan costos, no muestres margen ni rentabilidad como confiables (usa `<Notice>`). Lo mismo con
    cantidades de importación. El margen `null` con aviso `no_cost_data` se muestra como «—» más el aviso.

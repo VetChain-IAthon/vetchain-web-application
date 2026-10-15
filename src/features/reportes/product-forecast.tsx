@@ -1,11 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PageHeader } from "@/components/layout/page-header";
+import { AiBadge } from "@/components/data/ai-badge";
 import { OriginBadge } from "@/components/data/origin-badge";
 import { api, errorMessage } from "@/lib/api/client";
 import { formatNumber } from "@/lib/format";
@@ -15,7 +14,8 @@ import type { components } from "@/lib/api/schema";
 type Forecast = components["schemas"]["ForecastComparisonOut"];
 type Explanation = components["schemas"]["ForecastExplanationOut"];
 
-export function ProductForecastPage() {
+/** Sección de Stock y merma: compara promedio móvil de seis meses y el modelo predictivo (Extra Trees) para un producto. */
+export function ProductForecast() {
   const [productId, setProductId] = useState("");
   const [scenario, setScenario] = useState<"A" | "B">("A");
   const [horizon, setHorizon] = useState<1 | 3>(1);
@@ -50,17 +50,19 @@ export function ProductForecastPage() {
       const response = await api.POST("/api/v1/prediction/forecasts/explanation", {
         body: { product_id: result.product_id, scenario: result.scenario, horizon: result.horizon_months, cutoff: result.cutoff_month },
       });
-      if (response.error) setExplanationError(errorMessage(response.error, "No se pudo explicar el pronóstico."));
+      if (response.error) setExplanationError(errorMessage(response.error, "No se pudo redactar el resumen. Inténtalo de nuevo."));
       else setExplanation(response.data ?? null);
     } catch {
-      setExplanationError("No se pudo explicar el pronóstico.");
+      setExplanationError("No se pudo redactar el resumen. Inténtalo de nuevo.");
     } finally { setExplaining(false); }
   }
 
-  return <div className="space-y-6">
-    <Link href="/reportes" className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand no-underline"><ArrowLeft size={16} aria-hidden />Reportes</Link>
-    <PageHeader title="Pronóstico por producto" subtitle="Comparación de promedio móvil de seis meses y Extra Trees" origin="estimated" />
-    <Card className="space-y-5 p-6">
+  return <section id="pronostico" aria-label="Pronóstico por producto" className="scroll-mt-6 space-y-4">
+    <Card className="space-y-5 p-8">
+      <div className="flex items-start justify-between gap-3">
+        <div><h2 className="text-lg font-semibold">Pronóstico por producto</h2><p className="text-sm text-ink-muted">Cantidad que se pedirá, según el promedio móvil de seis meses y el modelo predictivo</p></div>
+        <OriginBadge origin="estimated" className="flex-none" />
+      </div>
       <div className="grid gap-4 md:grid-cols-4">
         <label className="text-sm font-semibold">Producto
           <input list="forecast-products" className="mt-1 block h-11 w-full rounded border border-line-strong px-3 font-normal" value={productId}
@@ -85,25 +87,22 @@ export function ProductForecastPage() {
       <Button disabled={busy || !productId.trim()} onClick={calculate}>{busy ? "Calculando…" : "Calcular pronóstico"}</Button>
       {error && <p role="alert" className="text-sm text-danger">{error}</p>}
     </Card>
-    {result && <Card className="space-y-5 p-6">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-lg font-semibold">Resultado para {result.product_id}</h2><OriginBadge origin="estimated" />
+    {result && <Card className="space-y-5 p-8">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h3 className="text-base font-semibold">Resultado para {result.product_id}</h3>
+        <Button type="button" variant="outline" size="sm" className="shrink-0" disabled={explaining} onClick={explain}><Sparkles size={14} aria-hidden />{explaining ? "Redactando…" : "Redactar resumen"}</Button>
       </div>
       <p className="text-sm text-ink-muted">Escenario {result.scenario} · Corte {result.cutoff_month} · Desde {result.forecast_start_month} · {result.horizon_months} {result.horizon_months === 1 ? "mes" : "meses acumulados"}</p>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded bg-canvas p-5"><p className="text-sm text-ink-muted">Promedio móvil de 6 meses · método estadístico</p><p className="mt-2 text-3xl font-semibold">{formatNumber(result.moving_average_6m, 2)}</p></div>
-        <div className="rounded bg-canvas p-5"><div className="flex flex-wrap items-center justify-between gap-2"><p className="text-sm text-ink-muted">Extra Trees</p><span className="rounded bg-brand-soft px-2 py-0.5 text-xs font-semibold text-brand">IA predictiva</span></div><p className="mt-2 text-3xl font-semibold">{formatNumber(result.extra_trees, 2)}</p></div>
+        <div className="rounded bg-canvas p-5"><div className="flex flex-wrap items-center justify-between gap-2"><p className="text-sm text-ink-muted">Modelo predictivo</p><AiBadge kind="predictive" /></div><p className="mt-2 text-3xl font-semibold">{formatNumber(result.extra_trees, 2)}</p></div>
       </div>
       <p className="text-sm text-ink-muted">{result.warning} Las dos cifras son cantidades de presentaciones registradas, no importes en soles.</p>
-      <div className="border-t border-line pt-5">
-        <p className="mb-3 text-xs text-ink-muted">Al solicitar la explicación, se envían a Gemini el escenario, el período y las dos cantidades estimadas. No se envían nombres ni identificadores de clientes.</p>
-        <Button variant="outline" disabled={explaining} onClick={explain}><Sparkles size={16} aria-hidden />{explaining ? "Redactando…" : "Explicar resultados"}</Button>
-        {explanationError && <p role="alert" className="mt-3 text-sm text-danger">{explanationError}</p>}
-        {explanation && <div className="mt-4 rounded bg-canvas p-4">
-          <span className="rounded bg-brand-soft px-2 py-0.5 text-xs font-semibold text-brand">{explanation.source === "gemini" ? "IA generativa · Gemini" : "Texto de respaldo"}</span>
-          <p className="mt-2 text-sm leading-relaxed">{explanation.text}</p>
-        </div>}
-      </div>
+      {explanationError && <p role="alert" className="text-sm text-danger">{explanationError}</p>}
+      {explanation && <div className="rounded bg-canvas p-4">
+        {explanation.source === "gemini" && <AiBadge />}
+        <p className={explanation.source === "gemini" ? "mt-2 text-sm leading-relaxed" : "text-sm leading-relaxed"}>{explanation.text}</p>
+      </div>}
     </Card>}
-  </div>;
+  </section>;
 }
