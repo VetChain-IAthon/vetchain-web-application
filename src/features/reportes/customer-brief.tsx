@@ -129,13 +129,13 @@ function BriefBody({ brief, projection }: { brief: Brief; projection: Projection
 
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
       <StatTile label="Venta del período" value={formatPen(brief.amount)} detail={`${formatPercent(brief.share_pct)} de la venta de Mederi`} />
-      <PendingTile label="Ganancia estimada" kind="data" reason="Faltan costos de compra validados" />
+      <PendingTile label="Ganancia estimada" kind="data" reason="Faltan costos de compra validados" demoKey="ficha-ganancia" />
       <StatTile label="Pedidos" value={formatInt(brief.order_count)} detail={brief.order_count ? `Pedido promedio ${formatPen(brief.average_order_amount)}` : undefined} />
       <StatTile label="Ritmo de compra" value={brief.purchase_rhythm_days != null ? `Cada ${formatNumber(brief.purchase_rhythm_days, 0)} días` : "—"} tone={late ? "bad" : "muted"}
         detail={brief.days_since_last_order != null ? `Última compra hace ${brief.days_since_last_order} días` : "Sin pedidos"} />
       <StatTile label="Descuentos" value={`${formatPercent(discountPct)} en factura`}
         detail={brief.below_reference_pct != null ? `Pagó ${formatPercent(Math.abs(brief.below_reference_pct))} ${brief.below_reference_pct >= 0 ? "bajo" : "sobre"} el precio de referencia` : undefined} />
-      <PendingTile label={`Proyección ${PROJECTION_LABEL[projection].toLowerCase()}`} kind="data" reason="Falta validar la proyección de importes por cliente" />
+      <PendingTile label={`Proyección ${PROJECTION_LABEL[projection].toLowerCase()}`} kind="data" reason="Falta validar la proyección de importes por cliente" demoKey="ficha-proyeccion" />
     </div>
 
     <MonthlyCard brief={brief} projection={projection} />
@@ -197,7 +197,7 @@ function CustomerVersionBody({ brief, projection }: { brief: Brief; projection: 
       <StatTile label="Pedidos" value={formatInt(brief.order_count)} detail={brief.order_count ? `Pedido promedio ${formatPen(brief.average_order_amount)}` : undefined} />
       <StatTile label="Ahorro frente a referencia" value={brief.below_reference_pct != null && brief.below_reference_pct > 0 ? formatPercent(brief.below_reference_pct) : "—"}
         detail="Precio pagado vs. precio de referencia" />
-      <PendingTile label="Propuesta" kind="data" reason="Pendiente del archivo de lotes y costos" />
+      <PendingTile label="Propuesta" kind="data" reason="Pendiente del archivo de lotes y costos" demoKey="ficha-propuesta" />
     </div>
 
     <div className="grid gap-4 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">

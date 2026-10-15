@@ -80,11 +80,11 @@ export function ProductForecast() {
             <option value={1}>1 mes</option><option value={3}>3 meses acumulados</option>
           </select>
         </label>
-        <label className="text-sm font-semibold">Mes de corte (opcional)
+        <label className="text-sm font-semibold">Calcular con datos hasta (opcional)
           <input type="month" className="mt-1 block h-11 w-full rounded border border-line-strong px-3 font-normal" value={cutoff} onInput={(e) => setCutoff(e.currentTarget.value)} onChange={(e) => setCutoff(e.target.value)} />
         </label>
       </div>
-      <p className="text-sm text-ink-muted">Sin corte indicado, se usa el último mes cerrado anterior al pedido más reciente cargado.</p>
+      <p className="text-sm text-ink-muted">Déjalo vacío para usar el último mes completo con pedidos. Elige un mes pasado para comprobar qué tan bien acierta: se ignoran los pedidos posteriores.</p>
       <Button disabled={busy || !productId.trim()} onClick={calculate}>{busy ? "Calculando…" : "Calcular pronóstico"}</Button>
       {error && <p role="alert" className="text-sm text-danger">{error}</p>}
     </Card>
@@ -93,7 +93,7 @@ export function ProductForecast() {
         <h3 className="text-base font-semibold">Resultado para {result.product_id}</h3>
         <Button type="button" variant="outline" size="sm" className="shrink-0" disabled={explaining} onClick={explain}><Sparkles size={14} aria-hidden />{explaining ? "Redactando…" : "Redactar resumen"}</Button>
       </div>
-      <p className="text-sm text-ink-muted">Escenario {result.scenario} · Corte {result.cutoff_month} · Desde {result.forecast_start_month} · {result.horizon_months} {result.horizon_months === 1 ? "mes" : "meses acumulados"}</p>
+      <p className="text-sm text-ink-muted">Escenario {result.scenario} · Datos hasta {result.cutoff_month} · Pronóstico desde {result.forecast_start_month} · {result.horizon_months} {result.horizon_months === 1 ? "mes" : "meses acumulados"}</p>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded bg-canvas p-5"><p className="text-sm text-ink-muted">Promedio móvil de 6 meses · método estadístico</p><p className="mt-2 text-3xl font-semibold">{formatNumber(result.moving_average_6m, 2)}</p></div>
         <div className="rounded bg-canvas p-5"><div className="flex flex-wrap items-center justify-between gap-2"><p className="text-sm text-ink-muted">Modelo predictivo</p><AiBadge kind="predictive" /></div><p className="mt-2 text-3xl font-semibold">{formatNumber(result.predictive_model, 2)}</p></div>

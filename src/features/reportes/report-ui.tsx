@@ -3,6 +3,8 @@
 import { BrainCircuit, Clock, Database, Sparkles } from "lucide-react";
 import { Notice } from "@/components/data/notice";
 import { OriginBadge } from "@/components/data/origin-badge";
+import { useDemoMode } from "@/lib/demo";
+import { DEMO_SECTIONS, DEMO_TILES } from "./demo-data";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { formatDate, formatPercent } from "@/lib/format";
@@ -101,6 +103,13 @@ const PENDING = {
 
 /** Sección que todavía no se puede mostrar: dice qué falta (modelo, IA, datos) en vez de inventar cifras. */
 export function Pending({ kind, title, children, className }: { kind: keyof typeof PENDING; title: string; children?: React.ReactNode; className?: string }) {
+  const demo = useDemoMode();
+  if (demo && DEMO_SECTIONS[title]) {
+    return <Card className={cn("flex flex-col gap-4", className)}>
+      <div className="flex flex-wrap items-center justify-between gap-2"><h2 className="text-lg font-semibold">{title}</h2><OriginBadge origin="simulated" /></div>
+      {DEMO_SECTIONS[title]}
+    </Card>;
+  }
   const p = PENDING[kind];
   const Icon = p.icon;
   return <Card className={cn("flex flex-col gap-3 border-dashed bg-canvas/40", className)}>
@@ -114,7 +123,16 @@ export function Pending({ kind, title, children, className }: { kind: keyof type
 }
 
 /** Tarjeta de cifra que aún no se puede calcular. */
-export function PendingTile({ label, kind, reason }: { label: string; kind: keyof typeof PENDING; reason: string }) {
+export function PendingTile({ label, kind, reason, demoKey }: { label: string; kind: keyof typeof PENDING; reason: string; demoKey?: string }) {
+  const demo = useDemoMode();
+  const sample = demo ? DEMO_TILES[demoKey ?? label] : undefined;
+  if (sample) {
+    return <Card className="flex flex-col gap-2 p-5">
+      <span className="text-sm text-ink-muted">{label}</span>
+      <span className="text-3xl font-semibold tracking-tight tabular-nums">{sample.value}</span>
+      <span className="flex flex-wrap items-center justify-between gap-2 text-[13px] text-ink-muted">{sample.detail}<OriginBadge origin="simulated" /></span>
+    </Card>;
+  }
   const Icon = PENDING[kind].icon;
   return <Card className="flex flex-col gap-2 border-dashed bg-canvas/40 p-5">
     <span className="text-sm text-ink-muted">{label}</span>
