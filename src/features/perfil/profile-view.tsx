@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { api, errorMessage } from "@/lib/api/client";
 import { initialsOf, useAuth, type CurrentUser } from "@/lib/auth";
 import { ROLE_LABEL } from "@/lib/types";
-import { GmailConnection } from "./gmail-connection";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -113,8 +112,6 @@ export function ProfileView() {
           <Row icon={Building2} label="Empresa" value="Mederi Pharma · piloto" last />
         </SectionCard>
       </div>
-
-      <GmailConnection />
 
       <div className="flex justify-end border-t border-line pt-5">
         <Button variant="outline" onClick={logout} className="h-auto border-brand px-6 py-3 text-[15px] text-brand hover:bg-brand-soft">

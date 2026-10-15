@@ -15,16 +15,15 @@ import { cn } from "@/lib/utils";
 import { MonthlyChart } from "./monthly-chart";
 import { PeriodFilter, rangeQuery, type MonthRange } from "./period-filter";
 import { PeriodText, SectionTitle, Status, Warnings, warningText } from "./report-ui";
+import { ReportGeminiSummary } from "./report-gemini-summary";
 
 
-/** Lo redacta Gemini a partir de cifras agregadas. Vacío hasta que se configure la clave de la API. */
-function WeeklySummary() {
-  return <section aria-label="Resumen de la semana" className="rounded-lg border border-line border-l-4 border-l-brand bg-surface px-6 py-5">
+function DashboardSummary({ data }: { data: components["schemas"]["DashboardSummaryOut"] }) {
+  return <section aria-label="Resumen del período" className="rounded-lg border border-line border-l-4 border-l-brand bg-surface px-6 py-5">
     <div className="flex flex-wrap items-baseline justify-between gap-2">
-      <h2 className="text-base font-semibold">Resumen de la semana</h2>
-      <span className="text-xs text-ink-muted">Propuesta: enviarlo cada lunes por WhatsApp o correo</span>
+      <h2 className="text-base font-semibold">Resumen del período</h2>
     </div>
-    <p className="mt-2 text-sm text-ink-muted">Todavía no hay resumen. Lo redactará la IA con las cifras de la semana cuando se configure la clave de la API de Gemini.</p>
+    <ReportGeminiSummary report="dashboard" metrics={{ amount_pen: data.amount, orders: data.order_count, active_customers: data.active_customers, average_order_pen: data.average_order, top_ten_share_pct: data.top_ten_share_pct }} />
   </section>;
 }
 
@@ -136,9 +135,9 @@ export function DashboardPage() {
   const monthly = range ? chart.data?.monthly : summary.data?.monthly;
   return <div className="space-y-5">
     <PageHeader title="Panel gerencial" subtitle="Resumen del negocio en los últimos 12 meses de datos disponibles" origin="real" />
-    <WeeklySummary />
     <Status loading={summary.loading} error={summary.error} reload={summary.reload} />
     {summary.data && <>
+      <DashboardSummary data={summary.data} />
       <PeriodText from={summary.data.period.from_date} to={summary.data.period.to_date} asOf={summary.data.period.data_as_of} />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <KpiCard label="Monto de pedidos" value={formatPen(summary.data.amount)} hint="Productos veterinarios" origin="real" />

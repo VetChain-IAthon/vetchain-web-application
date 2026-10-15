@@ -1,7 +1,7 @@
 "use client";
 
 import { jsPDF } from "jspdf";
-import { AlertTriangle, ArrowLeft, Check, Download, Mail, MessageSquare, Minus, Sparkles, X } from "lucide-react";
+import { AlertTriangle, ArrowLeft, BarChart3, Check, Download, Mail, MessageSquare, Minus, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { PageHeader } from "@/components/layout/page-header";
@@ -13,6 +13,7 @@ import { useQuery } from "@/lib/use-query";
 import { cn } from "@/lib/utils";
 import { Status, yearBefore } from "./report-ui";
 import { ShareDialog, type ShareChannel } from "./share-dialog";
+import { ReportGeminiSummary } from "./report-gemini-summary";
 
 /** Estructura de design/prototipo/KPIs-svux.dc.html: 12 indicadores en cuatro grupos, con meta propuesta y estado.
  *
@@ -114,7 +115,7 @@ export function KpisReportPage() {
     ] },
     { title: "Gestión con VetChain", question: "Se miden desde que el equipo registra resultados", items: [
       { key: "alerts", title: "Alertas atendidas en 48 horas", value: null, format: pct, target: 90, critical: 70, higher: true, origin: "new",
-        goalText: "Meta ≥ 90 %", explain: "Alertas con resultado registrado dentro de las 48 horas siguientes.", pendingReason: "Faltan las alertas del modelo de predicción" },
+        goalText: "Meta ≥ 90 %", explain: "Alertas con resultado registrado dentro de las 48 horas siguientes.", pendingReason: "Falta registrar las alertas y su seguimiento" },
       { key: "quotes", title: "Cotizaciones que terminan en pedido", value: null, format: pct, target: 40, critical: 20, higher: true, origin: "new",
         goalText: "Meta ≥ 40 %", explain: "Pedidos dividido entre cotizaciones enviadas en el mes.", pendingReason: "Falta enlazar cotizaciones con pedidos" },
       { key: "reactivated", title: "Clientes dormidos reactivados", value: null, format: (v) => formatInt(v), target: 25, critical: 10, higher: true, origin: "new",
@@ -157,11 +158,11 @@ export function KpisReportPage() {
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)]">
         <Card className="flex flex-col gap-4 p-8">
           <div className="flex items-center gap-3">
-            <span className="flex size-9 items-center justify-center rounded bg-brand-soft text-brand"><Sparkles size={18} aria-hidden /></span>
+            <span className="flex size-9 items-center justify-center rounded bg-brand-soft text-brand"><BarChart3 size={18} aria-hidden /></span>
             <h2 className="text-lg font-semibold">Resumen del mes</h2>
           </div>
           <ol className="list-decimal space-y-2 pl-5 text-[15px] leading-relaxed text-ink-2">{summary.map((line) => <li key={line}>{line}</li>)}</ol>
-          <p className="text-[13px] text-ink-muted">Resumen armado con las cifras de esta página. La redacción con IA queda pendiente de Gemini.</p>
+          <ReportGeminiSummary report="kpis" metrics={{ indicators: all.length, on_target: counts.ok, attention: counts.warn, critical: counts.bad, missing: counts.none, sales_growth_pct: all.find((item) => item.key === "growth")?.value }} />
         </Card>
         <Card className="flex flex-col gap-4 p-8">
           <h2 className="text-lg font-semibold">Estado de los {all.length} indicadores</h2>
