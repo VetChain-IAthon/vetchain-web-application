@@ -1,7 +1,7 @@
 "use client";
 
 import { jsPDF } from "jspdf";
-import { ArrowLeft, Database, Download, Mail, MessageSquare, Sparkles } from "lucide-react";
+import { ArrowLeft, BarChart3, Database, Download, Mail, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { PageHeader } from "@/components/layout/page-header";
@@ -13,6 +13,7 @@ import { formatInt, formatMonthYear, formatNumber, formatPen } from "@/lib/forma
 import { useQuery } from "@/lib/use-query";
 import { PendingTile, Status } from "./report-ui";
 import { ShareDialog, type ShareChannel } from "./share-dialog";
+import { ReportGeminiSummary } from "./report-gemini-summary";
 
 /** Estructura de design/prototipo/Cobranza-6f07.dc.html. Lo real son los cobros registrados (cuánto y quién pagó).
  *  La deuda pendiente, vencida y su antigüedad quedan pendientes: los cobros no se enlazan con pedidos ni facturas. */
@@ -56,11 +57,11 @@ export function ReceivablesReportPage() {
     {data && <>
       <Card className="flex flex-col gap-4 p-8">
         <div className="flex items-center gap-3">
-          <span className="flex size-9 items-center justify-center rounded bg-brand-soft text-brand"><Sparkles size={18} aria-hidden /></span>
+          <span className="flex size-9 items-center justify-center rounded bg-brand-soft text-brand"><BarChart3 size={18} aria-hidden /></span>
           <h2 className="text-lg font-semibold">Lo que dicen los datos</h2>
         </div>
         <ol className="list-decimal space-y-2 pl-5 text-[15px] leading-relaxed text-ink-2">{insights.map((line) => <li key={line}>{line}</li>)}</ol>
-        <p className="text-[13px] text-ink-muted">Armado con los cobros registrados. Las recomendaciones con IA quedan pendientes de Gemini.</p>
+        <ReportGeminiSummary report="receivables" metrics={{ receipts: data.receipt_count, collected_pen: data.collected_amount, top_five_share_pct: topShare }} />
       </Card>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -108,9 +109,9 @@ export function ReceivablesReportPage() {
           <PendingChip />
         </div>
         <Table>
-          <THead><TR><TH>Cliente</TH><TH>Nivel</TH><TH numeric>Vencido</TH><TH numeric>Atraso</TH><TH numeric>Facturas</TH><TH>Qué hacer (IA)</TH></TR></THead>
+          <THead><TR><TH>Cliente</TH><TH>Nivel</TH><TH numeric>Vencido</TH><TH numeric>Atraso</TH><TH numeric>Facturas</TH><TH>Qué hacer</TH></TR></THead>
           <TBody><TR><TD colSpan={6} className="py-8 text-center text-sm text-ink-muted">
-            Pendiente: la lista de clientes con deuda vencida aparecerá al enlazar cobros con facturas. «Qué hacer» lo sugerirá la IA (Gemini).
+            Pendiente: la lista de clientes con deuda vencida aparecerá al enlazar cobros con facturas y validar las fechas de vencimiento.
           </TD></TR></TBody>
         </Table>
       </Card>

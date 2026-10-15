@@ -1,7 +1,7 @@
 "use client";
 
 import { jsPDF } from "jspdf";
-import { ArrowLeft, Download, Mail, MessageSquare, Sparkles } from "lucide-react";
+import { ArrowLeft, BarChart3, Download, Mail, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
@@ -17,6 +17,7 @@ import { useQuery } from "@/lib/use-query";
 import { PeriodFilter, rangeQuery, type MonthRange } from "./period-filter";
 import { compare, Pending, PendingTile, ShareBars, StatTile, Status, yearBefore } from "./report-ui";
 import { ShareDialog, type ShareChannel } from "./share-dialog";
+import { ReportGeminiSummary } from "./report-gemini-summary";
 
 /** Estructura de design/prototipo/Ventas-ubd8.dc.html. Montos de pedidos sin IGV, solo veterinarios, sin cancelados.
  *  Ganancia, proyección y categorías quedan pendientes hasta tener costos, el modelo de predicción y categorías confirmadas. */
@@ -64,7 +65,7 @@ export function SalesReportPage() {
     data.below_reference_pct != null
       ? `El descuento en factura es ${formatPen(data.invoice_discount)} (${formatPercent(invoicePct)}), pero los ${TOP_PRODUCTS} productos principales se venden en promedio ${formatPercent(data.below_reference_pct)} bajo su precio de referencia: el descuento real está dentro del precio.`
       : "",
-    "La proyección de los próximos meses queda pendiente del modelo de predicción.",
+    "La proyección de importes queda pendiente; el pronóstico de cantidades por producto está disponible por separado.",
   ].filter(Boolean) : [];
   const periodText = period?.from_date && period.to_date ? `${monthLabel(period.from_date)} a ${formatMonthYear(period.to_date)}` : "";
   const subject = `Ventas y rentabilidad · ${periodText}${sellerName ? ` · ${sellerName}` : ""}`;
@@ -103,11 +104,12 @@ export function SalesReportPage() {
     {data && <>
       <Card className="flex flex-col gap-4 p-8">
         <div className="flex items-center gap-3">
-          <span className="flex size-9 items-center justify-center rounded bg-brand-soft text-brand"><Sparkles size={18} aria-hidden /></span>
+          <span className="flex size-9 items-center justify-center rounded bg-brand-soft text-brand"><BarChart3 size={18} aria-hidden /></span>
           <h2 className="text-lg font-semibold">Lo que dicen los datos</h2>
         </div>
         <ol className="list-decimal space-y-2 pl-5 text-[15px] leading-relaxed text-ink-2">{insights.map((line) => <li key={line}>{line}</li>)}</ol>
-        <p className="text-[13px] text-ink-muted">Armado con las cifras de este reporte. La redacción con IA queda pendiente de Gemini.{sellerName && ` Filtrado por ${titleCase(sellerName)}.`}</p>
+        {!seller && <ReportGeminiSummary report="sales" metrics={{ amount_pen: data.amount, orders: data.order_count, invoice_discount_pen: data.invoice_discount, below_reference_pct: data.below_reference_pct }} />}
+        {sellerName && <p className="text-[13px] text-ink-muted">Vista filtrada por {titleCase(sellerName)}. El resumen con Gemini está disponible en la vista de todos los vendedores.</p>}
       </Card>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
@@ -115,7 +117,7 @@ export function SalesReportPage() {
         <PendingTile label="Ganancia estimada" kind="data" reason="Faltan costos de compra validados" />
         <StatTile label="Pedidos" value={formatInt(data.order_count)} detail={data.amount && data.order_count ? `Ticket promedio ${formatPen(data.amount / data.order_count)}` : undefined} />
         <StatTile label="Descuento real bajo referencia" value={formatPercent(data.below_reference_pct)} detail={`En factura: ${formatPen(data.invoice_discount)}`} />
-        <PendingTile label="Proyección" kind="model" reason="Pendiente del modelo de predicción" />
+        <PendingTile label="Proyección en soles" kind="data" reason="Pendiente de una conversión validada de cantidades a importes" />
       </div>
 
       <MonthlyCard data={data} />
@@ -179,7 +181,7 @@ function MonthlyCard({ data }: { data: Sales }) {
         </BarChart>
       </ResponsiveContainer>
     </div>
-    <p className="rounded bg-canvas p-4 text-sm text-ink-muted">Proyección: pendiente del modelo de predicción. Cuando se entrene con el historial de pedidos, aquí aparecerán los próximos 6 meses con su rango probable.</p>
+    <p className="rounded bg-canvas p-4 text-sm text-ink-muted">La proyección en soles permanece pendiente. <Link href="/reportes/pronosticos" className="font-semibold text-brand">Consultar pronóstico de cantidades por producto</Link>.</p>
   </Card>;
 }
 

@@ -93,8 +93,8 @@ export function ShareBars({ items, valueLabel }: { items: { key: string; label: 
 }
 
 const PENDING = {
-  model: { icon: BrainCircuit, badge: "Requiere el modelo de predicción", hint: "Se completará cuando se entrene el modelo XGBoost con el historial de pedidos." },
-  ai: { icon: Sparkles, badge: "Requiere IA (Gemini)", hint: "Se completará cuando se configure la clave de la API de Gemini. Solo se le envían cifras agregadas, nunca nombres ni RUC." },
+  model: { icon: BrainCircuit, badge: "Función pendiente", hint: "La predicción por producto está disponible en Pronósticos; esta sección requiere una integración específica." },
+  ai: { icon: Sparkles, badge: "Redacción pendiente", hint: "Esta sección todavía no llama a Gemini." },
   data: { icon: Database, badge: "Faltan datos de Mederi", hint: "" },
   feature: { icon: Clock, badge: "Próximamente", hint: "" },
 } as const;

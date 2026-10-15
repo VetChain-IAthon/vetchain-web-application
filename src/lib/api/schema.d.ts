@@ -437,6 +437,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/insights/report-summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Summarize Report
+         * @description Envía a Gemini únicamente las métricas numéricas permitidas del reporte.
+         */
+        post: operations["summarize_report_api_v1_insights_report_summary_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/settings/pricing": {
         parameters: {
             query?: never;
@@ -613,6 +633,46 @@ export interface paths {
         get: operations["pending_get_prediction_model_api_v1_prediction_model_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/prediction/forecasts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Compare Forecasts
+         * @description Compara Extra Trees con el promedio móvil para cantidades registradas.
+         */
+        get: operations["compare_forecasts_api_v1_prediction_forecasts_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/prediction/forecasts/explanation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Explain Forecast
+         * @description Redacta una explicación con Gemini sobre las cifras del pronóstico calculado.
+         */
+        post: operations["explain_forecast_api_v1_prediction_forecasts_explanation_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1966,6 +2026,63 @@ export interface components {
              */
             money_at_stake: number;
         };
+        /** ForecastComparisonOut */
+        ForecastComparisonOut: {
+            /** Product Id */
+            product_id: string;
+            /**
+             * Scenario
+             * @description A: cantidad solicitada T/A; B: la misma cantidad con precio unitario positivo.
+             */
+            scenario: string;
+            /** Horizon Months */
+            horizon_months: number;
+            /** Cutoff Month */
+            cutoff_month: string;
+            /** Forecast Start Month */
+            forecast_start_month: string;
+            /**
+             * Moving Average 6M
+             * @description Cantidad total estimada para el horizonte.
+             */
+            moving_average_6m: number;
+            /**
+             * Extra Trees
+             * @description Cantidad total estimada para el horizonte.
+             */
+            extra_trees: number;
+            /** Data Origin */
+            data_origin: string;
+            /** Warning */
+            warning: string;
+        };
+        /** ForecastExplanationIn */
+        ForecastExplanationIn: {
+            /** Product Id */
+            product_id: string;
+            /**
+             * Scenario
+             * @default A
+             */
+            scenario: string;
+            /**
+             * Horizon
+             * @default 1
+             */
+            horizon: number;
+            /** Cutoff */
+            cutoff?: string | null;
+        };
+        /** ForecastExplanationOut */
+        ForecastExplanationOut: {
+            /** Text */
+            text: string;
+            /**
+             * Source
+             * @description gemini si la IA redactó el texto; fallback si se usó una plantilla.
+             */
+            source: string;
+        };
         /** FunnelReportOut */
         FunnelReportOut: {
             period: components["schemas"]["PeriodOut"];
@@ -2614,6 +2731,28 @@ export interface components {
             data_origin: string | null;
             /** Warning */
             warning: string | null;
+        };
+        /** ReportSummaryIn */
+        ReportSummaryIn: {
+            /**
+             * Report
+             * @enum {string}
+             */
+            report: "dashboard" | "kpis" | "sales" | "customers" | "stock" | "receivables" | "salespeople";
+            /** Metrics */
+            metrics: {
+                [key: string]: number;
+            };
+        };
+        /** ReportSummaryOut */
+        ReportSummaryOut: {
+            /** Text */
+            text: string;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "gemini" | "fallback";
         };
         /** RowErrorOut */
         RowErrorOut: {
@@ -3763,6 +3902,39 @@ export interface operations {
             };
         };
     };
+    summarize_report_api_v1_insights_report_summary_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReportSummaryIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReportSummaryOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_pricing_api_v1_settings_pricing_get: {
         parameters: {
             query?: never;
@@ -4138,6 +4310,73 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+        };
+    };
+    compare_forecasts_api_v1_prediction_forecasts_get: {
+        parameters: {
+            query: {
+                product_id: string;
+                scenario?: string;
+                horizon?: number;
+                cutoff?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForecastComparisonOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    explain_forecast_api_v1_prediction_forecasts_explanation_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ForecastExplanationIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ForecastExplanationOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
