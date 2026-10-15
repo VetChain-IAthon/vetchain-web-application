@@ -1,7 +1,7 @@
 "use client";
 
 import { jsPDF } from "jspdf";
-import { ArrowLeft, ArrowRight, Download, Mail, MessageSquare, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, BarChart3, Download, Mail, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
@@ -16,6 +16,7 @@ import { formatDate, formatInt, formatMonthYear, formatNumber, formatPen, format
 import { useQuery } from "@/lib/use-query";
 import { compare, StatTile, Status, warningText, yearBefore } from "./report-ui";
 import { ShareDialog, type ShareChannel } from "./share-dialog";
+import { ReportGeminiSummary } from "./report-gemini-summary";
 
 /** Estructura de design/prototipo/Clientes-9xcu.dc.html. Montos de pedidos sin IGV, solo veterinarios, sin cancelados.
  *  «Qué hacer» y la prioridad de los dormidos esperan a Gemini y al modelo de predicción: no se inventan. */
@@ -85,11 +86,11 @@ export function CustomersReportPage() {
     {data && <>
       <Card className="flex flex-col gap-4 p-8">
         <div className="flex items-center gap-3">
-          <span className="flex size-9 items-center justify-center rounded bg-brand-soft text-brand"><Sparkles size={18} aria-hidden /></span>
+          <span className="flex size-9 items-center justify-center rounded bg-brand-soft text-brand"><BarChart3 size={18} aria-hidden /></span>
           <h2 className="text-lg font-semibold">Lo que dicen los datos</h2>
         </div>
         <ol className="list-decimal space-y-2 pl-5 text-[15px] leading-relaxed text-ink-2">{insights.map((line) => <li key={line}>{line}</li>)}</ol>
-        <p className="text-[13px] text-ink-muted">Armado con las cifras de este reporte. La redacción con IA queda pendiente de Gemini.</p>
+        <ReportGeminiSummary report="customers" metrics={{ active: data.active_count, previous_active: prevActive, top_ten_share_pct: data.top_ten_share_pct, at_risk: atRisk.data?.total, recoverable }} />
       </Card>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -156,13 +157,13 @@ export function CustomersReportPage() {
               <TD numeric className="font-semibold">{formatPen(c.money_at_stake)}</TD>
               <TD className="text-ink-muted">{c.purchase_rhythm_days != null ? `Cada ${formatNumber(c.purchase_rhythm_days)} días` : `≈ Cada ${formatInt(atRisk.data!.default_rhythm_days)} días`}</TD>
               <TD numeric className="font-semibold text-brand-strong">{late != null ? `${formatNumber(late)} días` : `${formatInt(c.days_since_last_order)} días sin pedir`}</TD>
-              <TD className="text-[13px] text-ink-muted">Pendiente de IA</TD>
+              <TD className="text-[13px] text-ink-muted">Pendiente</TD>
             </TR>;
           })}</TBody>
         </Table> : <p className="text-sm text-ink-muted">Ningún cliente está atrasado respecto de su ritmo.</p>)}
         {riskItems[0] && <Link href={`/reportes/ficha?ruc=${riskItems[0].ruc}`} className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand no-underline">
           Abrir la ficha de {riskItems[0].name} <ArrowRight size={16} aria-hidden /></Link>}
-        {atRisk.data && <p className="text-[13px] text-ink-muted">{warningText[atRisk.data.warning]} «Qué hacer» lo sugerirá la IA cuando se configure Gemini.{riskItems.length > 10 && ` Se muestran 10 de ${formatInt(riskItems.length)}.`}</p>}
+        {atRisk.data && <p className="text-[13px] text-ink-muted">{warningText[atRisk.data.warning]} Las acciones individuales requieren una validación adicional.{riskItems.length > 10 && ` Se muestran 10 de ${formatInt(riskItems.length)}.`}</p>}
       </Card>
 
       <Card className="flex flex-col gap-4 p-8">

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Download, Mail, MessageSquare, Sparkles } from "lucide-react";
+import { ArrowLeft, Download, Mail, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -61,7 +61,6 @@ export function CustomerBriefPage() {
     <PageHeader
       title="Ficha de cliente para reunión"
       subtitle="Cuánto compró, a qué precio, cuánto se ganó, qué proyectamos y qué ofrecerle según stock y merma."
-      badge={<span className="inline-flex items-center gap-1.5 rounded-xs bg-brand-soft px-2 py-0.5 text-[13px] font-semibold text-brand" title="Las secciones con IA están pendientes de configurar Gemini"><Sparkles size={14} aria-hidden />Con IA</span>}
       actions={<ShareActions brief={data} projection={projection} version={version} onShare={setChannel} />}
     />
 
@@ -124,8 +123,8 @@ function BriefBody({ brief, projection }: { brief: Brief; projection: Projection
       </div>
     </Card>
 
-    <Pending kind="ai" title="Resumen para la reunión">
-      Cuatro líneas con lo esencial: cuánto compra y qué lugar ocupa, si va atrasado, cuánto paga frente a la referencia y qué proponerle. Las cifras de esta ficha ya son reales; falta que Gemini las redacte.
+    <Pending kind="feature" title="Resumen para la reunión">
+      Cuatro líneas con lo esencial: cuánto compra y qué lugar ocupa, si va atrasado, cuánto paga frente a la referencia y qué proponerle. El resumen individual queda pendiente de una política de uso de datos del cliente con Gemini.
     </Pending>
 
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -136,7 +135,7 @@ function BriefBody({ brief, projection }: { brief: Brief; projection: Projection
         detail={brief.days_since_last_order != null ? `Última compra hace ${brief.days_since_last_order} días` : "Sin pedidos"} />
       <StatTile label="Descuentos" value={`${formatPercent(discountPct)} en factura`}
         detail={brief.below_reference_pct != null ? `Pagó ${formatPercent(Math.abs(brief.below_reference_pct))} ${brief.below_reference_pct >= 0 ? "bajo" : "sobre"} el precio de referencia` : undefined} />
-      <PendingTile label={`Proyección ${PROJECTION_LABEL[projection].toLowerCase()}`} kind="model" reason="Pendiente del modelo de predicción" />
+      <PendingTile label={`Proyección ${PROJECTION_LABEL[projection].toLowerCase()}`} kind="data" reason="Falta validar la proyección de importes por cliente" />
     </div>
 
     <MonthlyCard brief={brief} projection={projection} />
@@ -144,10 +143,10 @@ function BriefBody({ brief, projection }: { brief: Brief; projection: Projection
     <RhythmCard brief={brief} />
     <ProductsCard brief={brief} discountPct={discountPct} />
 
-    <Pending kind="ai" title="Qué ofrecerle">
-      La IA cruzará lo que compra con el stock, los lotes por vencer y lo que compran clientes parecidos, y armará una propuesta que no baje del margen mínimo. Necesita Gemini, el archivo de lotes y costos validados.
+    <Pending kind="feature" title="Qué ofrecerle">
+      La propuesta personalizada requiere el archivo de lotes, costos validados y reglas comerciales aprobadas antes de poder redactarse.
     </Pending>
-    <Pending kind="ai" title="Guion para la reunión">
+    <Pending kind="feature" title="Guion para la reunión">
       Preguntas y propuestas en orden para la conversación: abrir con su historial, preguntar por el atraso, proponer la reposición y cuidar el descuento.
     </Pending>
     <Pending kind="data" title="Crédito y cobranza">
@@ -190,7 +189,7 @@ function CustomerVersionBody({ brief, projection }: { brief: Brief; projection: 
         <OriginBadge origin="real" className="flex-none" />
       </div>
       <ol className="list-decimal space-y-2 pl-5 text-[15px] leading-relaxed text-ink-2">{summary.map((line) => <li key={line}>{line}</li>)}</ol>
-      <p className="inline-flex items-center gap-1.5 text-[13px] text-ink-muted"><Sparkles size={14} aria-hidden />La propuesta para el cliente y su redacción con IA están pendientes de Gemini.</p>
+      <p className="text-[13px] text-ink-muted">La propuesta individual sigue pendiente de datos de lotes y costos validados.</p>
     </Card>
 
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -198,7 +197,7 @@ function CustomerVersionBody({ brief, projection }: { brief: Brief; projection: 
       <StatTile label="Pedidos" value={formatInt(brief.order_count)} detail={brief.order_count ? `Pedido promedio ${formatPen(brief.average_order_amount)}` : undefined} />
       <StatTile label="Ahorro frente a referencia" value={brief.below_reference_pct != null && brief.below_reference_pct > 0 ? formatPercent(brief.below_reference_pct) : "—"}
         detail="Precio pagado vs. precio de referencia" />
-      <PendingTile label="Propuesta" kind="ai" reason="Pendiente de IA y del archivo de lotes" />
+      <PendingTile label="Propuesta" kind="data" reason="Pendiente del archivo de lotes y costos" />
     </div>
 
     <div className="grid gap-4 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
@@ -207,8 +206,8 @@ function CustomerVersionBody({ brief, projection }: { brief: Brief; projection: 
     </div>
     <ProductsCard brief={brief} discountPct={brief.list_amount > 0 ? (brief.invoice_discount / brief.list_amount) * 100 : 0} forCustomer />
 
-    <Pending kind="ai" title="Nuestra propuesta">
-      Ofertas para este cliente con precios sin IGV y su vigencia: su reposición habitual, productos de lotes por vencer y precios por volumen. Necesita Gemini, el archivo de lotes y costos validados para no bajar del margen mínimo.
+    <Pending kind="feature" title="Nuestra propuesta">
+      Ofertas para este cliente con precios sin IGV y su vigencia: su reposición habitual, productos de lotes por vencer y precios por volumen. Requiere el archivo de lotes y costos validados para respetar el margen mínimo.
     </Pending>
 
     <p className="text-[13px] leading-relaxed text-ink-muted">Fuente: pedidos de {brief.name} registrados en Mederi, sin IGV. Precio de referencia: último precio pagado registrado del producto.</p>

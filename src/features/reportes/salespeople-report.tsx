@@ -1,7 +1,7 @@
 "use client";
 
 import { jsPDF } from "jspdf";
-import { ArrowLeft, Database, Download, Mail, MessageSquare, Sparkles } from "lucide-react";
+import { ArrowLeft, BarChart3, Database, Download, Mail, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { OriginBadge } from "@/components/data/origin-badge";
@@ -14,9 +14,10 @@ import { formatInt, formatPen, formatPercent } from "@/lib/format";
 import { useQuery } from "@/lib/use-query";
 import { PendingTile, StatTile, Status } from "./report-ui";
 import { ShareDialog, type ShareChannel } from "./share-dialog";
+import { ReportGeminiSummary } from "./report-gemini-summary";
 
 /** Estructura de design/prototipo/Vendedores-45z4.dc.html. Real: venta de 12 meses por vendedor (cartera según la ficha
- *  del cliente, provisional). El embudo de alertas y el seguimiento esperan al modelo de predicción (alertas diarias). */
+ *  del cliente, provisional). El embudo de alertas y el seguimiento esperan el registro de resultados. */
 
 const FUNNEL = ["Alertas generadas", "Clientes contactados", "Cotizaciones enviadas", "Pedidos"];
 const titleCase = (text: string) => text.toLowerCase().replace(/(^|\s)\S/g, (c) => c.toUpperCase());
@@ -44,7 +45,7 @@ export function SalespeopleReportPage() {
     <Link href="/reportes" className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand no-underline"><ArrowLeft size={16} aria-hidden />Reportes</Link>
     <PageHeader title="Vendedores y seguimiento"
       badge={<span className="rounded-xs bg-warn-bg px-2 py-0.5 text-[13px] font-semibold text-warn-fg">Parcial</span>}
-      subtitle="Cuánto vende cada uno y qué pasa con cada alerta · la venta por vendedor es real; el embudo y el seguimiento esperan las alertas del modelo"
+      subtitle="Cuánto vende cada uno y qué pasa con cada alerta · la venta por vendedor es real; el embudo y el seguimiento esperan el registro de alertas"
       actions={<div className="flex flex-none gap-2">
         <Button disabled={!data} onClick={() => downloadSellersPdf(subject, insights, sellers)}><Download size={16} aria-hidden />Descargar PDF</Button>
         <Button variant="outline" disabled={!data} onClick={() => setChannel("email")}><Mail size={16} aria-hidden />Correo</Button>
@@ -56,19 +57,19 @@ export function SalespeopleReportPage() {
     {data && <>
       <Card className="flex flex-col gap-4 p-8">
         <div className="flex items-center gap-3">
-          <span className="flex size-9 items-center justify-center rounded bg-brand-soft text-brand"><Sparkles size={18} aria-hidden /></span>
+          <span className="flex size-9 items-center justify-center rounded bg-brand-soft text-brand"><BarChart3 size={18} aria-hidden /></span>
           <h2 className="text-lg font-semibold">Lo que dicen los datos</h2>
         </div>
         <ol className="list-decimal space-y-2 pl-5 text-[15px] leading-relaxed text-ink-2">{insights.map((line) => <li key={line}>{line}</li>)}</ol>
-        <p className="text-[13px] text-ink-muted">Armado con la venta por vendedor. La redacción con IA queda pendiente de Gemini.</p>
+        <ReportGeminiSummary report="salespeople" metrics={{ salespeople: sellers.length, leader_share_pct: leader?.share_pct, leader_customers: leader?.customer_count, level_a_customers: aCount }} />
       </Card>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatTile label="Venta de un solo vendedor" value={formatPercent(leader?.share_pct)} origin="real"
           tone={(leader?.share_pct ?? 0) > 40 ? "bad" : "muted"} detail="Meta 40 % (propuesta)" />
-        <PendingTile label="Alertas atendidas en 48 horas" kind="model" reason="Pendiente de las alertas del modelo" />
+        <PendingTile label="Alertas atendidas en 48 horas" kind="data" reason="Falta registrar el seguimiento de alertas" />
         <PendingTile label="Cotizaciones que terminan en pedido" kind="data" reason="Falta enlazar cotizaciones con pedidos" />
-        <PendingTile label="Venta recuperada con alertas" kind="model" reason="Pendiente de las alertas del modelo" />
+        <PendingTile label="Venta recuperada con alertas" kind="data" reason="Falta vincular alertas y pedidos" />
       </div>
 
       <div className="grid gap-4 xl:grid-cols-2">
@@ -84,7 +85,7 @@ export function SalespeopleReportPage() {
             </li>)}
           </ul>
           <div className="flex items-center justify-between rounded bg-canvas px-5 py-4"><span className="font-semibold text-ink-muted">Venta recuperada</span><span className="text-lg font-semibold text-ink-muted">—</span></div>
-          <PendingNote>Pendiente: se medirá cuando el modelo de predicción genere las alertas diarias y el equipo registre sus resultados.</PendingNote>
+          <PendingNote>Pendiente: se medirá cuando existan alertas registradas y el equipo registre sus resultados.</PendingNote>
         </Card>
 
         <Card className="flex flex-col gap-4 p-8">
@@ -118,7 +119,7 @@ export function SalespeopleReportPage() {
             {Array.from({ length: 6 }, (_, i) => <TD key={i} numeric className="text-ink-muted">—</TD>)}
           </TR>)}</TBody>
         </Table>
-        <PendingNote>Pendiente: las columnas se llenarán con las alertas del modelo de predicción y los resultados que registre cada vendedor.</PendingNote>
+        <PendingNote>Pendiente: las columnas se llenarán con las alertas y los resultados que registre cada vendedor.</PendingNote>
       </Card>
 
       <Card className="flex flex-wrap items-center justify-between gap-6 p-8">
@@ -157,6 +158,6 @@ function downloadSellersPdf(title: string, insights: string[], sellers: Seller[]
   insights.forEach((s, i) => line(`${i + 1}. ${s}`));
   y += 2; line("Venta de 12 meses por vendedor", 12, true);
   sellers.forEach((s) => line(`${titleCase(s.name)}: ${formatPen(s.amount)} · ${formatPercent(s.share_pct)} · ${formatInt(s.customer_count)} clientes`, 9));
-  y += 3; line("Embudo de alertas y seguimiento: pendientes del modelo de predicción. Cartera según la ficha del cliente (provisional).", 8, false, [95, 99, 104]);
+  y += 3; line("Embudo de alertas y seguimiento: pendientes del registro de resultados. Cartera según la ficha del cliente (provisional).", 8, false, [95, 99, 104]);
   doc.save(`vetchain-vendedores-${new Date().toISOString().slice(0, 10)}.pdf`);
 }

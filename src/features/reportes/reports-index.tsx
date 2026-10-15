@@ -8,7 +8,8 @@ import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { api } from "@/lib/api/client";
+import { api, errorMessage } from "@/lib/api/client";
+import type { components } from "@/lib/api/schema";
 import { formatDate, formatInt, formatPen, twelveMonthStart } from "@/lib/format";
 import { useQuery } from "@/lib/use-query";
 import { cn } from "@/lib/utils";
@@ -29,13 +30,13 @@ const REPORTS: { n: number; code: string; href: string; title: string; question:
 const BRIEF_INCLUDES: { text: string; pending?: "model" | "ai" | "data" }[] = [
   { text: "Compras y precios por producto, con su evolución mensual" },
   { text: "Descuento en factura y descuento real frente al precio de lista" },
-  { text: "Ganancia estimada y proyección a 1, 6 o 12 meses", pending: "model" },
+  { text: "Ganancia estimada y proyección a 1, 6 o 12 meses", pending: "data" },
   { text: "Ofertas según stock y lotes por vencer", pending: "data" },
   { text: "Guion de preguntas para la reunión", pending: "ai" },
   { text: "PDF para el cliente, correo y WhatsApp" },
 ];
 
-const PENDING_LABEL = { model: "Pendiente del modelo de predicción y de costos", ai: "Pendiente de IA (Gemini)", data: "Faltan datos de lotes" } as const;
+const PENDING_LABEL = { model: "Función pendiente", ai: "Redacción pendiente", data: "Faltan datos validados" } as const;
 
 export function ReportsIndexPage() {
   const catalog = useQuery(() => api.GET("/api/v1/reports"), [], "No se pudo cargar el catálogo de reportes.");
@@ -59,8 +60,6 @@ export function ReportsIndexPage() {
     <PageHeader
       title="Reportes"
       subtitle={period ? `Inteligencia comercial sobre el historial de Mederi · datos hasta el ${formatDate(period.data_as_of)} · montos sin IGV` : "Inteligencia comercial sobre el historial de Mederi"}
-      badge={<span className="inline-flex items-center gap-1.5 rounded-xs bg-brand-soft px-2 py-0.5 text-[13px] font-semibold text-brand" title="Las funciones con IA están pendientes de configurar Gemini">
-        <Sparkles size={14} aria-hidden />Con IA</span>}
     />
 
     <CustomerBriefCard asOf={period?.data_as_of ?? null} />
@@ -97,7 +96,6 @@ export function ReportsIndexPage() {
             <p className="mt-1 text-sm text-ink-muted">{report.question}</p>
             <div className="mt-4 flex flex-col gap-2 rounded bg-canvas p-4 text-sm text-ink-2">
               {info?.warning && <p>{warningText[info.warning] ?? info.warning}</p>}
-              <p className="inline-flex items-center gap-1.5 text-[13px] text-ink-muted"><Sparkles size={14} aria-hidden />Resumen automático pendiente de IA (Gemini)</p>
             </div>
             <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-semibold text-brand">Abrir reporte <ArrowRight size={16} aria-hidden className="transition-transform group-hover:translate-x-0.5" /></span>
           </Link>;
@@ -157,20 +155,36 @@ function CustomerBriefCard({ asOf }: { asOf: string | null }) {
   </Card>;
 }
 
-/** Preguntas en lenguaje natural: la base queda lista y se activa cuando se configure Gemini. */
+/** Gemini interpreta una pregunta agregada; las cifras salen de la base. */
 function AskYourDataCard() {
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState<components["schemas"]["InsightAnswerOut"] | null>(null);
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  async function ask(e: React.FormEvent) {
+    e.preventDefault();
+    if (!question.trim()) return;
+    setBusy(true); setError(""); setAnswer(null);
+    try {
+      const response = await api.POST("/api/v1/insights/questions", { body: { question: question.trim() } });
+      if (response.error) setError(errorMessage(response.error, "No se pudo responder la pregunta."));
+      else setAnswer(response.data ?? null);
+    } catch { setError("No se pudo responder la pregunta."); }
+    finally { setBusy(false); }
+  }
   return <Card className="flex flex-col gap-4 p-8">
     <div>
-      <h2 className="text-lg font-semibold">Pregúntale a tus datos</h2>
+      <div className="flex flex-wrap items-center justify-between gap-2"><h2 className="text-lg font-semibold">Pregúntale a tus datos</h2><span className="inline-flex items-center gap-1 rounded bg-brand-soft px-2 py-0.5 text-xs font-semibold text-brand"><Sparkles size={14} aria-hidden />IA generativa</span></div>
       <p className="mt-1 text-sm text-ink-muted">Escribe como le preguntarías a un analista. La respuesta dice de qué datos sale.</p>
     </div>
-    <form className="flex gap-3" onSubmit={(e) => e.preventDefault()}>
+    <form className="flex gap-3" onSubmit={ask}>
       <label className="relative flex flex-1 items-center"><span className="sr-only">Pregunta</span>
         <Sparkles size={16} className="absolute left-3 text-ink-muted" aria-hidden />
-        <Input disabled placeholder="Ej.: ¿cuánto le vendimos a Diservet este año?" className="h-12 pl-9" /></label>
-      <Button type="submit" disabled className="h-12 bg-ink px-6 hover:bg-ink">Preguntar</Button>
+        <Input value={question} onChange={(e) => setQuestion(e.target.value)} maxLength={500} placeholder="Ej.: ¿cuántos pedidos hubo por mes este año?" className="h-12 pl-9" /></label>
+      <Button type="submit" disabled={busy || !question.trim()} className="h-12 bg-ink px-6 hover:bg-ink">{busy ? "Consultando…" : "Preguntar"}</Button>
     </form>
-    <p className="inline-flex items-center gap-1.5 text-[13px] text-ink-muted"><Sparkles size={14} aria-hidden />
-      Pendiente de IA generativa (Gemini): se activará cuando se configure la clave de la API. Solo se le enviarán cifras agregadas, nunca nombres ni RUC.</p>
+    {error && <p role="alert" className="text-sm text-danger">{error}</p>}
+    {answer && <div className="rounded bg-canvas p-4"><p className="whitespace-pre-wrap text-sm leading-relaxed">{answer.text}</p><p className="mt-3 text-xs text-ink-muted">Fuentes: {answer.sources.join(", ") || "base de datos"} · origen {answer.data_origin}</p></div>}
+    <p className="text-[13px] text-ink-muted">Gemini interpreta preguntas sobre cifras agregadas; no incluyas nombres, RUC ni información personal.</p>
   </Card>;
 }
