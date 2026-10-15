@@ -4,11 +4,13 @@ import { jsPDF } from "jspdf";
 import { AlertTriangle, ArrowLeft, Check, Download, Mail, MessageSquare, Minus, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { OriginBadge } from "@/components/data/origin-badge";
 import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { api } from "@/lib/api/client";
 import { formatDate, formatInt, formatMonthYear, formatPen, formatPercent } from "@/lib/format";
+import { useSimulated } from "@/lib/demo";
 import { useQuery } from "@/lib/use-query";
 import { cn } from "@/lib/utils";
 import { Status, yearBefore } from "./report-ui";
@@ -21,7 +23,7 @@ import { ReportGeminiSummary } from "./report-gemini-summary";
  *  devuelve target = null). Se muestran siempre como «propuesta». Un indicador sin datos queda «Sin dato» con lo que falta. */
 
 type State = "ok" | "warn" | "bad" | "none";
-type Origin = "real" | "estimated" | "pending" | "new";
+type Origin = "real" | "estimated" | "pending" | "new" | "simulated";
 
 type Indicator = {
   key: string;
@@ -55,7 +57,7 @@ const STATE = {
   none: { label: "Sin dato", icon: Minus, chip: "bg-neutral-bg text-neutral-fg", bar: "bg-line-strong" },
 } as const;
 
-const ORIGIN_LABEL: Record<Origin, string> = { real: "Dato real", estimated: "Estimado", pending: "Pendiente", new: "Nuevo con VetChain" };
+const ORIGIN_LABEL: Record<Origin, string> = { real: "Dato real", estimated: "Estimado", pending: "Pendiente", new: "Nuevo con VetChain", simulated: "Simulado" };
 
 export function KpisReportPage() {
   const query = useQuery(() => api.GET("/api/v1/reports/kpis"), [], "No se pudo cargar los indicadores.");
@@ -67,6 +69,7 @@ export function KpisReportPage() {
   const customers = useQuery(() => api.GET("/api/v1/reports/customers"), [], "");
   const dormant = useQuery(() => api.GET("/api/v1/customers/dormant", { params: { query: { per_page: 1 } } }), [], "");
   const [channel, setChannel] = useState<ShareChannel | null>(null);
+  const sim = useSimulated()?.kpis;
 
   const data = query.data;
   const value = (items: { code: string; value: number | null }[] | undefined, code: string) => items?.find((k) => k.code === code)?.value ?? null;
@@ -93,12 +96,12 @@ export function KpisReportPage() {
         explain: `Monto de pedidos dividido entre ${orders != null ? `los ${formatInt(orders)} pedidos` : "los pedidos"} del período.` },
     ] },
     { title: "Precio y rentabilidad", question: "¿Cuánto ganamos por cada sol vendido?", items: [
-      { key: "margin", title: "Margen bruto", value: null, format: pct, target: 22, critical: 15, higher: true, origin: "pending",
+      { key: "margin", title: "Margen bruto", value: sim?.margin ?? null, format: pct, target: 22, critical: 15, higher: true, origin: sim?.margin != null ? "simulated" : "pending",
         goalText: "Meta ≥ 22 % · crítico bajo 15 %", explain: "(Venta − costo) ÷ venta.", pendingReason: "Falta el archivo de costos de compra" },
       { key: "discount", title: "Descuento real bajo referencia", value: value(data?.items, "below_reference_pct"), format: pct,
         target: 12, critical: 20, higher: false, origin: "estimated", goalText: "Meta ≤ 12 % · crítico sobre 20 %",
         explain: "1 − precio pagado ÷ precio de referencia (último precio pagado), en los 5 productos principales." },
-      { key: "waste", title: "Merma sobre la venta", value: null, format: pct, target: 0.5, critical: 1.5, higher: false, origin: "pending",
+      { key: "waste", title: "Merma sobre la venta", value: sim?.waste ?? null, format: pct, target: 0.5, critical: 1.5, higher: false, origin: sim?.waste != null ? "simulated" : "pending",
         goalText: "Meta ≤ 0,5 % · crítico sobre 1,5 %", explain: "Producto dado de baja por vencimiento o daño, dividido entre la venta.",
         pendingReason: "Falta el archivo de lotes y bajas" },
     ] },
@@ -109,16 +112,16 @@ export function KpisReportPage() {
       { key: "seller", title: "Venta de un solo vendedor", value: leader?.share_pct ?? null, format: pct,
         target: 40, critical: 50, higher: false, origin: "real", goalText: "Meta ≤ 40 % · crítico sobre 50 %",
         explain: leader ? `${titleCase(leader.name)} tiene pedidos por ${formatPen(leader.amount)} de ${formatInt(leader.customer_count)} clientes (cartera provisional).` : "Parte de la venta del vendedor principal." },
-      { key: "overdue", title: "Cartera vencida", value: null, format: pct, target: 10, critical: 20, higher: false, origin: "pending",
+      { key: "overdue", title: "Cartera vencida", value: sim?.overdue ?? null, format: pct, target: 10, critical: 20, higher: false, origin: sim?.overdue != null ? "simulated" : "pending",
         goalText: "Meta ≤ 10 % · crítico sobre 20 %", explain: "Deuda vencida dividida entre el total por cobrar.",
         pendingReason: "Los cobros aún no se enlazan con los pedidos" },
     ] },
     { title: "Gestión con VetChain", question: "Se miden desde que el equipo registra resultados", items: [
-      { key: "alerts", title: "Alertas atendidas en 48 horas", value: null, format: pct, target: 90, critical: 70, higher: true, origin: "new",
+      { key: "alerts", title: "Alertas atendidas en 48 horas", value: sim?.alerts ?? null, format: pct, target: 90, critical: 70, higher: true, origin: sim?.alerts != null ? "simulated" : "new",
         goalText: "Meta ≥ 90 %", explain: "Alertas con resultado registrado dentro de las 48 horas siguientes.", pendingReason: "Falta registrar las alertas y su seguimiento" },
-      { key: "quotes", title: "Cotizaciones que terminan en pedido", value: null, format: pct, target: 40, critical: 20, higher: true, origin: "new",
+      { key: "quotes", title: "Cotizaciones que terminan en pedido", value: sim?.quotes ?? null, format: pct, target: 40, critical: 20, higher: true, origin: sim?.quotes != null ? "simulated" : "new",
         goalText: "Meta ≥ 40 %", explain: "Pedidos dividido entre cotizaciones enviadas en el mes.", pendingReason: "Falta enlazar cotizaciones con pedidos" },
-      { key: "reactivated", title: "Clientes dormidos reactivados", value: null, format: (v) => formatInt(v), target: 25, critical: 10, higher: true, origin: "new",
+      { key: "reactivated", title: "Clientes dormidos reactivados", value: sim?.reactivated ?? null, format: (v) => formatInt(v), target: 25, critical: 10, higher: true, origin: sim?.reactivated != null ? "simulated" : "new",
         goalText: "Meta 25 por trimestre",
         explain: `Clientes sin compras en 12 meses que vuelven a comprar.${dormant.data ? ` Hay ${formatInt(dormant.data.ordered_before_count)} recuperables.` : ""}`,
         pendingReason: "Se mide desde el inicio del piloto" },
@@ -206,7 +209,8 @@ function KpiCard({ kpi }: { kpi: Indicator }) {
       <p className="text-sm leading-relaxed text-ink-muted">{kpi.explain}</p>
     </div>
     <div className="mt-auto flex flex-wrap gap-2">
-      {kpi.origin !== "pending" && <span className="rounded-xs border border-line-strong px-2 py-0.5 text-xs font-semibold text-ink-2">{ORIGIN_LABEL[kpi.origin]}</span>}
+      {kpi.origin === "simulated" ? <OriginBadge origin="simulated" />
+        : kpi.origin !== "pending" && <span className="rounded-xs border border-line-strong px-2 py-0.5 text-xs font-semibold text-ink-2">{ORIGIN_LABEL[kpi.origin]}</span>}
       {kpi.value == null && kpi.pendingReason && <span className="rounded-xs bg-neutral-bg px-2 py-0.5 text-xs font-semibold text-neutral-fg">Pendiente: {kpi.pendingReason.charAt(0).toLowerCase() + kpi.pendingReason.slice(1)}</span>}
     </div>
   </Card>;

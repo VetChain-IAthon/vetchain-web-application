@@ -11,7 +11,7 @@ import { Card } from "@/components/ui/card";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { api } from "@/lib/api/client";
 import { formatInt, formatMonthYear, formatNumber, formatPen } from "@/lib/format";
-import { useDemoMode } from "@/lib/demo";
+import { useSimulated } from "@/lib/demo";
 import { useQuery } from "@/lib/use-query";
 import { PendingTile, Status } from "./report-ui";
 import { ShareDialog, type ShareChannel } from "./share-dialog";
@@ -32,7 +32,11 @@ const monthLabel = (iso: string) => { const s = formatMonthYear(iso); return s.c
 export function ReceivablesReportPage() {
   const query = useQuery(() => api.GET("/api/v1/reports/receivables"), [], "No se pudo cargar el reporte de cobranza.");
   const [channel, setChannel] = useState<ShareChannel | null>(null);
-  const demo = useDemoMode();
+  const sim = useSimulated()?.receivables;
+  const demo = !!sim;
+  const aging = sim?.aging ?? [];
+  const overdue = aging.reduce((a, b) => a + b, 0);
+  const levelShare = (level: string) => (sim && overdue ? `${formatPen(sim.levels[level] ?? 0)} · ${Math.round(((sim.levels[level] ?? 0) / overdue) * 100)} %` : "—");
   const chip = demo ? <OriginBadge origin="simulated" className="flex-none" /> : <PendingChip />;
   const data = query.data;
   const payers = data?.top_payers ?? [];
@@ -77,10 +81,10 @@ export function ReceivablesReportPage() {
             {chip}
           </div>
           <div className="relative grid h-56 grid-cols-4 items-end gap-6 border-b border-line-strong px-4" aria-hidden>
-            {(demo ? DEMO_AGING : [78, 46, 20, 20]).map((h, i) => <div key={i} className="flex flex-col items-center gap-2">
+            {(demo ? aging : [78, 46, 20, 20]).map((h, i) => <div key={i} className="flex flex-col items-center gap-2">
               <span className={demo ? "text-sm font-semibold" : "text-sm font-semibold text-ink-muted"}>{demo ? formatPen(h) : "—"}</span>
               <div className={demo ? "w-full max-w-[80px] rounded-t bg-brand" : "w-full max-w-[80px] rounded-t border-2 border-dashed border-line-strong bg-canvas"}
-                style={{ height: `${demo ? (h / DEMO_AGING[0]) * 125 : h * 1.6}px` }} />
+                style={{ height: `${demo ? (h / Math.max(...aging)) * 125 : h * 1.6}px` }} />
             </div>)}
           </div>
           <div className="grid grid-cols-4 gap-6 px-4 text-center text-sm text-ink-muted">{AGING.map((label) => <span key={label}>{label}</span>)}</div>
@@ -93,14 +97,14 @@ export function ReceivablesReportPage() {
             {chip}
           </div>
           <div className="relative mx-auto size-44" aria-hidden>
-            {demo ? <div className="absolute inset-0 rounded-full" style={{ background: `conic-gradient(${LEVELS[0][1]} 0 52%, ${LEVELS[1][1]} 52% 83%, ${LEVELS[2][1]} 83% 100%)` }} />
+            {demo ? <div className="absolute inset-0 rounded-full" style={{ background: conicLevels(sim?.levels ?? {}, overdue) }} />
               : <div className="absolute inset-0 rounded-full border-[26px] border-line" />}
             {demo && <div className="absolute inset-[26px] rounded-full bg-surface" />}
-            <div className="absolute inset-0 flex flex-col items-center justify-center"><span className={demo ? "text-lg font-semibold" : "text-lg font-semibold text-ink-muted"}>{demo ? formatPen(96540) : "—"}</span><span className="text-xs text-ink-muted">vencido</span></div>
+            <div className="absolute inset-0 flex flex-col items-center justify-center"><span className={demo ? "text-lg font-semibold" : "text-lg font-semibold text-ink-muted"}>{demo ? formatPen(overdue) : "—"}</span><span className="text-xs text-ink-muted">vencido</span></div>
           </div>
           <ul className="flex flex-col gap-2 text-sm">{LEVELS.map(([level, color]) => <li key={level} className="flex items-center gap-3">
             <span className="size-3 flex-none rounded-xs" style={{ backgroundColor: color }} aria-hidden />
-            <span className="flex-1">Nivel {level}</span><span className={demo ? "font-semibold tabular-nums" : "font-semibold text-ink-muted"}>{demo ? DEMO_LEVELS[level] : "—"}</span></li>)}</ul>
+            <span className="flex-1">Nivel {level}</span><span className={demo ? "font-semibold tabular-nums" : "font-semibold text-ink-muted"}>{levelShare(level)}</span></li>)}</ul>
           {!demo && <PendingNote>Pendiente: se calculará con la deuda por cliente.</PendingNote>}
         </Card>
       </div>
@@ -112,7 +116,7 @@ export function ReceivablesReportPage() {
         </div>
         <Table>
           <THead><TR><TH>Cliente</TH><TH>Nivel</TH><TH numeric>Vencido</TH><TH numeric>Atraso</TH><TH numeric>Facturas</TH><TH>Qué hacer</TH></TR></THead>
-          <TBody>{demo ? DEMO_DEBTORS.map(([name, level, amount, days, invoices, action]) => <TR key={name}>
+          <TBody>{sim ? sim.debtors.map(({ name, level, amount, days, invoices, action }) => <TR key={name}>
             <TD className="font-semibold">{name}</TD><TD>{level}</TD><TD numeric>{formatPen(amount)}</TD><TD numeric>{days} días</TD>
             <TD numeric>{invoices}</TD><TD className="text-[13px] text-ink-2">{action}</TD></TR>)
             : <TR><TD colSpan={6} className="py-8 text-center text-sm text-ink-muted">
@@ -136,16 +140,14 @@ export function ReceivablesReportPage() {
 }
 
 const AGING = ["1 a 30 días", "31 a 60 días", "61 a 90 días", "Más de 90 días"];
-// Modo demostración (?demo=1): cifras de ejemplo, marcadas «Simulado».
-const DEMO_AGING = [41200, 27800, 14900, 12640];
-const DEMO_LEVELS: Record<string, string> = { A: "S/ 50,200.80 · 52 %", B: "S/ 29,927.40 · 31 %", C: "S/ 16,411.80 · 17 %" };
-const DEMO_DEBTORS: [string, string, number, number, number, string][] = [
-  ["Cliente de ejemplo 1", "A", 18420, 45, 4, "Llamar hoy y pausar nuevos créditos"],
-  ["Cliente de ejemplo 2", "A", 12960, 32, 3, "Acordar fecha de pago esta semana"],
-  ["Cliente de ejemplo 3", "B", 9870, 68, 5, "Pedir pago antes del próximo pedido"],
-  ["Cliente de ejemplo 4", "B", 7340, 21, 2, "Recordatorio por WhatsApp"],
-  ["Cliente de ejemplo 5", "C", 5120, 97, 3, "Solo pago al contado"],
-];
+/** Dona de la deuda vencida por nivel (datos simulados). */
+function conicLevels(levels: Record<string, number>, total: number): string {
+  let from = 0;
+  return `conic-gradient(${LEVELS.map(([level, color]) => {
+    const to = from + (total ? ((levels[level] ?? 0) / total) * 100 : 0);
+    const part = `${color} ${from}% ${to}%`; from = to; return part;
+  }).join(", ")})`;
+}
 const LEVELS = [["A", "#8E1119"], ["B", "#D01F29"], ["C", "#E8959A"]] as const; // tokens chart-level-*
 
 function PendingChip() {

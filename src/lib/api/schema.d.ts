@@ -1054,6 +1054,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/simulated-sections": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Simulated Sections
+         * @description Todas las secciones simuladas. La interfaz las muestra con la etiqueta «Simulado».
+         */
+        get: operations["list_simulated_sections_api_v1_simulated_sections_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -2914,6 +2934,22 @@ export interface components {
              */
             token_type: string;
             user: components["schemas"]["UserOut"];
+        };
+        /** SimulatedSectionsOut */
+        SimulatedSectionsOut: {
+            /**
+             * Origin
+             * @description Siempre `simulated`: cifras de ejemplo, no datos de Mederi.
+             * @default simulated
+             */
+            origin: string;
+            /**
+             * Sections
+             * @description Bloques por clave (tiles, sections, receivables, salespeople, kpis, sales).
+             */
+            sections: {
+                [key: string]: unknown;
+            };
         };
         /** StockItemOut */
         StockItemOut: {
@@ -5117,6 +5153,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_simulated_sections_api_v1_simulated_sections_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SimulatedSectionsOut"];
                 };
             };
         };

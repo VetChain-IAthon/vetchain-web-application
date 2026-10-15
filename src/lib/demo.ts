@@ -1,34 +1,41 @@
 "use client";
 
-import { useEffect, useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
+import { api } from "@/lib/api/client";
 
-/** Modo demostración: rellena las secciones pendientes con datos de ejemplo marcados como «Simulado».
- *  Se activa por navegador con `?demo=1` y se apaga con `?demo=0` (queda guardado en localStorage). Los datos reales no cambian. */
-const KEY = "vetchain-demo";
-const listeners = new Set<() => void>();
+/** Secciones simuladas que guarda el backend (`GET /simulated-sections`, tabla `simulated_sections`).
+ *  Rellenan lo que aún espera datos de Mederi (costos, lotes, facturas, alertas) y siempre se muestran como «Simulado».
+ *  Si el endpoint no responde (vendedor, sin datos), las secciones vuelven a su estado pendiente. */
+export type SimFormat = "pen" | "pct" | "days" | "int" | "text";
+export type SimTile = { value: number | string; format: SimFormat; detail: string };
+export type SimBlock =
+  | { type: "bars"; items: { label: string; value: number; note: string | null }[] }
+  | { type: "table"; head: string[]; rows: string[][] }
+  | { type: "stats"; items: { label: string; value: number; format: SimFormat }[] }
+  | { type: "text"; text: string }
+  | { type: "list"; items: string[] };
+export type Simulated = {
+  tiles?: Record<string, SimTile>;
+  sections?: Record<string, SimBlock>;
+  receivables?: { aging: number[]; levels: Record<string, number>; debtors: { name: string; level: string; amount: number; days: number; invoices: number; action: string }[] };
+  salespeople?: { funnel: number[]; recovered: number; follow_up: number[][] };
+  kpis?: Partial<Record<"margin" | "waste" | "overdue" | "alerts" | "quotes" | "reactivated", number>>;
+  sales?: { projection: { month: string; amount: number }[] };
+};
 
-function read(): boolean {
-  try { return window.localStorage.getItem(KEY) === "1"; } catch { return false; }
+let cache: Promise<Simulated | null> | null = null;
+
+function load(): Promise<Simulated | null> {
+  if (!cache) {
+    cache = api.GET("/api/v1/simulated-sections")
+      .then((r) => (r.data?.sections as Simulated | undefined) ?? null)
+      .catch(() => null);
+  }
+  return cache;
 }
 
-export function setDemoMode(on: boolean) {
-  try { if (on) window.localStorage.setItem(KEY, "1"); else window.localStorage.removeItem(KEY); } catch { /* sin almacenamiento: no hay demo */ }
-  listeners.forEach((notify) => notify());
-}
-
-function subscribe(notify: () => void) {
-  listeners.add(notify);
-  return () => { listeners.delete(notify); };
-}
-
-export function useDemoMode(): boolean {
-  return useSyncExternalStore(subscribe, read, () => false);
-}
-
-/** Lee `?demo=1|0` de la URL una vez; se monta en el layout de la app. */
-export function useDemoQueryParam() {
-  useEffect(() => {
-    const value = new URLSearchParams(window.location.search).get("demo");
-    if (value === "1" || value === "0") setDemoMode(value === "1");
-  }, []);
+export function useSimulated(): Simulated | null {
+  const [data, setData] = useState<Simulated | null>(null);
+  useEffect(() => { let alive = true; load().then((d) => { if (alive) setData(d); }); return () => { alive = false; }; }, []);
+  return data;
 }

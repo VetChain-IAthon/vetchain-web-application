@@ -11,7 +11,7 @@ import { Card } from "@/components/ui/card";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { api } from "@/lib/api/client";
 import { formatInt, formatPen, formatPercent } from "@/lib/format";
-import { useDemoMode } from "@/lib/demo";
+import { useSimulated } from "@/lib/demo";
 import { useQuery } from "@/lib/use-query";
 import { PendingTile, StatTile, Status } from "./report-ui";
 import { ShareDialog, type ShareChannel } from "./share-dialog";
@@ -21,14 +21,11 @@ import { ReportGeminiSummary } from "./report-gemini-summary";
  *  del cliente, provisional). El embudo de alertas y el seguimiento esperan el registro de resultados. */
 
 const FUNNEL = ["Alertas generadas", "Clientes contactados", "Cotizaciones enviadas", "Pedidos"];
-// Modo demostración (?demo=1): cifras de ejemplo, marcadas «Simulado».
-const DEMO_FUNNEL = [200, 164, 96, 58];
-function demoFollowUp(row: number): string[] {
-  const alerts = [64, 48, 37, 26, 15, 10][row] ?? 8;
-  const contacted = Math.round(alerts * (0.9 - row * 0.05));
-  const quotes = Math.round(contacted * 0.6);
-  const orders = Math.round(quotes * (0.62 - row * 0.03));
-  return [formatInt(alerts), formatInt(contacted), formatInt(quotes), formatInt(orders), `${Math.round((orders / alerts) * 100)} %`, formatPen(orders * 2180)];
+/** Fila de seguimiento simulada: alertas, contactados, cotizaciones, pedidos y venta recuperada. */
+function followUp(row: number[] | undefined): string[] {
+  if (!row) return Array(6).fill("—");
+  const [alerts, contacted, quotes, orders, recovered] = row;
+  return [formatInt(alerts), formatInt(contacted), formatInt(quotes), formatInt(orders), `${alerts ? Math.round((orders / alerts) * 100) : 0} %`, formatPen(recovered)];
 }
 const titleCase = (text: string) => text.toLowerCase().replace(/(^|\s)\S/g, (c) => c.toUpperCase());
 
@@ -37,7 +34,9 @@ export function SalespeopleReportPage() {
   const levelA = useQuery(() => api.GET("/api/v1/customers", { params: { query: { level: "A", per_page: 1 } } }), [], "");
   const all = useQuery(() => api.GET("/api/v1/customers", { params: { query: { per_page: 1 } } }), [], "");
   const [channel, setChannel] = useState<ShareChannel | null>(null);
-  const demo = useDemoMode();
+  const sim = useSimulated()?.salespeople;
+  const demo = !!sim;
+  const funnel = sim?.funnel ?? [];
   const chip = demo ? <OriginBadge origin="simulated" className="flex-none" /> : <PendingChip />;
 
   const data = query.data;
@@ -87,11 +86,11 @@ export function SalespeopleReportPage() {
           </div>
           <ul className="flex flex-col gap-4" aria-hidden>
             {FUNNEL.map((label, i) => <li key={label}>
-              <div className="mb-1 flex justify-between text-sm"><span className="font-semibold">{label}</span><span className={demo ? "font-semibold tabular-nums" : "font-semibold text-ink-muted"}>{demo ? formatInt(DEMO_FUNNEL[i]) : "—"}</span></div>
-              <div className={demo ? "h-6 rounded bg-brand" : "h-6 rounded border-2 border-dashed border-line-strong bg-canvas"} style={{ width: `${demo ? (DEMO_FUNNEL[i] / DEMO_FUNNEL[0]) * 100 : 100 - i * 20}%` }} />
+              <div className="mb-1 flex justify-between text-sm"><span className="font-semibold">{label}</span><span className={demo ? "font-semibold tabular-nums" : "font-semibold text-ink-muted"}>{demo ? formatInt(funnel[i] ?? 0) : "—"}</span></div>
+              <div className={demo ? "h-6 rounded bg-brand" : "h-6 rounded border-2 border-dashed border-line-strong bg-canvas"} style={{ width: `${demo ? ((funnel[i] ?? 0) / (funnel[0] || 1)) * 100 : 100 - i * 20}%` }} />
             </li>)}
           </ul>
-          <div className="flex items-center justify-between rounded bg-canvas px-5 py-4"><span className="font-semibold text-ink-muted">Venta recuperada</span><span className={demo ? "text-lg font-semibold" : "text-lg font-semibold text-ink-muted"}>{demo ? formatPen(126480) : "—"}</span></div>
+          <div className="flex items-center justify-between rounded bg-canvas px-5 py-4"><span className="font-semibold text-ink-muted">Venta recuperada</span><span className={demo ? "text-lg font-semibold" : "text-lg font-semibold text-ink-muted"}>{demo ? formatPen(sim.recovered) : "—"}</span></div>
           {!demo && <PendingNote>Pendiente: se medirá cuando existan alertas registradas y el equipo registre sus resultados.</PendingNote>}
         </Card>
 
@@ -123,7 +122,7 @@ export function SalespeopleReportPage() {
           <THead><TR><TH>Vendedor</TH><TH numeric>Alertas</TH><TH numeric>Contactados en 48 h</TH><TH numeric>Cotizaciones</TH><TH numeric>Pedidos</TH><TH numeric>Conversión</TH><TH numeric>Venta recuperada</TH></TR></THead>
           <TBody>{sellers.map((s, row) => <TR key={s.code}>
             <TD className="font-semibold">{titleCase(s.name)}</TD>
-            {demo ? demoFollowUp(row).map((value, i) => <TD key={i} numeric>{value}</TD>)
+            {sim ? followUp(sim.follow_up[row]).map((value, i) => <TD key={i} numeric>{value}</TD>)
               : Array.from({ length: 6 }, (_, i) => <TD key={i} numeric className="text-ink-muted">—</TD>)}
           </TR>)}</TBody>
         </Table>
