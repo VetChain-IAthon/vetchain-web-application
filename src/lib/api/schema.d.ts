@@ -648,7 +648,7 @@ export interface paths {
         };
         /**
          * Compare Forecasts
-         * @description Compara Extra Trees con el promedio móvil para cantidades registradas.
+         * @description Compara el modelo predictivo (mezcla) con el promedio móvil para cantidades registradas.
          */
         get: operations["compare_forecasts_api_v1_prediction_forecasts_get"];
         put?: never;
@@ -2048,9 +2048,14 @@ export interface components {
             moving_average_6m: number;
             /**
              * Extra Trees
-             * @description Cantidad total estimada para el horizonte.
+             * @description Componente Extra Trees de la mezcla. Cantidad total para el horizonte.
              */
             extra_trees: number;
+            /**
+             * Predictive Model
+             * @description Cifra del modelo predictivo que se muestra: mezcla de Extra Trees, Gradient Boosting y promedio móvil (o Extra Trees solo si falta el Gradient Boosting).
+             */
+            predictive_model: number;
             /** Data Origin */
             data_origin: string;
             /** Warning */

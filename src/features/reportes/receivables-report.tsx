@@ -1,7 +1,7 @@
 "use client";
 
 import { jsPDF } from "jspdf";
-import { ArrowLeft, BarChart3, Database, Download, Mail, MessageSquare } from "lucide-react";
+import { ArrowLeft, Database, Download, Mail, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { PageHeader } from "@/components/layout/page-header";
@@ -56,12 +56,7 @@ export function ReceivablesReportPage() {
     <Status loading={query.loading && !data} error={query.error} reload={query.reload} />
     {data && <>
       <Card className="flex flex-col gap-4 p-8">
-        <div className="flex items-center gap-3">
-          <span className="flex size-9 items-center justify-center rounded bg-brand-soft text-brand"><BarChart3 size={18} aria-hidden /></span>
-          <h2 className="text-lg font-semibold">Lo que dicen los datos</h2>
-        </div>
-        <ol className="list-decimal space-y-2 pl-5 text-[15px] leading-relaxed text-ink-2">{insights.map((line) => <li key={line}>{line}</li>)}</ol>
-        <ReportGeminiSummary report="receivables" metrics={{ receipts: data.receipt_count, collected_pen: data.collected_amount, top_five_share_pct: topShare }} />
+        <ReportGeminiSummary title="Lo que dicen los datos" report="receivables" metrics={{ receipts: data.receipt_count, collected_pen: data.collected_amount, top_five_share_pct: topShare }} />
       </Card>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">

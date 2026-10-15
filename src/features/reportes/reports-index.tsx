@@ -4,6 +4,7 @@ import { ArrowRight, Check, Clock, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { AiBadge } from "@/components/data/ai-badge";
 import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -174,7 +175,7 @@ function AskYourDataCard() {
   }
   return <Card className="flex flex-col gap-4 p-8">
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-2"><h2 className="text-lg font-semibold">Pregúntale a tus datos</h2><span className="inline-flex items-center gap-1 rounded bg-brand-soft px-2 py-0.5 text-xs font-semibold text-brand"><Sparkles size={14} aria-hidden />IA generativa</span></div>
+      <div className="flex flex-wrap items-center justify-between gap-2"><h2 className="text-lg font-semibold">Pregúntale a tus datos</h2><AiBadge /></div>
       <p className="mt-1 text-sm text-ink-muted">Escribe como le preguntarías a un analista. La respuesta dice de qué datos sale.</p>
     </div>
     <form className="flex gap-3" onSubmit={ask}>
@@ -185,6 +186,6 @@ function AskYourDataCard() {
     </form>
     {error && <p role="alert" className="text-sm text-danger">{error}</p>}
     {answer && <div className="rounded bg-canvas p-4"><p className="whitespace-pre-wrap text-sm leading-relaxed">{answer.text}</p><p className="mt-3 text-xs text-ink-muted">Fuentes: {answer.sources.join(", ") || "base de datos"} · origen {answer.data_origin}</p></div>}
-    <p className="text-[13px] text-ink-muted">Gemini interpreta preguntas sobre cifras agregadas; no incluyas nombres, RUC ni información personal.</p>
+    <p className="text-[13px] text-ink-muted">Pregunta por cifras agregadas; no incluyas nombres, RUC ni información personal.</p>
   </Card>;
 }

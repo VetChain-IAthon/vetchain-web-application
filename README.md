@@ -8,7 +8,7 @@ Este repositorio contiene el frontend. La API FastAPI y sus migraciones están e
 
 - Inicio de sesión y navegación según el rol de gerencia o vendedor.
 - Clientes, cotizaciones, ajustes y reportes de pedidos, clientes, stock, cobranza y vendedores.
-- Reportes › Pronóstico por producto: compara Extra Trees y promedio móvil de seis meses mediante la API; requiere los artefactos privados configurados en el backend.
+- Reportes › Stock y merma › Pronóstico por producto: compara el modelo predictivo (Extra Trees) y el promedio móvil de seis meses mediante la API; requiere los artefactos privados configurados en el backend.
 - Planificación de importación con cuatro laboratorios ficticios, cifras de ejemplo y revisión persistida; no crea pedidos reales ni utiliza IA.
 - Ficha de cliente para reunión, PDF generado en el navegador y envío por correo con asunto, mensaje, destinatarios y adjunto.
 - Cada usuario puede conectar su Gmail desde el formulario de envío para enviar desde su cuenta; el correo compartido se define en **Ajustes › Correo**. Google OAuth debe activarse en el backend para que la conexión personal funcione.

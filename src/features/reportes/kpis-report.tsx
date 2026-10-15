@@ -1,7 +1,7 @@
 "use client";
 
 import { jsPDF } from "jspdf";
-import { AlertTriangle, ArrowLeft, BarChart3, Check, Download, Mail, MessageSquare, Minus, X } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Check, Download, Mail, MessageSquare, Minus, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { PageHeader } from "@/components/layout/page-header";
@@ -157,12 +157,7 @@ export function KpisReportPage() {
     {data && <>
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)]">
         <Card className="flex flex-col gap-4 p-8">
-          <div className="flex items-center gap-3">
-            <span className="flex size-9 items-center justify-center rounded bg-brand-soft text-brand"><BarChart3 size={18} aria-hidden /></span>
-            <h2 className="text-lg font-semibold">Resumen del mes</h2>
-          </div>
-          <ol className="list-decimal space-y-2 pl-5 text-[15px] leading-relaxed text-ink-2">{summary.map((line) => <li key={line}>{line}</li>)}</ol>
-          <ReportGeminiSummary report="kpis" metrics={{ indicators: all.length, on_target: counts.ok, attention: counts.warn, critical: counts.bad, missing: counts.none, sales_growth_pct: all.find((item) => item.key === "growth")?.value }} />
+          <ReportGeminiSummary title="Resumen del mes" report="kpis" metrics={{ indicators: all.length, on_target: counts.ok, attention: counts.warn, critical: counts.bad, missing: counts.none, sales_growth_pct: all.find((item) => item.key === "growth")?.value }} />
         </Card>
         <Card className="flex flex-col gap-4 p-8">
           <h2 className="text-lg font-semibold">Estado de los {all.length} indicadores</h2>

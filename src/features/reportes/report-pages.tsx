@@ -20,10 +20,7 @@ import { ReportGeminiSummary } from "./report-gemini-summary";
 
 function DashboardSummary({ data }: { data: components["schemas"]["DashboardSummaryOut"] }) {
   return <section aria-label="Resumen del período" className="rounded-lg border border-line border-l-4 border-l-brand bg-surface px-6 py-5">
-    <div className="flex flex-wrap items-baseline justify-between gap-2">
-      <h2 className="text-base font-semibold">Resumen del período</h2>
-    </div>
-    <ReportGeminiSummary report="dashboard" metrics={{ amount_pen: data.amount, orders: data.order_count, active_customers: data.active_customers, average_order_pen: data.average_order, top_ten_share_pct: data.top_ten_share_pct }} />
+    <ReportGeminiSummary title="Resumen del período" report="dashboard" metrics={{ amount_pen: data.amount, orders: data.order_count, active_customers: data.active_customers, average_order_pen: data.average_order, top_ten_share_pct: data.top_ten_share_pct }} />
   </section>;
 }
 

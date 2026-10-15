@@ -1,7 +1,7 @@
 "use client";
 
 import { jsPDF } from "jspdf";
-import { ArrowLeft, ArrowRight, BarChart3, Download, Mail, MessageSquare } from "lucide-react";
+import { ArrowLeft, ArrowRight, Download, Mail, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
@@ -85,12 +85,7 @@ export function CustomersReportPage() {
     <Status loading={query.loading && !data} error={query.error} reload={query.reload} />
     {data && <>
       <Card className="flex flex-col gap-4 p-8">
-        <div className="flex items-center gap-3">
-          <span className="flex size-9 items-center justify-center rounded bg-brand-soft text-brand"><BarChart3 size={18} aria-hidden /></span>
-          <h2 className="text-lg font-semibold">Lo que dicen los datos</h2>
-        </div>
-        <ol className="list-decimal space-y-2 pl-5 text-[15px] leading-relaxed text-ink-2">{insights.map((line) => <li key={line}>{line}</li>)}</ol>
-        <ReportGeminiSummary report="customers" metrics={{ active: data.active_count, previous_active: prevActive, top_ten_share_pct: data.top_ten_share_pct, at_risk: atRisk.data?.total, recoverable }} />
+        <ReportGeminiSummary title="Lo que dicen los datos" report="customers" metrics={{ active: data.active_count, previous_active: prevActive, top_ten_share_pct: data.top_ten_share_pct, at_risk: atRisk.data?.total, recoverable }} />
       </Card>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
