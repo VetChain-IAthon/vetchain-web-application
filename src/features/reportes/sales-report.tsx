@@ -13,6 +13,7 @@ import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import type { components } from "@/lib/api/schema";
 import { api } from "@/lib/api/client";
 import { formatInt, formatMonthYear, formatNumber, formatPen, formatPercent } from "@/lib/format";
+import { useSimulated } from "@/lib/demo";
 import { useQuery } from "@/lib/use-query";
 import { PeriodFilter, rangeQuery, type MonthRange } from "./period-filter";
 import { compare, Pending, PendingTile, ShareBars, StatTile, Status, yearBefore } from "./report-ui";
@@ -26,6 +27,7 @@ const TOP_PRODUCTS = 5;
 const SELECT = "h-11 rounded border border-line-strong bg-surface px-3 text-sm text-ink focus:border-brand focus:outline focus:outline-2 focus:outline-brand";
 const BAR = "#D01F29";
 const BAR_PARTIAL = "#B5B5B5"; // token chart-other: mes incompleto
+const BAR_PROJECTED = "#E8959A"; // token chart-level-c: proyección simulada
 
 type PeriodChoice = "last12" | `year-${number}` | "custom";
 
@@ -150,8 +152,14 @@ function MonthlyCard({ data }: { data: Sales }) {
   const rows = fillMonths(data.monthly.map((m) => ({ key: m.month.slice(0, 7), amount: m.amount, orders: m.order_count })), data.period.from_date, end);
   const chart = rows.map((r, i) => {
     const label = new Intl.DateTimeFormat("es-PE", { month: "short", timeZone: "UTC" }).format(new Date(`${r.key}-01`)).replace(".", "");
-    return { ...r, label: `${label.charAt(0).toUpperCase()}${label.slice(1)}${i === 0 || r.key.endsWith("-01") ? ` ${r.key.slice(2, 4)}` : ""}`, partial: r.key === partialKey, full: monthLabel(`${r.key}-01`) };
+    return { ...r, label: `${label.charAt(0).toUpperCase()}${label.slice(1)}${i === 0 || r.key.endsWith("-01") ? ` ${r.key.slice(2, 4)}` : ""}`, partial: r.key === partialKey, projected: false, full: monthLabel(`${r.key}-01`) };
   });
+  const projection = useSimulated()?.sales?.projection ?? [];
+  for (const p of projection) {
+    if (chart.some((r) => r.key === p.month)) continue;
+    const label = new Intl.DateTimeFormat("es-PE", { month: "short", timeZone: "UTC" }).format(new Date(`${p.month}-01`)).replace(".", "");
+    chart.push({ key: p.month, amount: p.amount, orders: 0, label: `${label.charAt(0).toUpperCase()}${label.slice(1)}`, partial: false, projected: true, full: `${monthLabel(`${p.month}-01`)} (proyección simulada)` });
+  }
   return <Card className="flex flex-col gap-4 p-8">
     <div className="flex flex-wrap items-start justify-between gap-3">
       <div><h2 className="text-lg font-semibold">Venta por mes y proyección</h2>
@@ -159,6 +167,7 @@ function MonthlyCard({ data }: { data: Sales }) {
       <div className="flex flex-wrap items-center gap-4 text-sm text-ink-2">
         <span className="inline-flex items-center gap-1.5"><span className="size-3 rounded-xs" style={{ backgroundColor: BAR }} />Venta real</span>
         {partialKey && <span className="inline-flex items-center gap-1.5"><span className="size-3 rounded-xs" style={{ backgroundColor: BAR_PARTIAL }} />Mes incompleto</span>}
+        {projection.length > 0 && <span className="inline-flex items-center gap-1.5"><span className="size-3 rounded-xs" style={{ backgroundColor: BAR_PROJECTED }} />Proyección <OriginBadge origin="simulated" /></span>}
       </div>
     </div>
     <div className="h-72 w-full" role="img" aria-label="Venta por mes, sin IGV">
@@ -168,15 +177,15 @@ function MonthlyCard({ data }: { data: Sales }) {
           <XAxis dataKey="label" tick={{ fill: "#5F6368", fontSize: 11 }} axisLine={{ stroke: "#CFCFCF" }} tickLine={false} interval={0} />
           <YAxis hide />
           <Tooltip cursor={{ fill: "#F5F5F5" }} labelFormatter={(_l, p) => p?.[0]?.payload?.full ?? ""}
-            formatter={(v, _n, item) => [`${formatPen(Number(v))} · ${formatInt(item.payload.orders)} pedidos${item.payload.partial ? " (mes incompleto)" : ""}`, "Venta sin IGV"]} />
+            formatter={(v, _n, item) => [item.payload.projected ? `${formatPen(Number(v))} · proyección simulada` : `${formatPen(Number(v))} · ${formatInt(item.payload.orders)} pedidos${item.payload.partial ? " (mes incompleto)" : ""}`, "Venta sin IGV"]} />
           <Bar dataKey="amount" radius={[4, 4, 0, 0]} maxBarSize={48}>
-            {chart.map((r) => <Cell key={r.key} fill={r.partial ? BAR_PARTIAL : BAR} />)}
+            {chart.map((r) => <Cell key={r.key} fill={r.projected ? BAR_PROJECTED : r.partial ? BAR_PARTIAL : BAR} />)}
             <LabelList dataKey="amount" position="top" fill="#3A3A3A" fontSize={11} formatter={(v: unknown) => formatNumber(Number(v) / 1000, 0)} />
           </Bar>
         </BarChart>
       </ResponsiveContainer>
     </div>
-    <p className="rounded bg-canvas p-4 text-sm text-ink-muted">La proyección en soles permanece pendiente. <Link href="/reportes/stock#pronostico" className="font-semibold text-brand">Consultar pronóstico de cantidades por producto</Link>.</p>
+    <p className="rounded bg-canvas p-4 text-sm text-ink-muted">{projection.length ? "Los meses en rosado son una proyección simulada en soles, no un cálculo del modelo." : "La proyección en soles permanece pendiente."} <Link href="/reportes/stock#pronostico" className="font-semibold text-brand">Consultar pronóstico de cantidades por producto</Link>.</p>
   </Card>;
 }
 

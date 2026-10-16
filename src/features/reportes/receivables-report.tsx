@@ -4,12 +4,14 @@ import { jsPDF } from "jspdf";
 import { ArrowLeft, Database, Download, Mail, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { OriginBadge } from "@/components/data/origin-badge";
 import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { api } from "@/lib/api/client";
 import { formatInt, formatMonthYear, formatNumber, formatPen } from "@/lib/format";
+import { useSimulated } from "@/lib/demo";
 import { useQuery } from "@/lib/use-query";
 import { PendingTile, Status } from "./report-ui";
 import { ShareDialog, type ShareChannel } from "./share-dialog";
@@ -30,6 +32,12 @@ const monthLabel = (iso: string) => { const s = formatMonthYear(iso); return s.c
 export function ReceivablesReportPage() {
   const query = useQuery(() => api.GET("/api/v1/reports/receivables"), [], "No se pudo cargar el reporte de cobranza.");
   const [channel, setChannel] = useState<ShareChannel | null>(null);
+  const sim = useSimulated()?.receivables;
+  const demo = !!sim;
+  const aging = sim?.aging ?? [];
+  const overdue = aging.reduce((a, b) => a + b, 0);
+  const levelShare = (level: string) => (sim && overdue ? `${formatPen(sim.levels[level] ?? 0)} · ${Math.round(((sim.levels[level] ?? 0) / overdue) * 100)} %` : "—");
+  const chip = demo ? <OriginBadge origin="simulated" className="flex-none" /> : <PendingChip />;
   const data = query.data;
   const payers = data?.top_payers ?? [];
   const topShare = data?.collected_amount ? (payers.slice(0, 5).reduce((s, p) => s + p.amount, 0) / data.collected_amount) * 100 : null;
@@ -70,44 +78,50 @@ export function ReceivablesReportPage() {
         <Card className="flex flex-col gap-4 p-8">
           <div className="flex items-start justify-between gap-3">
             <div><h2 className="text-lg font-semibold">Deuda vencida por antigüedad</h2><p className="text-sm text-ink-muted">Días de atraso desde el vencimiento de la factura</p></div>
-            <PendingChip />
+            {chip}
           </div>
           <div className="relative grid h-56 grid-cols-4 items-end gap-6 border-b border-line-strong px-4" aria-hidden>
-            {[78, 46, 20, 20].map((h, i) => <div key={i} className="flex flex-col items-center gap-2">
-              <span className="text-sm font-semibold text-ink-muted">—</span>
-              <div className="w-full max-w-[80px] rounded-t border-2 border-dashed border-line-strong bg-canvas" style={{ height: `${h * 1.6}px` }} />
+            {(demo ? aging : [78, 46, 20, 20]).map((h, i) => <div key={i} className="flex flex-col items-center gap-2">
+              <span className={demo ? "text-sm font-semibold" : "text-sm font-semibold text-ink-muted"}>{demo ? formatPen(h) : "—"}</span>
+              <div className={demo ? "w-full max-w-[80px] rounded-t bg-brand" : "w-full max-w-[80px] rounded-t border-2 border-dashed border-line-strong bg-canvas"}
+                style={{ height: `${demo ? (h / Math.max(...aging)) * 125 : h * 1.6}px` }} />
             </div>)}
           </div>
           <div className="grid grid-cols-4 gap-6 px-4 text-center text-sm text-ink-muted">{AGING.map((label) => <span key={label}>{label}</span>)}</div>
-          <PendingNote>Pendiente: falta enlazar los cobros con las facturas y la fecha de vencimiento de cada una.</PendingNote>
+          {!demo && <PendingNote>Pendiente: falta enlazar los cobros con las facturas y la fecha de vencimiento de cada una.</PendingNote>}
         </Card>
 
         <Card className="flex flex-col gap-4 p-8">
           <div className="flex items-start justify-between gap-3">
             <div><h2 className="text-lg font-semibold">Vencida por nivel de cliente</h2><p className="text-sm text-ink-muted">Cuánto deben los clientes A, B y C</p></div>
-            <PendingChip />
+            {chip}
           </div>
           <div className="relative mx-auto size-44" aria-hidden>
-            <div className="absolute inset-0 rounded-full border-[26px] border-line" />
-            <div className="absolute inset-0 flex flex-col items-center justify-center"><span className="text-lg font-semibold text-ink-muted">—</span><span className="text-xs text-ink-muted">vencido</span></div>
+            {demo ? <div className="absolute inset-0 rounded-full" style={{ background: conicLevels(sim?.levels ?? {}, overdue) }} />
+              : <div className="absolute inset-0 rounded-full border-[26px] border-line" />}
+            {demo && <div className="absolute inset-[26px] rounded-full bg-surface" />}
+            <div className="absolute inset-0 flex flex-col items-center justify-center"><span className={demo ? "text-lg font-semibold" : "text-lg font-semibold text-ink-muted"}>{demo ? formatPen(overdue) : "—"}</span><span className="text-xs text-ink-muted">vencido</span></div>
           </div>
           <ul className="flex flex-col gap-2 text-sm">{LEVELS.map(([level, color]) => <li key={level} className="flex items-center gap-3">
             <span className="size-3 flex-none rounded-xs" style={{ backgroundColor: color }} aria-hidden />
-            <span className="flex-1">Nivel {level}</span><span className="font-semibold text-ink-muted">—</span></li>)}</ul>
-          <PendingNote>Pendiente: se calculará con la deuda por cliente.</PendingNote>
+            <span className="flex-1">Nivel {level}</span><span className={demo ? "font-semibold tabular-nums" : "font-semibold text-ink-muted"}>{levelShare(level)}</span></li>)}</ul>
+          {!demo && <PendingNote>Pendiente: se calculará con la deuda por cliente.</PendingNote>}
         </Card>
       </div>
 
       <Card className="flex flex-col gap-4 p-8">
         <div className="flex items-start justify-between gap-3">
           <div><h2 className="text-lg font-semibold">Clientes con deuda vencida</h2><p className="text-sm text-ink-muted">Los 5 mayores</p></div>
-          <PendingChip />
+          {chip}
         </div>
         <Table>
           <THead><TR><TH>Cliente</TH><TH>Nivel</TH><TH numeric>Vencido</TH><TH numeric>Atraso</TH><TH numeric>Facturas</TH><TH>Qué hacer</TH></TR></THead>
-          <TBody><TR><TD colSpan={6} className="py-8 text-center text-sm text-ink-muted">
+          <TBody>{sim ? sim.debtors.map(({ name, level, amount, days, invoices, action }) => <TR key={name}>
+            <TD className="font-semibold">{name}</TD><TD>{level}</TD><TD numeric>{formatPen(amount)}</TD><TD numeric>{days} días</TD>
+            <TD numeric>{invoices}</TD><TD className="text-[13px] text-ink-2">{action}</TD></TR>)
+            : <TR><TD colSpan={6} className="py-8 text-center text-sm text-ink-muted">
             Pendiente: la lista de clientes con deuda vencida aparecerá al enlazar cobros con facturas y validar las fechas de vencimiento.
-          </TD></TR></TBody>
+          </TD></TR>}</TBody>
         </Table>
       </Card>
 
@@ -126,6 +140,14 @@ export function ReceivablesReportPage() {
 }
 
 const AGING = ["1 a 30 días", "31 a 60 días", "61 a 90 días", "Más de 90 días"];
+/** Dona de la deuda vencida por nivel (datos simulados). */
+function conicLevels(levels: Record<string, number>, total: number): string {
+  let from = 0;
+  return `conic-gradient(${LEVELS.map(([level, color]) => {
+    const to = from + (total ? ((levels[level] ?? 0) / total) * 100 : 0);
+    const part = `${color} ${from}% ${to}%`; from = to; return part;
+  }).join(", ")})`;
+}
 const LEVELS = [["A", "#8E1119"], ["B", "#D01F29"], ["C", "#E8959A"]] as const; // tokens chart-level-*
 
 function PendingChip() {

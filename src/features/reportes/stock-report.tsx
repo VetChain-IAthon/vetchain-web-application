@@ -3,8 +3,9 @@
 import { jsPDF } from "jspdf";
 import { ArrowLeft, Download, Mail, MessageSquare } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import { AiBadge } from "@/components/data/ai-badge";
 import { OriginBadge } from "@/components/data/origin-badge";
 import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
@@ -98,15 +99,15 @@ export function StockReportPage() {
 
       <Card className="flex flex-col gap-4 p-8">
         <div className="flex items-start justify-between gap-3">
-          <div><h2 className="text-lg font-semibold">Sobrestock y quiebres</h2><p className="text-sm text-ink-muted">Saldo del kardex frente a los pedidos de 12 meses</p></div>
-          <OriginBadge origin="estimated" className="flex-none" />
+          <div><h2 className="text-lg font-semibold">Sobrestock y quiebres</h2><p className="text-sm text-ink-muted">Saldo del kardex frente a los pedidos de 12 meses y a la demanda pronosticada de 3 meses</p></div>
+          <span className="flex flex-none gap-2"><AiBadge kind="predictive" /><OriginBadge origin="estimated" /></span>
         </div>
         <div className="grid gap-4 lg:grid-cols-2">
           <IssueList status="overstock" title="Sobrestock" empty="Ningún producto pasa de 120 días de cobertura."
-            items={overstock.slice(0, 5).map((i) => ({ key: i.product_code, name: i.product_name ?? i.product_code,
+            items={overstock.slice(0, 5).map((i) => ({ key: i.product_code, name: i.product_name ?? i.product_code, balance: Number(i.balance),
               detail: `${coverageText(i.coverage_days)} de cobertura · ${formatNumber(i.balance, 0)} u en stock · ${formatNumber(i.units_12m, 0)} u pedidas en 12 meses` }))} />
           <IssueList status="out_with_demand" title="Sin stock" empty="Ningún producto con demanda está sin stock."
-            items={outWithDemand.slice(0, 5).map((i) => ({ key: i.product_code, name: i.product_name ?? i.product_code,
+            items={outWithDemand.slice(0, 5).map((i) => ({ key: i.product_code, name: i.product_name ?? i.product_code, balance: Number(i.balance),
               detail: `${formatNumber(i.units_12m, 0)} u pedidas en 12 meses · último pedido ${formatDate(i.last_sale_date)}` }))} />
         </div>
         <p className="text-[13px] text-ink-muted">La acción sugerida (frenar la importación, ofrecer por volumen, incluir en el próximo pedido) llegará con la IA y la planificación de importación.</p>
@@ -148,13 +149,42 @@ function StatusDonut({ items }: { items: Item[] }) {
   </Card>;
 }
 
-function IssueList({ status, title, items, empty }: { status: StockStatus; title: string; items: { key: string; name: string; detail: string }[]; empty: string }) {
+function IssueList({ status, title, items, empty }: { status: StockStatus; title: string; items: { key: string; name: string; detail: string; balance: number }[]; empty: string }) {
   return <div className="flex flex-col gap-3 rounded-lg border border-line p-5">
     <span className={cn("self-start rounded-xs px-2 py-0.5 text-xs font-semibold", STATUS[status].chip)}>{title}</span>
     {items.length ? <ul className="flex flex-col gap-3">{items.map((i) => <li key={i.key}>
-      <p className="font-semibold">{i.name}</p><p className="text-sm text-ink-muted">{i.detail}</p></li>)}</ul>
+      <p className="font-semibold">{i.name}</p><p className="text-sm text-ink-muted">{i.detail}</p>
+      <ForecastHint code={i.key} balance={i.balance} /></li>)}</ul>
       : <p className="text-sm text-ink-muted">{empty}</p>}
   </div>;
+}
+
+/** Pronósticos de 3 meses ya pedidos en esta sesión: la lista no vuelve a llamar a la API al re-renderizar. */
+const forecastCache = new Map<string, Promise<number | null>>();
+
+function forecast3m(code: string): Promise<number | null> {
+  let pending = forecastCache.get(code);
+  if (!pending) {
+    pending = api.GET("/api/v1/prediction/forecasts", { params: { query: { product_id: code, scenario: "A", horizon: 3 } } })
+      .then((r) => r.data?.predictive_model ?? null).catch(() => null);
+    forecastCache.set(code, pending);
+  }
+  return pending;
+}
+
+/** Demanda de los próximos 3 meses según el modelo predictivo, junto al stock actual. Sin historia suficiente, no muestra nada. */
+function ForecastHint({ code, balance }: { code: string; balance: number }) {
+  const [units, setUnits] = useState<number | null | undefined>(undefined);
+  useEffect(() => { let alive = true; forecast3m(code).then((v) => { if (alive) setUnits(v); }); return () => { alive = false; }; }, [code]);
+  if (units === undefined) return <p className="mt-1 text-xs text-ink-muted">Calculando pronóstico…</p>;
+  if (units === null) return null;
+  const perMonth = units / 3;
+  const text = balance <= 0
+    ? `Se pedirán ~${formatInt(Math.round(units))} u en 3 meses: es lo que faltaría para no perder esos pedidos.`
+    : perMonth > 0
+      ? `Se pedirán ~${formatInt(Math.round(units))} u en 3 meses: el stock alcanza para ~${formatNumber(balance / perMonth, 0)} meses.`
+      : "El pronóstico no prevé pedidos en los próximos 3 meses.";
+  return <p className="mt-1 flex flex-wrap items-center gap-2 text-[13px] text-ink-2"><AiBadge kind="predictive" />{text}</p>;
 }
 
 function downloadStockPdf(title: string, insights: string[], overstock: Item[], outWithDemand: Item[]) {
