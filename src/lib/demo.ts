@@ -21,7 +21,26 @@ export type Simulated = {
   salespeople?: { funnel: number[]; recovered: number; follow_up: number[][] };
   kpis?: Partial<Record<"margin" | "waste" | "overdue" | "alerts" | "quotes" | "reactivated", number>>;
   sales?: { projection: { month: string; amount: number }[] };
+  collections?: { profiles: SimCollectionProfile[] };
 };
+export type SimCollectionProfile = { status: string; tone: "ok" | "warn" | "danger"; detail: string; amount: [number, number]; days: [number, number]; weight: number };
+
+/** Perfil de cobranza simulado para un cliente: depende solo de su RUC, así no cambia entre recargas. */
+export function simulatedCollection(ruc: string, profiles: SimCollectionProfile[]): { status: string; tone: SimCollectionProfile["tone"]; detail: string } | null {
+  const total = profiles.reduce((sum, p) => sum + p.weight, 0);
+  if (!total) return null;
+  let hash = 0;
+  for (const ch of ruc) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
+  let pick = hash % total;
+  const profile = profiles.find((p) => (pick -= p.weight) < 0) ?? profiles[0];
+  const within = ([lo, hi]: [number, number], salt: number) => lo + (((hash >>> salt) % 1000) / 1000) * (hi - lo);
+  const amount = Math.round(within(profile.amount, 3) / 10) * 10;
+  const days = Math.round(within(profile.days, 7));
+  const detail = profile.detail
+    .replace("{amount}", amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }))
+    .replace("{days}", String(days));
+  return { status: profile.status, tone: profile.tone, detail };
+}
 
 let cache: Promise<Simulated | null> | null = null;
 
