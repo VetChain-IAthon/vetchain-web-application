@@ -1,5 +1,5 @@
-import { ScreenStub } from "@/components/layout/screen-stub";
+import { AlertsPage } from "@/features/alertas/alerts-page";
 
 export default function Page() {
-  return <ScreenStub screenKey="alertas" />;
+  return <AlertsPage />;
 }
