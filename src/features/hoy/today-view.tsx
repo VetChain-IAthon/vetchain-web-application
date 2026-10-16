@@ -4,6 +4,7 @@ import { ArrowRight, Check, ClipboardCheck, MessageCircle, Phone, RefreshCw } fr
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Notice } from "@/components/data/notice";
+import { OriginBadge } from "@/components/data/origin-badge";
 import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { api, errorMessage } from "@/lib/api/client";
@@ -11,6 +12,7 @@ import type { components } from "@/lib/api/schema";
 import { formatMonthYear, formatNumber, formatPen } from "@/lib/format";
 import { formatPeruPhone, peruPhone } from "@/lib/phone";
 import { CONTACT_OUTCOMES } from "@/lib/labels";
+import { simulatedCollection, useSimulated } from "@/lib/demo";
 import { useQuery } from "@/lib/use-query";
 
 type AtRisk = components["schemas"]["AtRiskCustomerOut"];
@@ -195,10 +197,7 @@ function TodayCustomer({ item, position, defaultRhythm, contact, contactsLoaded,
             </div>
             <div>
               <dt className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Cobranza</dt>
-              <dd className="mt-1.5">
-                <span className="inline-block rounded bg-neutral-bg px-3 py-1.5 text-sm font-semibold text-neutral-fg">Sin datos todavía</span>
-                <span className="mt-1 block text-xs text-ink-muted">Falta enlazar cobros con facturas</span>
-              </dd>
+              <dd className="mt-1.5"><CollectionStatus ruc={item.ruc} /></dd>
             </div>
           </dl>
 
@@ -243,4 +242,23 @@ function TodayCustomer({ item, position, defaultRhythm, contact, contactsLoaded,
       </div>
     </article>
   );
+}
+
+const TONE: Record<"ok" | "warn" | "danger", string> = { ok: "bg-ok-bg text-ok-fg", warn: "bg-warn-bg text-warn-fg", danger: "bg-danger-bg text-danger-fg" };
+
+/** Estado de cobranza del cliente. Mientras los cobros no se enlacen con facturas, sale de los perfiles simulados del backend. */
+function CollectionStatus({ ruc }: { ruc: string }) {
+  const profiles = useSimulated()?.collections?.profiles;
+  const sim = profiles ? simulatedCollection(ruc, profiles) : null;
+  if (!sim) return <>
+    <span className="inline-block rounded bg-neutral-bg px-3 py-1.5 text-sm font-semibold text-neutral-fg">Sin datos todavía</span>
+    <span className="mt-1 block text-xs text-ink-muted">Falta enlazar cobros con facturas</span>
+  </>;
+  return <>
+    <span className="flex flex-wrap items-center gap-2">
+      <span className={`inline-block rounded px-3 py-1.5 text-sm font-semibold ${TONE[sim.tone]}`}>{sim.status}</span>
+      <OriginBadge origin="simulated" />
+    </span>
+    <span className="mt-1 block text-xs text-ink-muted">{sim.detail}</span>
+  </>;
 }
