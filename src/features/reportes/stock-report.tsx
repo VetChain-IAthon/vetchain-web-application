@@ -15,7 +15,7 @@ import { api } from "@/lib/api/client";
 import { formatDate, formatInt, formatNumber, formatPercent } from "@/lib/format";
 import { useQuery } from "@/lib/use-query";
 import { cn } from "@/lib/utils";
-import { Pending, PendingTile, StatTile, Status, Warnings } from "./report-ui";
+import { Pending, PendingTile, StatTile, Status } from "./report-ui";
 import { ShareDialog, type ShareChannel } from "./share-dialog";
 import { ProductForecast } from "./product-forecast";
 import { ReportGeminiSummary } from "./report-gemini-summary";
@@ -75,7 +75,6 @@ export function StockReportPage() {
       <Card className="flex flex-col gap-4 p-8">
         <ReportGeminiSummary title="Lo que dicen los datos" report="stock" metrics={{ products: items.length, normal: by("normal").length, overstock: overstock.length, slow: by("slow").length, out_with_demand: outWithDemand.length, coverage_days: coverage }} />
       </Card>
-      <Warnings codes={data.warnings.filter((w) => w === "stock_balance_unconfirmed")} />
 
       <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-5">
         <PendingTile label="Valor del stock" kind="data" reason="Faltan costos de compra" />
